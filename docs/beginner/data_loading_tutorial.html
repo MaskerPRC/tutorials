@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Writing Custom Datasets, DataLoaders and Transforms — PyTorch Tutorials 2.3.0+cpu documentation</title>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<link href="../_static/copybutton.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/katex-math.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-binder.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-dataframe.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-rendered-html.css" rel="stylesheet" type="text/css">
+<link href="../_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom2.css" rel="stylesheet" type="text/css">
+<link href="../genindex.html" rel="index" title="Index">
+<link href="../search.html" rel="search" title="Search">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T8XT4PS');</script>
+<!-- End Google Tag Manager -->
+<script src="../_static/js/modernizr.min.js"></script>
+<!-- Preload the theme fonts -->
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-book.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" rel="preload" type="font/woff2">
+<!-- Preload the katex fonts -->
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" rel="preload" type="font/woff2">
+<link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" rel="stylesheet">
+</head><body class="pytorch-body"><div class="container-fluid header-holder tutorials-header" id="header-holder">
+<div class="container">
+<div class="header-container">
+<a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
+<div class="main-menu">
+<ul>
+<li class="main-menu-item">
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">学习</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/get-started">
+<span class="dropdown-title">开始使用</span>
+<p>在本地运行 PyTorch 或快速开始使用支持的云平台之一</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials">
+<span class="dropdown-title">教程</span>
+<p>PyTorch 教程中有什么新内容</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">
+<span class="dropdown-title">学习基础知识</span>
+<p>熟悉 PyTorch 的概念和模块</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">
+<span class="dropdown-title">PyTorch 食谱</span>
+<p>小巧便捷、即用型 PyTorch 代码示例</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/introyt.html">
+<span class="dropdown-title">PyTorch 入门 - YouTube 系列教程</span>
+<p>通过我们引人入胜的 YouTube 教程系列掌握 PyTorch 基础知识</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">生态系统</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
+<span class="dropdown-title">工具</span>
+<p>了解 PyTorch 生态系统中的工具和框架</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/#community-module">
+<span class="dropdown-title">社区</span>
+<p>加入 PyTorch 开发者社区，贡献、学习并解答你的问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://discuss.pytorch.org/" target="_blank">
+<span class="dropdown-title">论坛</span>
+<p>讨论 PyTorch 代码、问题、安装、研究的地方</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/resources">
+<span class="dropdown-title">开发者资源</span>
+<p>查找资源并解答问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
+<span class="dropdown-title">贡献者奖项 - 2024</span>
+<p>本届 PyTorch 大会揭晓获奖者</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">边缘</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/edge">
+<span class="dropdown-title">关于 PyTorch Edge</span>
+<p>为边缘设备构建创新且注重隐私的 AI 体验</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/executorch-overview">
+<span class="dropdown-title">ExecuTorch</span>
+<p>实现移动和边缘设备端到端推理能力的解决方案</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/executorch/stable/index.html">
+<span class="dropdown-title">ExecuTorch 文档</span>
+</a>
+</div>
+</div>
+</li>
+<li class="main-menu-item">
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">文档</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
+<span class="dropdown-title">PyTorch</span>
+<p>查阅文档以获取全面指导，了解如何使用 PyTorch</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/pytorch-domains">
+<span class="dropdown-title">PyTorch 领域</span>
+<p>阅读 PyTorch Domains 文档以了解更多关于特定领域库的信息</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">博客与新闻</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/blog/">
+<span class="dropdown-title">PyTorch 博客</span>
+<p>捕捉最新的技术新闻和事件</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
+<span class="dropdown-title">社区博客</span>
+<p>PyTorch 生态系统中的故事</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/videos">
+<span class="dropdown-title">视频</span>
+<p>了解最新的 PyTorch 教程、新内容等</p>
+</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+<span class="dropdown-title">社区故事</span>
+<p>学习如何我们的社区使用 PyTorch 解决真实、日常的机器学习问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/events">
+<span class="dropdown-title">活动</span>
+<p>查找活动、网络研讨会和播客</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
+<span class="dropdown-title">通讯</span>
+<p>保持最新更新</p>
+</a>
+</div>
+</div></li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">关于</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/foundation">
+<span class="dropdown-title">PyTorch 基金会</span>
+<p>了解更多关于 PyTorch 基金会</p>
+</a>
+管理委员会云信用计划技术顾问委员会员工联系我们
+</div>
+</div>
+</li>
+<li class="main-menu-item">
+<div class="no-dropdown">
+<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
+</div>
+</li>
+<li>
+<div class="main-menu-item">
+<a class="github-icon" href="https://github.com/pytorch/pytorch">
+</a>
+</div>
+</li>
+<!--- TODO: This block adds the search icon to the nav bar. We will enable it later. 
+          <li>
+            <div class="main-menu-item">
+             <a href="https://github.com/pytorch/pytorch" class="search-icon">
+             </a>
+            </div>
+          </li>
+          --->
+</ul>
+</div>
+<a class="main-menu-open-button" data-behavior="open-mobile-menu" href="#"></a>
+</div>
+</div>
+</div>
+
+<div class="table-of-contents-link-wrapper">
+<span>目录</span>
+<a class="toggle-table-of-contents" data-behavior="toggle-table-of-contents" href="#"></a>
+</div>
+<nav class="pytorch-left-menu" data-toggle="wy-nav-shift" id="pytorch-left-menu">
+<div class="pytorch-side-scroll">
+<div aria-label="main navigation" class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation">
+<div class="pytorch-left-menu-search">
+<div class="version">
+        2.3.0+cpu
+      </div>
+<!-- Search box -->
+<div id="searchBox">
+<div class="searchbox" id="googleSearchBox">
+<script async="" src="https://cse.google.com/cse.js?cx=e65585f8c3ea1440e"></script>
+<div class="gcse-search"></div>
+</div>
+<div id="sphinxSearchBox" style="display: none;">
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input name="q" placeholder="Search Docs" type="text">
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default">
+</form>
+</div>
+</div>
+</div>
+<form id="searchForm">
+<label style="margin-bottom: 1rem">
+<input checked="" name="searchType" type="radio" value="google">谷歌搜索</label>
+<label style="margin-bottom: 1rem">
+<input name="searchType" type="radio" value="sphinx">经典搜索</label>
+</form>
+<script>
+     document.addEventListener('DOMContentLoaded', function() {
+      const searchForm = document.getElementById('searchForm');
+      const googleSearchBox = document.getElementById('googleSearchBox');
+      const sphinxSearchBox = document.getElementById('sphinxSearchBox');
+      // Function to toggle search box visibility
+      function toggleSearchBox(searchType) {
+        googleSearchBox.style.display = searchType === 'google' ? 'block' : 'none';
+        sphinxSearchBox.style.display = searchType === 'sphinx' ? 'block' : 'none';
+      }
+      // Determine the default search type
+      let defaultSearchType = 'google';
+      if (window.location.href.startsWith('https://docs-preview.pytorch.org/')) {
+        defaultSearchType = 'sphinx';
+      } else {
+        defaultSearchType = localStorage.getItem('searchType') || 'google';
+      }
+      // Set the default search type
+      document.querySelector(`input[name="searchType"][value="${defaultSearchType}"]`).checked = true;
+      toggleSearchBox(defaultSearchType);
+      // Event listener for changes in search type
+      searchForm.addEventListener('change', function(event) {
+        const selectedSearchType = event.target.value;
+        localStorage.setItem('searchType', selectedSearchType);
+        toggleSearchBox(selectedSearchType);
+      });
+      // Set placeholder text for Google search box
+      window.onload = function() {
+        var placeholderText = "Search Docs";
+        var googleSearchboxText = document.querySelector("#gsc-i-id1");
+        if (googleSearchboxText) {
+          googleSearchboxText.placeholder = placeholderText;
+          googleSearchboxText.style.fontFamily = 'FreightSans';
+          googleSearchboxText.style.fontSize = "1.2rem";
+          googleSearchboxText.style.color = '#262626';
+        }
+      };
+    });
+  </script>
+</div>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 食谱</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/recipes_index.html">查看所有菜谱</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prototype/prototype_index.html">查看所有原型菜谱</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="basics/intro.html">学习基础知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basics/quickstart_tutorial.html">快速入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics/tensorqs_tutorial.html">张量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics/data_tutorial.html">数据集和数据加载器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics/transforms_tutorial.html">转换</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics/buildmodel_tutorial.html">构建神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics/autogradqs_tutorial.html">自动微分与 <code class="docutils literal "><span class="pre">torch.autograd</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics/optimization_tutorial.html">优化模型参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basics/saveloadrun_tutorial.html">保存和加载模型</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="introyt/introyt_index.html">PyTorch 入门 - YouTube 系列</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introyt/introyt1_tutorial.html">PyTorch 入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introyt/tensors_deeper_tutorial.html">PyTorch 张量入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introyt/autogradyt_tutorial.html">Autograd 基础</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introyt/modelsyt_tutorial.html">使用 PyTorch 构建模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introyt/tensorboardyt_tutorial.html">PyTorch TensorBoard 支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introyt/trainingyt.html">使用 PyTorch 进行训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introyt/captumyt.html">使用 Captum 理解模型</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">学习 PyTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="deep_learning_60min_blitz.html">深度学习与 PyTorch：60 分钟速成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pytorch_with_examples.html">通过示例学习 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nn_tutorial.html"><cite>torch.nn</cite><em> 究竟</em>是什么？</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/nlp_from_scratch_index.html">从零开始学习自然语言处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/tensorboard_tutorial.html">使用 TensorBoard 可视化模型、数据和训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/pinmem_nonblock.html">PyTorch 中正确使用<code class="docutils literal "><span class="pre">非阻塞</span></code>和<code class="docutils literal "><span class="pre">固定内存</span></code>的指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">图像和视频</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchvision_tutorial.html">TorchVision 目标检测微调教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transfer_learning_tutorial.html">计算机视觉迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fgsm_tutorial.html">对抗样本生成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dcgan_faces_tutorial.html">DCGAN 教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/spatial_transformer_tutorial.html">空间变换网络教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vt_tutorial.html">优化视觉 Transformer 模型以部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/tiatoolbox_tutorial.html">使用 PyTorch 和 TIAToolbox 进行全切片图像分类</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">音频</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="audio_io_tutorial.html">音频输入/输出</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_resampling_tutorial.html">音频重采样</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_data_augmentation_tutorial.html">音频数据增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_feature_extractions_tutorial.html">音频特征提取</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_feature_augmentation_tutorial.html">音频特征增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio_datasets_tutorial.html">音频数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/speech_recognition_pipeline_tutorial.html">使用 Wav2Vec2 的语音识别</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/text_to_speech_with_torchaudio.html">使用 Tacotron2 的文本到语音</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/forced_alignment_with_torchaudio_tutorial.html">使用 Wav2Vec2 的强制对齐</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">后端</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="onnx/intro_onnx.html">ONNX 简介</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">强化学习</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/reinforcement_q_learning.html">强化学习（DQN）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/reinforcement_ppo.html">使用 TorchRL 的强化学习（PPO）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/mario_rl_tutorial.html">训练一个玩马里奥的强化学习智能体</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/pendulum.html">摆锤：使用 TorchRL 编写你的环境和转换</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">部署 PyTorch 模型到生产环境</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="onnx/intro_onnx.html">ONNX 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/flask_rest_api_tutorial.html">使用 Flask 通过 REST API 部署 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Intro_to_TorchScript_tutorial.html">TorchScript 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_export.html">在 C++中加载 TorchScript 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/super_resolution_with_onnxruntime.html">(可选) 将 PyTorch 模型导出为 ONNX 并使用 ONNX Runtime 运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/realtime_rpi.html">Raspberry Pi 4 上的实时推理（30 fps！）</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 性能分析</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="profiler.html">PyTorch 模块性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hta_intro_tutorial.html">全景式跟踪分析简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hta_trace_diff_tutorial.html">使用全景式跟踪分析进行跟踪差异</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">使用 FX 进行代码转换</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/fx_conv_bn_fuser.html">(beta) 在 FX 中构建卷积/批量归一化融合器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/fx_profiling_tutorial.html">(beta) 使用 FX 构建简单的 CPU 性能分析器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">前端 API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/memory_format_tutorial.html">(beta) PyTorch 中的通道最后内存格式</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/forward_ad_usage.html">前向模式自动微分（Beta）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/jacobians_hessians.html">雅可比矩阵、海森矩阵、HVP、vHP 以及更多：函数变换的组成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/ensembling.html">模型集成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/per_sample_grads.html">每样本梯度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_frontend.html">使用 PyTorch C++前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch-script-parallelism.html">动态并行化在 TorchScript 中</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_autograd.html">C++前端中的自动微分</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">扩展 PyTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/custom_ops_landing_page.html">PyTorch 自定义算子</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/python_custom_ops.html">自定义 Python 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_custom_ops.html">自定义 C++和 CUDA 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/custom_function_double_backward_tutorial.html">使用自定义函数的双向回传</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/custom_function_conv_bn_tutorial.html">使用自定义函数融合卷积和批量归一化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_extension.html">自定义 C++ 和 CUDA 扩展</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_ops.html">使用自定义 C++ 操作符扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_classes.html">使用自定义 C++ 类扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dispatcher.html">在 C++ 中注册分派操作符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/extend_dispatcher.html">C++中扩展后端调度器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/privateuseone.html">通过 PrivateUse1 促进新后端集成</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">模型优化</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="profiler.html">PyTorch 模块性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/tensorboard_profiler_tutorial.html">PyTorch 分析器与 TensorBoard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hyperparameter_tuning_tutorial.html">使用 Ray Tune 进行超参数调整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vt_tutorial.html">优化视觉 Transformer 模型以部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/parametrizations.html">参数化教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/pruning_tutorial.html">剪枝教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dynamic_quantization_tutorial.html">(beta) 在 LSTM 词语言模型上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/dynamic_quantization_bert_tutorial.html">(beta) 在 BERT 上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/quantized_transfer_learning_tutorial.html">(beta) 计算机视觉的量化迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/static_quantization_tutorial.html">(beta) PyTorch 中 Eager 模式下的静态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchserve_with_ipex.html">从原理出发掌握 PyTorch Intel CPU 性能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchserve_with_ipex_2.html">从原理出发掌握 PyTorch Intel CPU 性能（第二部分）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/nvfuser_intro_tutorial.html">入门指南 - 使用 nvFuser 加速您的脚本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/ax_multiobjective_nas_tutorial.html">基于 Ax 的多目标 NAS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torch_compile_tutorial.html"><code class="docutils literal "><span class="pre">torch.compile</span></code> 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/compiled_autograd_tutorial.html">编译 Autograd：捕获更大的 <code class="docutils literal "><span class="pre">torch.compile</span></code> 反向图</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/inductor_debug_cpu.html">电感 CPU 后端调试和性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/scaled_dot_product_attention_tutorial.html">(Beta) 使用缩放点积注意力（SDPA）实现高性能 Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="knowledge_distillation_tutorial.html">知识蒸馏教程</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">并行和分布式训练</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../distributed/home.html">分布式和并行训练教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dist_overview.html">PyTorch 分布式概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ddp_series_intro.html">PyTorch 分布式数据并行 - 视频教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/model_parallel_tutorial.html">单机模型并行最佳实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/ddp_tutorial.html">PyTorch 分布式数据并行入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/dist_tuto.html">使用 PyTorch 编写分布式应用程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/FSDP_tutorial.html">开始使用完全分片数据并行（FSDP）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/FSDP_advanced_tutorial.html">高级模型训练与完全分片数据并行（FSDP）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/TCPStore_libuv_backend.html">Libuv TCPStore 后端简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/TP_tutorial.html">使用 Tensor Parallel（TP）进行大规模 Transformer 模型训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/pipelining_tutorial.html">分布式流水线并行简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/process_group_cpp_extension_tutorial.html">使用 C++扩展自定义进程组后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/rpc_tutorial.html">分布式 RPC 框架入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/rpc_param_server_tutorial.html">使用分布式 RPC 框架实现参数服务器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/rpc_async_execution.html">使用异步执行实现批处理 RPC 处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/rpc_ddp_tutorial.html">结合分布式数据并行与分布式 RPC 框架</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/generic_join.html">使用 Join 上下文管理器进行不均匀输入的分布式训练</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Edge 与 ExecuTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html">导出至 ExecuTorch 教程</a></li>
+<li class="toctree-l1"><a class="reference external" href=" https://pytorch.org/executorch/stable/running-a-model-cpp-tutorial.html">在 C++中运行 ExecuTorch 模型教程</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/sdk-integration-tutorial.html">使用 ExecuTorch SDK 对模型进行性能分析</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-ios.html">构建 ExecuTorch iOS 演示应用</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-android.html">构建 ExecuTorch Android 演示应用</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/examples-end-to-end-to-lower-model-to-delegate.html">将模型作为代理降低</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">推荐系统</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchrec_intro_tutorial.html">火炬 Rec 入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/sharding.html">探索 TorchRec 分片</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">多模态</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="flava_finetuning_tutorial.html">TorchMultimodal 教程：微调 FLAVA</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="pytorch-container">
+<div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+<div class="pytorch-breadcrumbs-wrapper">
+<div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="pytorch-breadcrumbs">
+<li>
+<font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">教程
+
+         &gt;</font></font></font></li>
+<li>编写自定义数据集、数据加载器和转换</li>
+<li class="pytorch-breadcrumbs-aside">
+<a href="../_sources/beginner/data_loading_tutorial.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg" width="16" height="16"></a>
+</li>
+</ul>
+</div>
+</div>
+<div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">快捷键</div>
+</div>
+<section class="pytorch-content-wrap" data-toggle="wy-nav-shift" id="pytorch-content-wrap">
+<div class="pytorch-content-left">
+<div class="pytorch-call-to-action-links">
+<div id="tutorial-type">beginner/数据加载教程</div>
+<div id="google-colab-link">
+<img class="call-to-action-img" src="../_static/images/pytorch-colab.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 Google Colab 中运行</div>
+<div class="call-to-action-mobile-view">Colab</div>
+</div>
+<div id="download-notebook-link">
+<img class="call-to-action-notebook-img" src="../_static/images/pytorch-download.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">下载笔记本</div>
+<div class="call-to-action-mobile-view">笔记本</div>
+</div>
+<div id="github-view-link">
+<img class="call-to-action-img" src="../_static/images/pytorch-github.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 GitHub 上查看</div>
+<div class="call-to-action-mobile-view">GitHub</div>
+</div>
+</div>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-T8XT4PS" style="display:none;visibility:hidden" width="0"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="rst-content">
+<div class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<article class="pytorch-article" id="pytorch-article" itemprop="articleBody">
+<div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">备注</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">点击 <a class="reference internal" href="#sphx-glr-download-beginner-data-loading-tutorial-py"><span class="std std-ref"> 这里</span></a>
+下载完整示例代码</font></font></font></p>
+</div>
+<div class="sphx-glr-example-title section" id="writing-custom-datasets-dataloaders-and-transforms">
+<span id="sphx-glr-beginner-data-loading-tutorial-py"></span><h1>编写自定义数据集、数据加载器和转换 <a class="headerlink" href="#writing-custom-datasets-dataloaders-and-transforms" title="Permalink to this heading">¶</a></font></font></font></h1><p class="date-info-last-verified" style="color: #6c6c6d; font-size: small;"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">创建时间：2025年4月1日 | 最后更新时间：2025年4月1日 | 最后验证时间：2024年11月5日</p>
+<p><strong>作者 </strong>: <a class="reference external" href="https://chsasank.github.io"> 萨桑克·奇拉穆库尔蒂</a></p>
+<p>解决任何机器学习问题都需要投入大量的努力，其中很大一部分是用于数据准备。PyTorch 提供了许多工具来简化数据加载，并希望使您的代码更易于阅读。在本教程中，我们将了解如何从非平凡数据集中加载和预处理/增强数据。</p>
+<p>运行本教程之前，请确保已安装以下包：</p>
+<ul class="simple">
+<li><p><code class="docutils literal "><span class="pre">scikit-image</span></code>：用于图像输入和转换</p></li>
+<li><p><code class="docutils literal "><span class="pre">pandas</span></code>：用于更轻松的 CSV 解析</p></li>
+</ul>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">io</span><span class="p">,</span> <span class="n">transform</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.data</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset" title="torch.utils.data.Dataset"><span class="n">Dataset</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader"><span class="n">DataLoader</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchvision</span><span class="w"> </span><span class="kn">import</span> <span class="n">transforms</span><span class="p">,</span> <span class="n">utils</span>
+
+<span class="c1"># Ignore warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>   <span class="c1"># interactive mode</span>
+</pre></div>
+</div>
+<p>我们将要处理的数据库是面部姿态数据集。这意味着面部是这样标注的：</p>
+<div class="figure align-default">
+<a class="reference internal image-reference" href="../_images/landmarked_face2.png"><img alt="../_images/landmarked_face2.png" src="../_images/landmarked_face2.png" style="width: 400px;"></a>
+</div>
+<p>总体来说，每个面部标注了68个不同的特征点。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">从<a class="reference external" href="https://download.pytorch.org/tutorial/faces.zip">这里</a>下载数据集。
+以确保图像位于名为‘data/faces/’的目录中。
+这个数据集实际上是
+通过应用优秀的 <a class="reference external" href="https://blog.dlib.net/2014/08/real-time-face-pose-estimation.html">dlib 的姿势
+估计</a>
+在从 imagenet 中标记为‘人脸’的几张图像上生成的。</font></font></font></p>
+</div>
+<p>数据集包含一个带有注释的 <code class="docutils literal "><span class="pre">.csv</span></code> 文件，其内容如下：</p>
+<div class="highlight-sh "><div class="highlight"><pre><span></span>image_name,part_0_x,part_0_y,part_1_x,part_1_y,part_2_x,<span class="w"> </span>...<span class="w"> </span>,part_67_x,part_67_y
+0805personali01.jpg,27,83,27,98,<span class="w"> </span>...<span class="w"> </span><span class="m">84</span>,134
+1084239450_e76e00b7e7.jpg,70,236,71,257,<span class="w"> </span>...<span class="w"> </span>,128,312
+</pre></div>
+</div>
+<p>让我们以单个图像名称及其注释为例，从 CSV 中读取，例如行索引号为 65 的 person-7.jpg。将其存储在 <code class="docutils literal "><span class="pre">img_name</span></code> 中，并将其注释存储在一个 (L, 2) 的数组 <code class="docutils literal "><span class="pre">landmarks</span></code> 中，其中 L 是该行中的地标数量。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">landmarks_frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'data/faces/face_landmarks.csv'</span><span class="p">)</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">65</span>
+<span class="n">img_name</span> <span class="o">=</span> <span class="n">landmarks_frame</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">landmarks</span> <span class="o">=</span> <span class="n">landmarks_frame</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span>
+<span class="n">landmarks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">landmarks</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Image name: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">img_name</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Landmarks shape: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">landmarks</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'First 4 Landmarks: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">landmarks</span><span class="p">[:</span><span class="mi">4</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>让我们编写一个简单的辅助函数来显示图像及其地标，并使用它来显示一个示例。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">show_landmarks</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">landmarks</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Show image with landmarks"""</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">landmarks</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">landmarks</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'r'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)</span>  <span class="c1"># pause a bit so that plots are updated</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">show_landmarks</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'data/faces/'</span><span class="p">,</span> <span class="n">img_name</span><span class="p">)),</span>
+               <span class="n">landmarks</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="dataset-class">
+<h2>数据集类 <a class="headerlink" href="#dataset-class" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal "><span class="pre">torch.utils.data.Dataset</span></code> 是一个表示数据集的抽象类。您的自定义数据集应继承 <code class="docutils literal "><span class="pre">Dataset</span></code> 并重写以下方法：</p>
+<ul class="simple">
+<li><p><code class="docutils literal "><span class="pre">__len__</span></code> 以确保 <code class="docutils literal "><span class="pre">len(dataset)</span></code> 返回数据集的大小。</p></li>
+<li><p><code class="docutils literal "><span class="pre">__getitem__</span></code> 以支持索引，使得 <code class="docutils literal "><span class="pre">dataset[i]</span></code> 可以用来获取第 <span class="math">\(i\) </span> 个样本。</p></li>
+</ul>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">让我们为我们的面部特征数据集创建一个数据集类。我们将在 <code class="docutils literal "><span class="pre">__init__</span></code> 中读取 csv 文件，但将图像的读取留给
+<code class="docutils literal "><span class="pre">__getitem__</span></code>. 这是因为所有图像不是一次性存储在内存中，而是按需读取，所以内存效率更高。</font></font></font></p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">我们的样本数据集将是一个字典。
+ <code class="docutils literal "><span class="pre">{'image':</span> <span class="pre">image,</span> <span class="pre">'landmarks':</span> <span class="pre">landmarks}</span></code> . 我们的数据集将接受一个可选参数 <code class="docutils literal "><span class="pre">transform</span></code>，以便可以对样本应用任何所需的处理。我们将在下一节中看到 <code class="docutils literal "><span class="pre">transform</span></code> 的有用性。</font></font></font></p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">FaceLandmarksDataset</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.Dataset" title="torch.utils.data.Dataset"><span class="n">Dataset</span></a><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Face Landmarks dataset."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csv_file</span><span class="p">,</span> <span class="n">root_dir</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Arguments:</span>
+<span class="sd">            csv_file (string): Path to the csv file with annotations.</span>
+<span class="sd">            root_dir (string): Directory with all the images.</span>
+<span class="sd">            transform (callable, optional): Optional transform to be applied</span>
+<span class="sd">                on a sample.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span> <span class="o">=</span> <span class="n">root_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transform</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">landmarks_frame</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="k">if</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.is_tensor.html#torch.is_tensor" title="torch.is_tensor"><span class="n">torch</span><span class="o">.</span><span class="n">is_tensor</span></a><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="n">img_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_frame</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">img_name</span><span class="p">)</span>
+        <span class="n">landmarks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">landmarks_frame</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="n">landmarks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">landmarks</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'image'</span><span class="p">:</span> <span class="n">image</span><span class="p">,</span> <span class="s1">'landmarks'</span><span class="p">:</span> <span class="n">landmarks</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">:</span>
+            <span class="n">sample</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">sample</span>
+</pre></div>
+</div>
+<p>让我们实例化这个类并遍历数据样本。我们将打印前4个样本的大小并显示它们的特征点。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">face_dataset</span> <span class="o">=</span> <span class="n">FaceLandmarksDataset</span><span class="p">(</span><span class="n">csv_file</span><span class="o">=</span><span class="s1">'data/faces/face_landmarks.csv'</span><span class="p">,</span>
+                                    <span class="n">root_dir</span><span class="o">=</span><span class="s1">'data/faces/'</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">face_dataset</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'image'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'landmarks'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Sample #</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'off'</span><span class="p">)</span>
+    <span class="n">show_landmarks</span><span class="p">(</span><span class="o">**</span><span class="n">sample</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">break</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="transforms">
+<h2>转换 <a class="headerlink" href="#transforms" title="Permalink to this heading">¶</a></h2>
+<p>从上面的内容我们可以看到一个问题是样本大小不一致。大多数神经网络都期望图像大小固定。因此，我们需要编写一些预处理代码。让我们创建三个转换：</p>
+<ul class="simple">
+<li><p><code class="docutils literal "><span class="pre">Rescale</span></code>：用于调整图像大小</p></li>
+<li><p><code class="docutils literal "><span class="pre">RandomCrop</span></code>：从图像中随机裁剪。这是数据增强。</p></li>
+<li><p><code class="docutils literal "><span class="pre">ToTensor</span></code>：将 numpy 图像转换为 torch 图像（我们需要交换轴）。</p></li>
+</ul>
+<p>我们将把它们写成可调用的类而不是简单的函数，这样在每次调用变换时就不需要传递参数。为此，我们只需要实现 <code class="docutils literal "><span class="pre">__call__</span></code> 方法，如果需要的话，还可以实现 <code class="docutils literal "><span class="pre">__init__</span></code> 方法。然后我们可以像这样使用变换：</p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">tsfm</span> <span class="o">=</span> <span class="n">Transform</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="n">transformed_sample</span> <span class="o">=</span> <span class="n">tsfm</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>观察以下这些变换是如何同时应用于图像和地标上的。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Rescale</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Rescale the image in a sample to a given size.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        output_size (tuple or int): Desired output size. If tuple, output is</span>
+<span class="sd">            matched to output_size. If int, smaller of image edges is matched</span>
+<span class="sd">            to output_size keeping aspect ratio the same.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_size</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output_size</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span> <span class="o">=</span> <span class="n">output_size</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">):</span>
+        <span class="n">image</span><span class="p">,</span> <span class="n">landmarks</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'image'</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'landmarks'</span><span class="p">]</span>
+
+        <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_size</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">h</span> <span class="o">&gt;</span> <span class="n">w</span><span class="p">:</span>
+                <span class="n">new_h</span><span class="p">,</span> <span class="n">new_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span> <span class="o">*</span> <span class="n">h</span> <span class="o">/</span> <span class="n">w</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_h</span><span class="p">,</span> <span class="n">new_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span> <span class="o">*</span> <span class="n">w</span> <span class="o">/</span> <span class="n">h</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_h</span><span class="p">,</span> <span class="n">new_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span>
+
+        <span class="n">new_h</span><span class="p">,</span> <span class="n">new_w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">new_h</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">new_w</span><span class="p">)</span>
+
+        <span class="n">img</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span><span class="n">new_h</span><span class="p">,</span> <span class="n">new_w</span><span class="p">))</span>
+
+        <span class="c1"># h and w are swapped for landmarks because for images,</span>
+        <span class="c1"># x and y axes are axis 1 and 0 respectively</span>
+        <span class="n">landmarks</span> <span class="o">=</span> <span class="n">landmarks</span> <span class="o">*</span> <span class="p">[</span><span class="n">new_w</span> <span class="o">/</span> <span class="n">w</span><span class="p">,</span> <span class="n">new_h</span> <span class="o">/</span> <span class="n">h</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">'image'</span><span class="p">:</span> <span class="n">img</span><span class="p">,</span> <span class="s1">'landmarks'</span><span class="p">:</span> <span class="n">landmarks</span><span class="p">}</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">RandomCrop</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Crop randomly the image in a sample.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        output_size (tuple or int): Desired output size. If int, square crop</span>
+<span class="sd">            is made.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_size</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output_size</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output_size</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">output_size</span><span class="p">,</span> <span class="n">output_size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_size</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span> <span class="o">=</span> <span class="n">output_size</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">):</span>
+        <span class="n">image</span><span class="p">,</span> <span class="n">landmarks</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'image'</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'landmarks'</span><span class="p">]</span>
+
+        <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">new_h</span><span class="p">,</span> <span class="n">new_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span>
+
+        <span class="n">top</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span> <span class="o">-</span> <span class="n">new_h</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">w</span> <span class="o">-</span> <span class="n">new_w</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="p">[</span><span class="n">top</span><span class="p">:</span> <span class="n">top</span> <span class="o">+</span> <span class="n">new_h</span><span class="p">,</span>
+                      <span class="n">left</span><span class="p">:</span> <span class="n">left</span> <span class="o">+</span> <span class="n">new_w</span><span class="p">]</span>
+
+        <span class="n">landmarks</span> <span class="o">=</span> <span class="n">landmarks</span> <span class="o">-</span> <span class="p">[</span><span class="n">left</span><span class="p">,</span> <span class="n">top</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">'image'</span><span class="p">:</span> <span class="n">image</span><span class="p">,</span> <span class="s1">'landmarks'</span><span class="p">:</span> <span class="n">landmarks</span><span class="p">}</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ToTensor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Convert ndarrays in sample to Tensors."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">):</span>
+        <span class="n">image</span><span class="p">,</span> <span class="n">landmarks</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'image'</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'landmarks'</span><span class="p">]</span>
+
+        <span class="c1"># swap color axis because</span>
+        <span class="c1"># numpy image: H x W x C</span>
+        <span class="c1"># torch image: C x H x W</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">transpose</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">'image'</span><span class="p">:</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.from_numpy.html#torch.from_numpy" title="torch.from_numpy"><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span></a><span class="p">(</span><span class="n">image</span><span class="p">),</span>
+                <span class="s1">'landmarks'</span><span class="p">:</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.from_numpy.html#torch.from_numpy" title="torch.from_numpy"><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span></a><span class="p">(</span><span class="n">landmarks</span><span class="p">)}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">在上面的例子中，<cite>RandomCrop</cite> 使用了外部库的随机数生成器（在这种情况下，Numpy 的 <cite>np.random.int</cite>）。这可能会导致与 <cite>DataLoader</cite> 的意外行为。
+（见 <a class="reference external" href="https://pytorch.org/docs/stable/notes/faq.html#my-data-loader-workers-return-identical-random-numbers"> 此处 </a>）。在实践中，坚持使用 PyTorch 的随机数生成器会更安全，例如通过使用 <cite>torch.randint</cite> 代替。</font></font></font></p>
+</div>
+<div class="section" id="compose-transforms">
+<h3>编写变换 <a class="headerlink" href="#compose-transforms" title="Permalink to this heading">¶</a></h3>
+<p>现在，我们在一个样本上应用这些变换。</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">假设我们想要将图像的较短边缩放到256，
+然后从其中随机裁剪一个224大小的正方形。即，我们想要组合
+<code class="docutils literal "><span class="pre">重缩放 </span></code> 和 <code class="docutils literal "><span class="pre"> 随机裁剪 </span></code> 转换。
+ <code class="docutils literal "><span class="pre">torchvision.transforms.Compose</span></code> 是一个简单的可调用类，允许我们这样做。</font></font></font></p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">scale</span> <span class="o">=</span> <span class="n">Rescale</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>
+<span class="n">crop</span> <span class="o">=</span> <span class="n">RandomCrop</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span>
+<span class="n">composed</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torchvision-transforms sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/vision/stable/generated/torchvision.transforms.Compose.html#torchvision.transforms.Compose" title="torchvision.transforms.Compose"><span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span></a><span class="p">([</span><span class="n">Rescale</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span>
+                               <span class="n">RandomCrop</span><span class="p">(</span><span class="mi">224</span><span class="p">)])</span>
+
+<span class="c1"># Apply each of the above transforms on sample.</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">sample</span> <span class="o">=</span> <span class="n">face_dataset</span><span class="p">[</span><span class="mi">65</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tsfrm</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="n">scale</span><span class="p">,</span> <span class="n">crop</span><span class="p">,</span> <span class="n">composed</span><span class="p">]):</span>
+    <span class="n">transformed_sample</span> <span class="o">=</span> <span class="n">tsfrm</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">tsfrm</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">show_landmarks</span><span class="p">(</span><span class="o">**</span><span class="n">transformed_sample</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="iterating-through-the-dataset">
+<h2>遍历数据集 <a class="headerlink" href="#iterating-through-the-dataset" title="Permalink to this heading">¶</a></h2>
+<p>让我们将这些内容组合起来创建一个具有组合转换的数据集。总结一下，每次从这个数据集中采样时：</p>
+<ul class="simple">
+<li><p>从文件中动态读取图像</p></li>
+<li><p>对读取的图像应用转换</p></li>
+<li><p>由于其中一个转换是随机的，因此在采样时对数据进行增强</p></li>
+</ul>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">我们可以迭代创建的数据集，使用 <code class="docutils literal "><span class="pre">for</span> <span class="pre">i</span> <span class="pre">in</span> <span class="pre">range</span></code>
+如前所述循环。</font></font></font></p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">transformed_dataset</span> <span class="o">=</span> <span class="n">FaceLandmarksDataset</span><span class="p">(</span><span class="n">csv_file</span><span class="o">=</span><span class="s1">'data/faces/face_landmarks.csv'</span><span class="p">,</span>
+                                           <span class="n">root_dir</span><span class="o">=</span><span class="s1">'data/faces/'</span><span class="p">,</span>
+                                           <span class="n">transform</span><span class="o">=</span><a class="sphx-glr-backref-module-torchvision-transforms sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/vision/stable/generated/torchvision.transforms.Compose.html#torchvision.transforms.Compose" title="torchvision.transforms.Compose"><span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span></a><span class="p">([</span>
+                                               <span class="n">Rescale</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span>
+                                               <span class="n">RandomCrop</span><span class="p">(</span><span class="mi">224</span><span class="p">),</span>
+                                               <span class="n">ToTensor</span><span class="p">()</span>
+                                           <span class="p">]))</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">transformed_dataset</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'image'</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'landmarks'</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">break</span>
+</pre></div>
+</div>
+<p>然而，使用简单的 <code class="docutils literal "><span class="pre">for</span></code> 循环遍历数据会导致我们丢失许多功能。特别是，我们错过了：</p>
+<ul class="simple">
+<li><p>数据分批处理</p></li>
+<li><p>数据打乱顺序</p></li>
+<li><p>使用 <code class="docutils literal "><span class="pre"> 多进程 </span></code> 工作员并行加载数据。</p></li>
+</ul>
+<p><code class="docutils literal "><span class="pre">torch.utils.data.DataLoader</span></code> 是一个迭代器，提供了所有这些功能。以下使用的参数应该清晰明了。一个值得关注的参数是 <code class="docutils literal "><span class="pre">collate_fn</span></code>。您可以使用 <code class="docutils literal "><span class="pre">collate_fn</span></code> 指定样本如何进行批处理。然而，默认的 collate 对于大多数用例来说应该就足够了。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">dataloader</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader"><span class="n">DataLoader</span></a><span class="p">(</span><span class="n">transformed_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                        <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="c1"># Helper function to show a batch</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">show_landmarks_batch</span><span class="p">(</span><span class="n">sample_batched</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Show image with landmarks for a batch of samples."""</span>
+    <span class="n">images_batch</span><span class="p">,</span> <span class="n">landmarks_batch</span> <span class="o">=</span> \
+            <span class="n">sample_batched</span><span class="p">[</span><span class="s1">'image'</span><span class="p">],</span> <span class="n">sample_batched</span><span class="p">[</span><span class="s1">'landmarks'</span><span class="p">]</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">images_batch</span><span class="p">)</span>
+    <span class="n">im_size</span> <span class="o">=</span> <span class="n">images_batch</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">grid_border_size</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="n">grid</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torchvision-utils sphx-glr-backref-type-py-function" href="https://pytorch.org/vision/stable/generated/torchvision.utils.make_grid.html#torchvision.utils.make_grid" title="torchvision.utils.make_grid"><span class="n">utils</span><span class="o">.</span><span class="n">make_grid</span></a><span class="p">(</span><span class="n">images_batch</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">transpose</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">landmarks_batch</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">im_size</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">grid_border_size</span><span class="p">,</span>
+                    <span class="n">landmarks_batch</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> <span class="o">+</span> <span class="n">grid_border_size</span><span class="p">,</span>
+                    <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'r'</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Batch from dataloader'</span><span class="p">)</span>
+
+<span class="c1"># if you are using Windows, uncomment the next line and indent the for loop.</span>
+<span class="c1"># you might need to go back and change ``num_workers`` to 0.</span>
+
+<span class="c1"># if __name__ == '__main__':</span>
+<span class="k">for</span> <span class="n">i_batch</span><span class="p">,</span> <span class="n">sample_batched</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">i_batch</span><span class="p">,</span> <span class="n">sample_batched</span><span class="p">[</span><span class="s1">'image'</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">(),</span>
+          <span class="n">sample_batched</span><span class="p">[</span><span class="s1">'landmarks'</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+
+    <span class="c1"># observe 4th batch and stop.</span>
+    <span class="k">if</span> <span class="n">i_batch</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">show_landmarks_batch</span><span class="p">(</span><span class="n">sample_batched</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'off'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ioff</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">break</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="afterword-torchvision">
+<h2>后记：torchvision<a class="headerlink" href="#afterword-torchvision" title="Permalink to this heading">¶</a></h2>
+<p>在本教程中，我们学习了如何编写和使用数据集、转换和加载数据。 <code class="docutils literal "><span class="pre">torchvision</span></code> 包提供了一些常见的数据集和转换。您可能甚至不需要编写自定义类。torchvision 中可用的更通用的数据集之一是 <code class="docutils literal "><span class="pre">ImageFolder</span></code>。它假定图像按以下方式组织：</p>
+<div class="highlight-sh "><div class="highlight"><pre><span></span>root/ants/xxx.png
+root/ants/xxy.jpeg
+root/ants/xxz.png
+.
+.
+.
+root/bees/123.jpg
+root/bees/nsdf3.png
+root/bees/asd932_.png
+</pre></div>
+</div>
+<p>‘蚂蚁’、‘蜜蜂’等是类别标签。同样，对 <code class="docutils literal "><span class="pre">PIL.Image</span></code> 进行操作的通用变换，如 <code class="docutils literal "><span class="pre">RandomHorizontalFlip</span></code>、<code class="docutils literal "><span class="pre">Scale</span></code>，也是可用的。您可以使用这些来编写类似这样的数据加载器：</p>
+<div class="highlight-pytorch "><div class="highlight"><pre><span></span>import torch
+from torchvision import transforms, datasets
+
+data_transform = transforms.Compose([
+        transforms.RandomResizedCrop(224),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                             std=[0.229, 0.224, 0.225])
+    ])
+hymenoptera_dataset = datasets.ImageFolder(root='hymenoptera_data/train',
+                                           transform=data_transform)
+dataset_loader = torch.utils.data.DataLoader(hymenoptera_dataset,
+                                             batch_size=4, shuffle=True,
+                                             num_workers=4)
+</pre></div>
+</div>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">有关训练代码的示例，请参阅
+<a class="reference internal" href="transfer_learning_tutorial.html"><span class="doc">计算机视觉迁移学习教程 </span></a>。</font></font></font></p>
+<p class="sphx-glr-timing"><strong>脚本总运行时间：</strong>（0 分钟 0.000 秒）</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-beginner-data-loading-tutorial-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/6042bacf7948939030769777afe22e55/data_loading_tutorial.py"><code class="xref download docutils literal "><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">data_loading_tutorial.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/f498e3bcd9b6159ecfb1a07d6551287d/data_loading_tutorial.ipynb"><code class="xref download docutils literal "><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">data_loading_tutorial.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Sphinx-Gallery 生成的画廊</a></p>
+</div>
+</div>
+</article>
+</div>
+<footer>
+<hr class="rating-hr hr-top">
+<div class="rating-container">
+<div class="rating-prompt">评分这个教程</div>
+<div class="stars-outer">
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="1" title="1 Star"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="2" title="2 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="3" title="3 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="4" title="4 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="5" title="5 Stars"></i>
+</div>
+</div>
+<hr class="rating-hr hr-bottom">
+<div role="contentinfo">
+<p>© 版权所有 2024，PyTorch。</p>
+</div>
+<div>使用 <a href="http://sphinx-doc.org/">Sphinx</a> 构建，并使用由 <a href="https://readthedocs.org">Read the Docs</a> 提供的 <a href="https://github.com/rtfd/sphinx_rtd_theme"> 主题 </a>。</div>
+</footer>
+</div>
+<script>
+if((window.location.href.indexOf("/prototype/")!= -1) && (window.location.href.indexOf("/prototype/prototype_index")< 1))
+  {
+    var div = '<div class="admonition note"><p class="admonition-title">Note</p><p><i class="fa fa-flask" aria-hidden="true">&nbsp</i> This tutorial describes a prototype feature. Prototype features are typically not available as part of binary distributions like PyPI or Conda, except sometimes behind run-time flags, and are at an early stage for feedback and testing.</p></div>'
+    document.getElementById("pytorch-article").insertAdjacentHTML('afterBegin', div)
+  }
+</script>
+</div>
+<div class="pytorch-content-right" id="pytorch-content-right">
+<div class="pytorch-right-menu" id="pytorch-right-menu">
+<div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+<ul>
+<li><a class="reference internal" href="#">编写自定义数据集、数据加载器和变换</a><ul>
+<li><a class="reference internal" href="#dataset-class">数据集类别</a></li>
+<li><a class="reference internal" href="#transforms">转换</a><ul>
+<li><a class="reference internal" href="#compose-transforms">组合转换</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#iterating-through-the-dataset">遍历数据集</a></li>
+<li><a class="reference internal" href="#afterword-torchvision">后记：torchvision</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js" type="text/javascript"></script>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+<script src="../_static/katex.min.js"></script>
+<script src="../_static/auto-render.min.js"></script>
+<script src="../_static/katex_autorenderer.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script src="../_static/js/custom.js"></script>
+<script src="../_static/js/vendor/popper.min.js" type="text/javascript"></script>
+<script src="../_static/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+<script src="../_static/js/theme.js" type="text/javascript"></script>
+<script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+<script>
+
+// Helper function to make it easier to call dataLayer.push()
+function gtag(){window.dataLayer.push(arguments);}
+
+//add microsoft link
+
+if(window.location.href.indexOf("/beginner/basics/")!= -1)
+{
+  var url="https://docs.microsoft.com/learn/paths/pytorch-fundamentals/?wt.mc_id=aiml-7486-cxa";
+  switch(window.location.pathname.split("/").pop().replace('.html',''))
+  {
+    case"quickstart_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/9-quickstart?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"tensorqs_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/2-tensors?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"data_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/3-data?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"transforms_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/4-transforms?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"buildmodel_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/5-model?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"autogradqs_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/6-autograd?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"optimization_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/7-optimization?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"saveloadrun_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/8-inference?WT.mc_id=aiml-7486-cxa";
+    }
+
+    $(".pytorch-call-to-action-links").children().first().before("<a href="+url+' data-behavior="call-to-action-event" data-response="Run in Microsoft Learn" target="_blank"><div id="microsoft-learn-link" style="padding-bottom: 0.625rem;border-bottom: 1px solid #f3f4f7;padding-right: 2.5rem;display: -webkit-box;  display: -ms-flexbox; display: flex; -webkit-box-align: center;-ms-flex-align: center;align-items: center;"><img class="call-to-action-img" src="../../_static/images/microsoft-logo.svg"/><div class="call-to-action-desktop-view">Run in Microsoft Learn</div><div class="call-to-action-mobile-view">Learn</div></div></a>')
+  }
+
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '243028289693773');
+  fbq('track', 'PageView');
+
+  $("[data-behavior='call-to-action-event']").on('click', function(){
+    fbq('trackCustom', "Download", {
+      tutorialTitle: $('h1:first').text(),
+      downloadLink: this.href,
+      tutorialLink: window.location.href,
+      downloadTitle: $(this).attr("data-response")
+    });
+    gtag('event', 'click', {
+      'event_category': $(this).attr("data-response"),
+      'event_label': $("h1").first().text(),
+      'tutorial_link': window.location.href
+    });
+   });
+
+   $("[data-behavior='tutorial-rating']").on('click', function(){
+    fbq('trackCustom', "Tutorial Rating", {
+      tutorialLink: window.location.href,
+      tutorialTitle: $('h1:first').text(),
+      rating: $(this).attr("data-count")
+    });
+    gtag('event', 'click', {
+      'event_category': 'Tutorial Rating',
+      'event_label': $("h1").first().text(),
+      'value': $(this).attr("data-count"),
+      'customEvent:Rating': $(this).attr("data-count") // send to GA custom dimension customEvent:Rating.
+    });
+   });
+
+   if (location.pathname == "/") {
+     $(".rating-container").hide();
+     $(".hr-bottom").hide();
+   }
+
+
+</script>
+<noscript>
+<img height="1" src="https://www.facebook.com/tr?id=243028289693773&amp;ev=PageView
+  &amp;noscript=1" width="1">
+</noscript>
+<script type="text/javascript">
+  var collapsedSections = ['PyTorch Recipes', 'Learning PyTorch', 'Image and Video', 'Audio', 'Text', 'Backends', 'Reinforcement Learning', 'Deploying PyTorch Models in Production', 'Profiling PyTorch', 'Code Transforms with FX', 'Frontend APIs', 'Extending PyTorch', 'Model Optimization', 'Parallel and Distributed Training', 'Edge with ExecuTorch', 'Recommendation Systems', 'Multimodality'];
+</script>
+<font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  "> <img width="1" style="border-style:none;" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0" height="1" alt=""> 
+
+//临时添加调查链接</font></font></font><script>
+    var survey = '<div class="survey-banner"><p><i class="fas fa-poll" aria-hidden="true">&nbsp </i> Take the <a href="https://forms.gle/KZ4xGL65VRMYNbbG6">PyTorch Docs/Tutorials survey</a>.</p></div>'
+    if ($(".pytorch-call-to-action-links").length) {
+        $(".pytorch-call-to-action-links").before(survey);
+    } else {
+        $("#pytorch-article").prepend(survey);
+    }
+</script>
+<!-- Begin Footer -->
+<div class="container-fluid docs-tutorials-resources" id="docs-tutorials-resources">
+<div class="container">
+<div class="row">
+<div class="col-md-4 text-center">
+<h2>文档</h2>
+<p>获取 PyTorch 的全面开发者文档</p>
+<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
+</div>
+<div class="col-md-4 text-center">
+<h2>教程</h2>
+<p>获取初学者和高级开发者的深入教程</p>
+<a class="with-right-arrow" href="https://maskerprc.github.io/tutorials">查看教程</a>
+</div>
+<div class="col-md-4 text-center">
+<h2>资源</h2>
+<p>查找开发资源并解答您的问题</p>
+<a class="with-right-arrow" href="https://pytorch.org/resources">查看资源</a>
+</div>
+</div>
+</div>
+</div>
+<footer class="site-footer">
+<div class="container footer-container">
+<div class="footer-logo-wrapper">
+<a class="footer-logo" href="https://pytorch.org/"></a>
+</div>
+<div class="footer-links-wrapper">
+<div class="footer-links-col">
+<ul>
+<li class="list-title"><a href="https://pytorch.org/">PyTorch</a></li>
+<li><a href="https://pytorch.org/get-started">开始使用</a></li>
+<li><a href="https://pytorch.org/features">特征</a></li>
+<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://pytorch.org/blog/">博客</a></li>
+<li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title"><a href="https://pytorch.org/resources">资源</a></li>
+<li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
+<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
+<li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
+<li><a href="https://pytorch.org/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title">保持更新</li>
+<li><a href="https://www.facebook.com/pytorch" target="_blank">Facebook</a></li>
+<li><a href="https://twitter.com/pytorch" target="_blank">Twitter</a></li>
+<li><a href="https://www.youtube.com/pytorch" target="_blank">YouTube</a></li>
+<li><a href="https://www.linkedin.com/company/pytorch" target="_blank">领英</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title">PyTorch 播客</li>
+<li><a href="https://open.spotify.com/show/6UzHKeiy368jKfQMKKvJY5" target="_blank">Spotify</a></li>
+<li><a href="https://podcasts.apple.com/us/podcast/pytorch-developer-podcast/id1566080008" target="_blank">苹果</a></li>
+<li><a href="https://www.google.com/podcasts?feed=aHR0cHM6Ly9mZWVkcy5zaW1wbGVjYXN0LmNvbS9PQjVGa0lsOA%3D%3D" target="_blank">谷歌</a></li>
+<li><a href="https://music.amazon.com/podcasts/7a4e6f0e-26c2-49e9-a478-41bd244197d0/PyTorch-Developer-Podcast?" target="_blank">亚马逊</a></li>
+</ul>
+</div>
+</div>
+<div class="privacy-policy">
+<ul>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/terms/" target="_blank">条款</a></li>
+<li class="privacy-policy-links">|</li>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/privacy-policy/" target="_blank">隐私</a></li>
+</ul>
+</div>
+<div class="copyright">
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">© 版权所有 Linux 基金会。PyTorch 基金会是 Linux 基金会的一个项目。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列、LF Projects, LLC 的政策，请参阅
+对于网站使用条款、商标政策以及其他适用于 PyTorch 基金会的政策，请参阅
+<a href="https://www.linuxfoundation.org/policies/">www.linuxfoundation.org/policies/</a>。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列、LF Projects, LLC 的政策，请参阅 <a href="https://www.lfprojects.org/policies/">www.lfprojects.org/policies/</a>。</font></font></font></p>
+</div>
+</div>
+</footer>
+<div class="cookie-banner-wrapper">
+<div class="container">
+<p class="gdpr-notice">为了分析交通并优化您的体验，我们在本网站上提供 cookies。通过点击或导航，您同意允许我们使用 cookies。作为本站点的当前维护者，Facebook 的 Cookies 政策适用。了解更多信息，包括可用的控制选项：[cookies 政策](<a href="https://www.facebook.com/policies/cookies/">cookies 政策 </a>)。</p>
+<img class="close-button" src="../_static/images/pytorch-x.svg" width="16" height="16">
+</div>
+</div>
+<!-- End Footer -->
+<!-- Begin Mobile Menu -->
+<div class="mobile-main-menu">
+<div class="container-fluid">
+<div class="container">
+<div class="mobile-main-menu-header-container">
+<a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
+<a class="main-menu-close-button" data-behavior="close-mobile-menu" href="#"></a>
+</div>
+</div>
+</div>
+<div class="mobile-main-menu-links-container">
+<div class="main-menu">
+<ul>
+<li class="resources-mobile-menu-title">
+<a>学习</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/get-started">开始使用</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials">教程</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">学习基础知识</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">PyTorch 食谱</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/beginner/introyt.html">PyTorch 入门 - YouTube 系列</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>生态系统</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/ecosystem">工具</a>
+</li>
+<li>
+<a href="https://pytorch.org/#community-module">社区</a>
+</li>
+<li>
+<a href="https://discuss.pytorch.org/">论坛</a>
+</li>
+<li>
+<a href="https://pytorch.org/resources">开发者资源</a>
+</li>
+<li>
+<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>边缘</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/edge">关于 PyTorch Edge</a>
+</li>
+<li>
+<a href="https://pytorch.org/executorch-overview">ExecuTorch</a>
+</li>
+<li>
+<a href="https://pytorch.org/executorch/stable/index.html">ExecuTorch 文档</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>文档</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
+</li>
+<li>
+<a href="https://pytorch.org/pytorch-domains">PyTorch 领域</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>博客 &amp; 新闻</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/blog/">PyTorch 博客</a>
+</li>
+<li>
+<a href="https://pytorch.org/community-blog">社区博客</a>
+</li>
+<li>
+<a href="https://pytorch.org/videos">视频</a>
+</li>
+<li>
+<a href="https://pytorch.org/community-stories">社区故事</a>
+</li>
+<li>
+<a href="https://pytorch.org/events">活动</a>
+</li>
+<li>
+<a href="https://pytorch.org/newsletter">通讯</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>关于</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
+</li>
+<li>
+<a href="https://pytorch.org/governing-board">管理委员会</a>
+</li>
+<li>
+<a href="https://pytorch.org/credits">云信用计划</a>
+</li>
+<li>
+<a href="https://pytorch.org/tac">技术顾问委员会</a>
+</li>
+<li>
+<a href="https://pytorch.org/staff">员工</a>
+</li>
+<li>
+<a href="https://pytorch.org/contact-us">联系我们</a>
+</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<!-- End Mobile Menu -->
+<script src="../_static/js/vendor/anchor.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+      mainMenuDropdown.bind();
+      filterTags.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function(e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+
+</body></html>

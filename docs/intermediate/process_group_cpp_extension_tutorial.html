@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Customize Process Group Backends Using Cpp Extensions — PyTorch Tutorials 2.3.0+cpu documentation</title>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<link href="../_static/copybutton.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/katex-math.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-binder.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-dataframe.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-rendered-html.css" rel="stylesheet" type="text/css">
+<link href="../_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom2.css" rel="stylesheet" type="text/css">
+<link href="../genindex.html" rel="index" title="Index">
+<link href="../search.html" rel="search" title="Search">
+<link href="rpc_tutorial.html" rel="next" title="Getting Started with Distributed RPC Framework">
+<link href="pipelining_tutorial.html" rel="prev" title="Introduction to Distributed Pipeline Parallelism">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T8XT4PS');</script>
+<!-- End Google Tag Manager -->
+<script src="../_static/js/modernizr.min.js"></script>
+<!-- Preload the theme fonts -->
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-book.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" rel="preload" type="font/woff2">
+<!-- Preload the katex fonts -->
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" rel="preload" type="font/woff2">
+<link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" rel="stylesheet">
+</head><body class="pytorch-body"><div class="container-fluid header-holder tutorials-header" id="header-holder">
+<div class="container">
+<div class="header-container">
+<a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
+<div class="main-menu">
+<ul>
+<li class="main-menu-item">
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">学习</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/get-started">
+<span class="dropdown-title">开始使用</span>
+<p>在本地运行 PyTorch 或快速开始使用支持的云平台之一</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials">
+<span class="dropdown-title">教程</span>
+<p>PyTorch 教程中有什么新内容</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">
+<span class="dropdown-title">学习基础知识</span>
+<p>熟悉 PyTorch 的概念和模块</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">
+<span class="dropdown-title">PyTorch 食谱</span>
+<p>小巧便捷、即用型 PyTorch 代码示例</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/introyt.html">
+<span class="dropdown-title">PyTorch 入门 - YouTube 系列教程</span>
+<p>通过我们引人入胜的 YouTube 教程系列掌握 PyTorch 基础知识</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">生态系统</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
+<span class="dropdown-title">工具</span>
+<p>了解 PyTorch 生态系统中的工具和框架</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/#community-module">
+<span class="dropdown-title">社区</span>
+<p>加入 PyTorch 开发者社区，贡献、学习并解答你的问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://discuss.pytorch.org/" target="_blank">
+<span class="dropdown-title">论坛</span>
+<p>讨论 PyTorch 代码、问题、安装、研究的地方</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/resources">
+<span class="dropdown-title">开发者资源</span>
+<p>查找资源并解答问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
+<span class="dropdown-title">贡献者奖项 - 2024</span>
+<p>本届 PyTorch 大会揭晓获奖者</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">边缘</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/edge">
+<span class="dropdown-title">关于 PyTorch Edge</span>
+<p>为边缘设备构建创新且注重隐私的 AI 体验</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/executorch-overview">
+<span class="dropdown-title">ExecuTorch</span>
+<p>实现移动和边缘设备端到端推理能力的解决方案</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/executorch/stable/index.html">
+<span class="dropdown-title">ExecuTorch 文档</span>
+</a>
+</div>
+</div>
+</li>
+<li class="main-menu-item">
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">文档</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
+<span class="dropdown-title">PyTorch</span>
+<p>查阅文档以获取全面指导，了解如何使用 PyTorch</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/pytorch-domains">
+<span class="dropdown-title">PyTorch 领域</span>
+<p>阅读 PyTorch Domains 文档以了解更多关于特定领域库的信息</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">博客与新闻</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/blog/">
+<span class="dropdown-title">PyTorch 博客</span>
+<p>捕捉最新的技术新闻和事件</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
+<span class="dropdown-title">社区博客</span>
+<p>PyTorch 生态系统中的故事</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/videos">
+<span class="dropdown-title">视频</span>
+<p>了解最新的 PyTorch 教程、新内容等</p>
+</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+<span class="dropdown-title">社区故事</span>
+<p>学习如何我们的社区使用 PyTorch 解决真实、日常的机器学习问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/events">
+<span class="dropdown-title">活动</span>
+<p>查找活动、网络研讨会和播客</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
+<span class="dropdown-title">通讯</span>
+<p>保持最新更新</p>
+</a>
+</div>
+</div></li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">关于</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/foundation">
+<span class="dropdown-title">PyTorch 基金会</span>
+<p>了解更多关于 PyTorch 基金会</p>
+</a>
+管理委员会云信用计划技术顾问委员会员工联系我们
+</div>
+</div>
+</li>
+<li class="main-menu-item">
+<div class="no-dropdown">
+<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
+</div>
+</li>
+<li>
+<div class="main-menu-item">
+<a class="github-icon" href="https://github.com/pytorch/pytorch">
+</a>
+</div>
+</li>
+<!--- TODO: This block adds the search icon to the nav bar. We will enable it later. 
+          <li>
+            <div class="main-menu-item">
+             <a href="https://github.com/pytorch/pytorch" class="search-icon">
+             </a>
+            </div>
+          </li>
+          --->
+</ul>
+</div>
+<a class="main-menu-open-button" data-behavior="open-mobile-menu" href="#"></a>
+</div>
+</div>
+</div>
+
+<div class="table-of-contents-link-wrapper">
+<span>目录</span>
+<a class="toggle-table-of-contents" data-behavior="toggle-table-of-contents" href="#"></a>
+</div>
+<nav class="pytorch-left-menu" data-toggle="wy-nav-shift" id="pytorch-left-menu">
+<div class="pytorch-side-scroll">
+<div aria-label="main navigation" class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation">
+<div class="pytorch-left-menu-search">
+<div class="version">
+        2.3.0+cpu
+      </div>
+<!-- Search box -->
+<div id="searchBox">
+<div class="searchbox" id="googleSearchBox">
+<script async="" src="https://cse.google.com/cse.js?cx=e65585f8c3ea1440e"></script>
+<div class="gcse-search"></div>
+</div>
+<div id="sphinxSearchBox" style="display: none;">
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input name="q" placeholder="Search Docs" type="text">
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default">
+</form>
+</div>
+</div>
+</div>
+<form id="searchForm">
+<label style="margin-bottom: 1rem">
+<input checked="" name="searchType" type="radio" value="google">谷歌搜索</label>
+<label style="margin-bottom: 1rem">
+<input name="searchType" type="radio" value="sphinx">经典搜索</label>
+</form>
+<script>
+     document.addEventListener('DOMContentLoaded', function() {
+      const searchForm = document.getElementById('searchForm');
+      const googleSearchBox = document.getElementById('googleSearchBox');
+      const sphinxSearchBox = document.getElementById('sphinxSearchBox');
+      // Function to toggle search box visibility
+      function toggleSearchBox(searchType) {
+        googleSearchBox.style.display = searchType === 'google' ? 'block' : 'none';
+        sphinxSearchBox.style.display = searchType === 'sphinx' ? 'block' : 'none';
+      }
+      // Determine the default search type
+      let defaultSearchType = 'google';
+      if (window.location.href.startsWith('https://docs-preview.pytorch.org/')) {
+        defaultSearchType = 'sphinx';
+      } else {
+        defaultSearchType = localStorage.getItem('searchType') || 'google';
+      }
+      // Set the default search type
+      document.querySelector(`input[name="searchType"][value="${defaultSearchType}"]`).checked = true;
+      toggleSearchBox(defaultSearchType);
+      // Event listener for changes in search type
+      searchForm.addEventListener('change', function(event) {
+        const selectedSearchType = event.target.value;
+        localStorage.setItem('searchType', selectedSearchType);
+        toggleSearchBox(selectedSearchType);
+      });
+      // Set placeholder text for Google search box
+      window.onload = function() {
+        var placeholderText = "Search Docs";
+        var googleSearchboxText = document.querySelector("#gsc-i-id1");
+        if (googleSearchboxText) {
+          googleSearchboxText.placeholder = placeholderText;
+          googleSearchboxText.style.fontFamily = 'FreightSans';
+          googleSearchboxText.style.fontSize = "1.2rem";
+          googleSearchboxText.style.color = '#262626';
+        }
+      };
+    });
+  </script>
+</div>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 食谱</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/recipes_index.html">查看所有菜谱</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prototype/prototype_index.html">查看所有原型菜谱</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/basics/intro.html">学习基础知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/quickstart_tutorial.html">快速入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/tensorqs_tutorial.html">张量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/data_tutorial.html">数据集和数据加载器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/transforms_tutorial.html">转换</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/buildmodel_tutorial.html">构建神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/autogradqs_tutorial.html">自动微分与 <code class="docutils literal "><span class="pre">torch.autograd</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/optimization_tutorial.html">优化模型参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/saveloadrun_tutorial.html">保存和加载模型</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/introyt/introyt_index.html">PyTorch 入门 - YouTube 系列</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/introyt1_tutorial.html">PyTorch 入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensors_deeper_tutorial.html">PyTorch 张量入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/autogradyt_tutorial.html">Autograd 基础</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/modelsyt_tutorial.html">使用 PyTorch 构建模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensorboardyt_tutorial.html">PyTorch TensorBoard 支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/trainingyt.html">使用 PyTorch 进行训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/captumyt.html">使用 Captum 理解模型</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">学习 PyTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/deep_learning_60min_blitz.html">深度学习与 PyTorch：60 分钟速成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/pytorch_with_examples.html">通过示例学习 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/nn_tutorial.html"><cite>torch.nn</cite><em> 究竟</em>是什么？</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlp_from_scratch_index.html">从零开始学习自然语言处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tensorboard_tutorial.html">使用 TensorBoard 可视化模型、数据和训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pinmem_nonblock.html">PyTorch 中正确使用<code class="docutils literal "><span class="pre">非阻塞</span></code>和<code class="docutils literal "><span class="pre">固定内存</span></code>的指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">图像和视频</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="torchvision_tutorial.html">TorchVision 目标检测微调教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/transfer_learning_tutorial.html">计算机视觉迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/fgsm_tutorial.html">对抗样本生成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dcgan_faces_tutorial.html">DCGAN 教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial_transformer_tutorial.html">空间变换网络教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">优化视觉 Transformer 模型以部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiatoolbox_tutorial.html">使用 PyTorch 和 TIAToolbox 进行全切片图像分类</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">音频</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_io_tutorial.html">音频输入/输出</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_resampling_tutorial.html">音频重采样</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_data_augmentation_tutorial.html">音频数据增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_extractions_tutorial.html">音频特征提取</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_augmentation_tutorial.html">音频特征增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_datasets_tutorial.html">音频数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="speech_recognition_pipeline_tutorial.html">使用 Wav2Vec2 的语音识别</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text_to_speech_with_torchaudio.html">使用 Tacotron2 的文本到语音</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forced_alignment_with_torchaudio_tutorial.html">使用 Wav2Vec2 的强制对齐</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">后端</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">强化学习</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_q_learning.html">强化学习（DQN）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_ppo.html">使用 TorchRL 的强化学习（PPO）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mario_rl_tutorial.html">训练一个玩马里奥的强化学习智能体</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/pendulum.html">摆锤：使用 TorchRL 编写你的环境和转换</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">部署 PyTorch 模型到生产环境</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flask_rest_api_tutorial.html">使用 Flask 通过 REST API 部署 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/Intro_to_TorchScript_tutorial.html">TorchScript 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_export.html">在 C++中加载 TorchScript 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/super_resolution_with_onnxruntime.html">(可选) 将 PyTorch 模型导出为 ONNX 并使用 ONNX Runtime 运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="realtime_rpi.html">Raspberry Pi 4 上的实时推理（30 fps！）</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 性能分析</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">PyTorch 模块性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_intro_tutorial.html">全景式跟踪分析简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_trace_diff_tutorial.html">使用全景式跟踪分析进行跟踪差异</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">使用 FX 进行代码转换</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fx_conv_bn_fuser.html">(beta) 在 FX 中构建卷积/批量归一化融合器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fx_profiling_tutorial.html">(beta) 使用 FX 构建简单的 CPU 性能分析器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">前端 API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="memory_format_tutorial.html">(beta) PyTorch 中的通道最后内存格式</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forward_ad_usage.html">前向模式自动微分（Beta）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jacobians_hessians.html">雅可比矩阵、海森矩阵、HVP、vHP 以及更多：函数变换的组成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ensembling.html">模型集成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="per_sample_grads.html">每样本梯度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_frontend.html">使用 PyTorch C++前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch-script-parallelism.html">动态并行化在 TorchScript 中</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_autograd.html">C++前端中的自动微分</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">扩展 PyTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/custom_ops_landing_page.html">PyTorch 自定义算子</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/python_custom_ops.html">自定义 Python 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_custom_ops.html">自定义 C++和 CUDA 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_function_double_backward_tutorial.html">使用自定义函数的双向回传</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_function_conv_bn_tutorial.html">使用自定义函数融合卷积和批量归一化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_extension.html">自定义 C++ 和 CUDA 扩展</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_ops.html">使用自定义 C++ 操作符扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_classes.html">使用自定义 C++ 类扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dispatcher.html">在 C++ 中注册分派操作符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/extend_dispatcher.html">C++中扩展后端调度器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/privateuseone.html">通过 PrivateUse1 促进新后端集成</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">模型优化</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">PyTorch 模块性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tensorboard_profiler_tutorial.html">PyTorch 分析器与 TensorBoard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hyperparameter_tuning_tutorial.html">使用 Ray Tune 进行超参数调整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">优化视觉 Transformer 模型以部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametrizations.html">参数化教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruning_tutorial.html">剪枝教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dynamic_quantization_tutorial.html">(beta) 在 LSTM 词语言模型上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_quantization_bert_tutorial.html">(beta) 在 BERT 上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantized_transfer_learning_tutorial.html">(beta) 计算机视觉的量化迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/static_quantization_tutorial.html">(beta) PyTorch 中 Eager 模式下的静态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex.html">从原理出发掌握 PyTorch Intel CPU 性能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex_2.html">从原理出发掌握 PyTorch Intel CPU 性能（第二部分）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nvfuser_intro_tutorial.html">入门指南 - 使用 nvFuser 加速您的脚本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ax_multiobjective_nas_tutorial.html">基于 Ax 的多目标 NAS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torch_compile_tutorial.html"><code class="docutils literal "><span class="pre">torch.compile</span></code> 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compiled_autograd_tutorial.html">编译 Autograd：捕获更大的 <code class="docutils literal "><span class="pre">torch.compile</span></code> 反向图</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inductor_debug_cpu.html">电感 CPU 后端调试和性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scaled_dot_product_attention_tutorial.html">(Beta) 使用缩放点积注意力（SDPA）实现高性能 Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/knowledge_distillation_tutorial.html">知识蒸馏教程</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">并行和分布式训练</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../distributed/home.html">分布式和并行训练教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dist_overview.html">PyTorch 分布式概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/ddp_series_intro.html">PyTorch 分布式数据并行 - 视频教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_parallel_tutorial.html">单机模型并行最佳实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ddp_tutorial.html">PyTorch 分布式数据并行入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dist_tuto.html">使用 PyTorch 编写分布式应用程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FSDP_tutorial.html">开始使用完全分片数据并行（FSDP）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FSDP_advanced_tutorial.html">高级模型训练与完全分片数据并行（FSDP）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TCPStore_libuv_backend.html">Libuv TCPStore 后端简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TP_tutorial.html">使用 Tensor Parallel（TP）进行大规模 Transformer 模型训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelining_tutorial.html">分布式流水线并行简介</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">使用 C++扩展自定义进程组后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_tutorial.html">分布式 RPC 框架入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_param_server_tutorial.html">使用分布式 RPC 框架实现参数服务器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_async_execution.html">使用异步执行实现批处理 RPC 处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/rpc_ddp_tutorial.html">结合分布式数据并行与分布式 RPC 框架</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/generic_join.html">使用 Join 上下文管理器进行不均匀输入的分布式训练</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Edge 与 ExecuTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html">导出至 ExecuTorch 教程</a></li>
+<li class="toctree-l1"><a class="reference external" href=" https://pytorch.org/executorch/stable/running-a-model-cpp-tutorial.html">在 C++中运行 ExecuTorch 模型教程</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/sdk-integration-tutorial.html">使用 ExecuTorch SDK 对模型进行性能分析</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-ios.html">构建 ExecuTorch iOS 演示应用</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-android.html">构建 ExecuTorch Android 演示应用</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/examples-end-to-end-to-lower-model-to-delegate.html">将模型作为代理降低</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">推荐系统</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="torchrec_intro_tutorial.html">火炬 Rec 入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/sharding.html">探索 TorchRec 分片</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">多模态</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/flava_finetuning_tutorial.html">TorchMultimodal 教程：微调 FLAVA</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="pytorch-container">
+<div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+<div class="pytorch-breadcrumbs-wrapper">
+<div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="pytorch-breadcrumbs">
+<li>
+<font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">教程
+
+         &gt;</font></font></font></li>
+<li>使用 C++扩展自定义进程组后端</li>
+<li class="pytorch-breadcrumbs-aside">
+<a href="../_sources/intermediate/process_group_cpp_extension_tutorial.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg" width="16" height="16"></a>
+</li>
+</ul>
+</div>
+</div>
+<div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">快捷键</div>
+</div>
+<section class="pytorch-content-wrap" data-toggle="wy-nav-shift" id="pytorch-content-wrap">
+<div class="pytorch-content-left">
+<div class="pytorch-call-to-action-links">
+<div id="tutorial-type">intermediate/中间/进程组/扩展/C++扩展教程</div>
+<div id="google-colab-link">
+<img class="call-to-action-img" src="../_static/images/pytorch-colab.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 Google Colab 中运行</div>
+<div class="call-to-action-mobile-view">Colab</div>
+</div>
+<div id="download-notebook-link">
+<img class="call-to-action-notebook-img" src="../_static/images/pytorch-download.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">下载笔记本</div>
+<div class="call-to-action-mobile-view">笔记本</div>
+</div>
+<div id="github-view-link">
+<img class="call-to-action-img" src="../_static/images/pytorch-github.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 GitHub 上查看</div>
+<div class="call-to-action-mobile-view">GitHub</div>
+</div>
+</div>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-T8XT4PS" style="display:none;visibility:hidden" width="0"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="rst-content">
+<div class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<article class="pytorch-article" id="pytorch-article" itemprop="articleBody">
+<div class="section" id="customize-process-group-backends-using-cpp-extensions">
+<h1>使用 C++扩展自定义进程组后端 <a class="headerlink" href="#customize-process-group-backends-using-cpp-extensions" title="Permalink to this heading">¶</a></font></font></font></h1><p class="date-info-last-verified" style="color: #6c6c6d; font-size: small;"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">创建时间：2025年4月1日 | 最后更新时间：2025年4月1日 | 最后验证时间：2024年11月5日</p>
+<p><strong>作者 </strong>: <a class="reference external" href="https://github.com/H-Huang"> 黄浩然 </a>, <a class="reference external" href="https://github.com/ftian1"> 田峰 </a>, <a class="reference external" href="https://mrshenli.github.io/"> 李沈 </a>, <a class="reference external" href="https://minsii.github.io/"> 思敏</a></p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><a class="reference internal" href="../_images/pencil-16.png"> <img height="16" width="16" style="width: 16px; height: 16px;" src="../_images/pencil-16.png" alt="edit"> </a> 在 <a class="reference external" href="https://github.com/pytorch/tutorials/blob/main/intermediate_source/process_group_cpp_extension_tutorial.rst">github</a> 中查看和编辑此教程。</p>
+</div>
+<p>前提条件：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="../beginner/dist_overview.html">PyTorch 分布式概述</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/docs/stable/distributed.html">PyTorch 集体通信包</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/docs/stable/cpp_extension.html">PyTorch C++ 扩展</a></p></li>
+<li><p><a class="reference external" href="https://maskerprc.github.io/tutorials/intermediate/dist_tuto.html">使用 PyTorch 编写分布式应用程序</a></p></li>
+</ul>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">本教程演示了如何实现自定义 <code class="docutils literal "><span class="pre"> 后端 </span></code> 并将其插入
+<a class="reference external" href="https://pytorch.org/docs/stable/distributed.html">PyTorch 分布式包 </a> 使用
+<a class="reference external" href="https://pytorch.org/docs/stable/cpp_extension.html">cpp 扩展 </a>。当您需要为您的硬件定制软件堆栈或希望尝试新的集体通信算法时，这很有帮助。</font></font></font></p>
+<div class="section" id="basics">
+<h2>基础知识 <a class="headerlink" href="#basics" title="Permalink to this heading">¶</a></h2>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">PyTorch 集体通信功能强大，被广泛采用
+的训练特性，包括
+<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.parallel.DistributedDataParallel.html">分布式数据并行</a>和
+<a class="reference external" href="https://pytorch.org/docs/stable/distributed.optim.html#torch.distributed.optim.ZeroRedundancyOptimizer">零冗余优化器 </a>.
+为了使相同的集体通信 API 能够与
+不同的通信后端一起工作，分布式包将集体
+通信操作抽象为一个
+<a class="reference external" href="https://github.com/pytorch/pytorch/blob/main/torch/csrc/distributed/c10d/Backend.hpp">后端</a>
+类。不同的后端可以
+然后作为 <code class="docutils literal "><span class="pre"> 后端 </span></code> 的子类实现，使用首选
+第三方库。PyTorch 分布式包含三个默认后端，
+<code class="docutils literal "><span class="pre">ProcessGroupNCCL</span></code>、<code class="docutils literal "><span class="pre">ProcessGroupGloo</span></code> 和 <code class="docutils literal "><span class="pre">ProcessGroupMPI</span></code>。然而，除了这三个后端之外，还有其他通信库（例如，<a class="reference external" href="https://github.com/openucx/ucc">UCC</a>），
+<a class="reference external" href="https://github.com/oneapi-src/oneCCL">OneCCL</a>），不同类型的硬件（例如，<a class="reference external" href="https://cloud.google.com/tpu">TPU</a>），
+<a class="reference external" href="https://aws.amazon.com/machine-learning/trainium/">Trainum</a>），以及新兴的
+通信算法（例如，
+<a class="reference external" href="https://www.amazon.science/publications/herring-rethinking-the-parameter-server-at-scale-for-the-cloud">鲱鱼 </a>,
+<a class="reference external" href="https://cloud.google.com/blog/topics/developers-practitioners/optimize-training-performance-reduction-server-vertex-ai">缩减服务器 </a>）。因此，分布式包公开扩展 API，允许自定义集体通信后端。</font></font></font></p>
+<p>以下 4 个步骤展示了如何实现一个虚拟的 <code class="docutils literal "><span class="pre"> 后端 </span></code> 后端并在 Python 应用程序代码中使用它。请注意，本教程侧重于演示扩展 API，而不是开发一个功能性的通信后端。因此，这个 <code class="docutils literal "><span class="pre"> 虚拟 </span></code> 后端仅覆盖了 API 的子集（<code class="docutils literal "><span class="pre">all_reduce</span></code> 和 <code class="docutils literal "><span class="pre">all_gather</span></code>），并且只是将张量的值设置为 0。</p>
+</div>
+<div class="section" id="step-1-implement-a-subclass-of-backend">
+<h2>步骤 1：实现 <code class="docutils literal "><span class="pre"> 后端 </span></code> 的子类 <a class="headerlink" href="#step-1-implement-a-subclass-of-backend" title="Permalink to this heading">¶</a></h2>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">这一步是实现一个覆盖目标集体通信 API 并运行自定义通信算法的后端子类的第一步。扩展还需要实现一个作为通信结果未来的工作子类，它允许在应用程序代码中异步执行。如果扩展使用第三方库，它可以从 <code class="docutils literal "><span class="pre">BackendDummy</span></code> 中包含头文件并调用库 API。
+子类。下面两个代码片段展示了 <code class="docutils literal "><span class="pre">dummy.h</span></code> 的实现。
+<code class="docutils literal "><span class="pre">dummy.cpp</span></code>。参见 <a class="reference external" href="https://github.com/H-Huang/torch_collective_extension">dummy 集体 </a>。
+代码库用于完整实现。</font></font></font></p>
+<div class="highlight-cpp "><div class="highlight"><pre><span></span><span class="c1">// file name: dummy.hpp</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;torch/python.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;torch/csrc/distributed/c10d/Backend.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;torch/csrc/distributed/c10d/Work.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;torch/csrc/distributed/c10d/Store.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;torch/csrc/distributed/c10d/Types.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;torch/csrc/distributed/c10d/Utils.hpp&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;pybind11/chrono.h&gt;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">c10d</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BackendDummy</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Backend</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">BackendDummy</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">c10</span><span class="o">::</span><span class="n">intrusive_ptr</span><span class="o">&lt;</span><span class="n">Work</span><span class="o">&gt;</span><span class="w"> </span><span class="n">allgather</span><span class="p">(</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">at</span><span class="o">::</span><span class="n">Tensor</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">outputTensors</span><span class="p">,</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">at</span><span class="o">::</span><span class="n">Tensor</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">inputTensors</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">AllgatherOptions</span><span class="o">&amp;</span><span class="w"> </span><span class="n">opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AllgatherOptions</span><span class="p">())</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">c10</span><span class="o">::</span><span class="n">intrusive_ptr</span><span class="o">&lt;</span><span class="n">Work</span><span class="o">&gt;</span><span class="w"> </span><span class="n">allreduce</span><span class="p">(</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">at</span><span class="o">::</span><span class="n">Tensor</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">tensors</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">AllreduceOptions</span><span class="o">&amp;</span><span class="w"> </span><span class="n">opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AllreduceOptions</span><span class="p">())</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// The collective communication APIs without a custom implementation</span>
+<span class="w">    </span><span class="c1">// will error out if invoked by application code.</span>
+<span class="p">};</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">WorkDummy</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Work</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">WorkDummy</span><span class="p">(</span>
+<span class="w">      </span><span class="n">OpType</span><span class="w"> </span><span class="n">opType</span><span class="p">,</span>
+<span class="w">      </span><span class="n">c10</span><span class="o">::</span><span class="n">intrusive_ptr</span><span class="o">&lt;</span><span class="n">c10</span><span class="o">::</span><span class="n">ivalue</span><span class="o">::</span><span class="n">Future</span><span class="o">&gt;</span><span class="w"> </span><span class="n">future</span><span class="p">)</span><span class="w"> </span><span class="c1">// future of the output</span>
+<span class="w">      </span><span class="o">:</span><span class="w"> </span><span class="n">Work</span><span class="p">(</span>
+<span class="w">          </span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="c1">// rank, only used by recvAnySource, irrelevant in this demo</span>
+<span class="w">          </span><span class="n">opType</span><span class="p">),</span>
+<span class="w">      </span><span class="n">future_</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">future</span><span class="p">))</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isCompleted</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">isSuccess</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="w"> </span><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kUnsetTimeout</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="n">c10</span><span class="o">::</span><span class="n">intrusive_ptr</span><span class="o">&lt;</span><span class="n">c10</span><span class="o">::</span><span class="n">ivalue</span><span class="o">::</span><span class="n">Future</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getFuture</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">c10</span><span class="o">::</span><span class="n">intrusive_ptr</span><span class="o">&lt;</span><span class="n">c10</span><span class="o">::</span><span class="n">ivalue</span><span class="o">::</span><span class="n">Future</span><span class="o">&gt;</span><span class="w"> </span><span class="n">future_</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace c10d</span>
+</pre></div>
+</div>
+<div class="highlight-cpp "><div class="highlight"><pre><span></span><span class="c1">// file name: dummy.cpp</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"dummy.hpp"</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">c10d</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// This is a dummy allgather that sets all output tensors to zero</span>
+<span class="c1">// Modify the implementation to conduct real communication asynchronously</span>
+<span class="n">c10</span><span class="o">::</span><span class="n">intrusive_ptr</span><span class="o">&lt;</span><span class="n">Work</span><span class="o">&gt;</span><span class="w"> </span><span class="n">BackendDummy</span><span class="o">::</span><span class="n">allgather</span><span class="p">(</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">at</span><span class="o">::</span><span class="n">Tensor</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">outputTensors</span><span class="p">,</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">at</span><span class="o">::</span><span class="n">Tensor</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">inputTensors</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">AllgatherOptions</span><span class="o">&amp;</span><span class="w"> </span><span class="cm">/* unused */</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">outputTensorVec</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">outputTensors</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">outputTensor</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">outputTensorVec</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">outputTensor</span><span class="p">.</span><span class="n">zero_</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">future</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c10</span><span class="o">::</span><span class="n">make_intrusive</span><span class="o">&lt;</span><span class="n">c10</span><span class="o">::</span><span class="n">ivalue</span><span class="o">::</span><span class="n">Future</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">c10</span><span class="o">::</span><span class="n">ListType</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">c10</span><span class="o">::</span><span class="n">ListType</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">c10</span><span class="o">::</span><span class="n">TensorType</span><span class="o">::</span><span class="n">get</span><span class="p">())));</span>
+<span class="w">    </span><span class="n">future</span><span class="o">-&gt;</span><span class="n">markCompleted</span><span class="p">(</span><span class="n">c10</span><span class="o">::</span><span class="n">IValue</span><span class="p">(</span><span class="n">outputTensors</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">c10</span><span class="o">::</span><span class="n">make_intrusive</span><span class="o">&lt;</span><span class="n">WorkDummy</span><span class="o">&gt;</span><span class="p">(</span><span class="n">OpType</span><span class="o">::</span><span class="n">ALLGATHER</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">future</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="c1">// This is a dummy allreduce that sets all output tensors to zero</span>
+<span class="c1">// Modify the implementation to conduct real communication asynchronously</span>
+<span class="n">c10</span><span class="o">::</span><span class="n">intrusive_ptr</span><span class="o">&lt;</span><span class="n">Work</span><span class="o">&gt;</span><span class="w"> </span><span class="n">BackendDummy</span><span class="o">::</span><span class="n">allreduce</span><span class="p">(</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">at</span><span class="o">::</span><span class="n">Tensor</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">tensors</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">AllreduceOptions</span><span class="o">&amp;</span><span class="w"> </span><span class="n">opts</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">tensor</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">tensors</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">tensor</span><span class="p">.</span><span class="n">zero_</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">future</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c10</span><span class="o">::</span><span class="n">make_intrusive</span><span class="o">&lt;</span><span class="n">c10</span><span class="o">::</span><span class="n">ivalue</span><span class="o">::</span><span class="n">Future</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">c10</span><span class="o">::</span><span class="n">ListType</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">c10</span><span class="o">::</span><span class="n">TensorType</span><span class="o">::</span><span class="n">get</span><span class="p">()));</span>
+<span class="w">    </span><span class="n">future</span><span class="o">-&gt;</span><span class="n">markCompleted</span><span class="p">(</span><span class="n">c10</span><span class="o">::</span><span class="n">IValue</span><span class="p">(</span><span class="n">tensors</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">c10</span><span class="o">::</span><span class="n">make_intrusive</span><span class="o">&lt;</span><span class="n">WorkDummy</span><span class="o">&gt;</span><span class="p">(</span><span class="n">OpType</span><span class="o">::</span><span class="n">ALLGATHER</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">future</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace c10d</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-2-expose-the-extension-python-apis">
+<h2>步骤 2：公开扩展的 Python API<a class="headerlink" href="#step-2-expose-the-extension-python-apis" title="Permalink to this heading">¶</a></h2>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">后端构造函数被调用
+<a class="reference external" href="https://github.com/pytorch/pytorch/blob/v1.9.0/torch/distributed/distributed_c10d.py#L643-L650">从 Python 端 </a>，因此扩展也需要公开构造函数 API 给 Python。这可以通过添加以下方法来实现。在这个例子中，<code class="docutils literal "><span class="pre">store</span></code> 和
+<code class="docutils literal "><span class="pre">timeout</span></code> 在 <code class="docutils literal "><span class="pre">BackendDummy</span></code> 实例化方法中被忽略，因为在这个模拟实现中这些没有被使用。然而，现实世界的扩展应该考虑使用 <code class="docutils literal "><span class="pre">store</span></code> 来执行 rendezvous 并支持使用
+<code class="docutils literal "><span class="pre">超时 </span></code> 参数。</font></font></font></p>
+<div class="highlight-cpp "><div class="highlight"><pre><span></span><span class="c1">// file name: dummy.hpp</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BackendDummy</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Backend</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="o">&lt;</span><span class="n">Step</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">code</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="p">...</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">c10</span><span class="o">::</span><span class="n">intrusive_ptr</span><span class="o">&lt;</span><span class="n">Backend</span><span class="o">&gt;</span><span class="w"> </span><span class="n">createBackendDummy</span><span class="p">(</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">c10</span><span class="o">::</span><span class="n">intrusive_ptr</span><span class="o">&lt;::</span><span class="n">c10d</span><span class="o">::</span><span class="n">Store</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">store</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">duration</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">timeout</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">BackendDummyConstructor</span><span class="p">()</span><span class="w"> </span><span class="n">__attribute__</span><span class="p">((</span><span class="n">constructor</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">py</span><span class="o">::</span><span class="n">object</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">py</span><span class="o">::</span><span class="k">module</span><span class="o">::</span><span class="k">import</span><span class="p">(</span><span class="s">"torch.distributed"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">py</span><span class="o">::</span><span class="n">object</span><span class="w"> </span><span class="n">register_backend</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="k">module</span><span class="p">.</span><span class="n">attr</span><span class="p">(</span><span class="s">"Backend"</span><span class="p">).</span><span class="n">attr</span><span class="p">(</span><span class="s">"register_backend"</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">// torch.distributed.Backend.register_backend will add `dummy` as a</span>
+<span class="w">        </span><span class="c1">// new valid backend.</span>
+<span class="w">        </span><span class="n">register_backend</span><span class="p">(</span><span class="s">"dummy"</span><span class="p">,</span><span class="w"> </span><span class="n">py</span><span class="o">::</span><span class="n">cpp_function</span><span class="p">(</span><span class="n">createBackendDummy</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-cpp "><div class="highlight"><pre><span></span><span class="c1">// file name: dummy.cpp</span>
+<span class="n">c10</span><span class="o">::</span><span class="n">intrusive_ptr</span><span class="o">&lt;</span><span class="n">Backend</span><span class="o">&gt;</span><span class="w"> </span><span class="n">BackendDummy</span><span class="o">::</span><span class="n">createBackendDummy</span><span class="p">(</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">c10</span><span class="o">::</span><span class="n">intrusive_ptr</span><span class="o">&lt;::</span><span class="n">c10d</span><span class="o">::</span><span class="n">Store</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="cm">/* unused */</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">size</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">duration</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="cm">/* unused */</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">c10</span><span class="o">::</span><span class="n">make_intrusive</span><span class="o">&lt;</span><span class="n">BackendDummy</span><span class="o">&gt;</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">PYBIND11_MODULE</span><span class="p">(</span><span class="n">TORCH_EXTENSION_NAME</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"createBackendDummy"</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">BackendDummy</span><span class="o">::</span><span class="n">createBackendDummy</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-3-build-the-custom-extension">
+<h2>步骤 3：构建自定义扩展 <a class="headerlink" href="#step-3-build-the-custom-extension" title="Permalink to this heading">¶</a></h2>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">现在，扩展的源代码文件已经准备好了。然后我们可以使用
+<a class="reference external" href="https://pytorch.org/docs/stable/cpp_extension.html">C++ 扩展</a>
+建立它。为此，创建一个 <code class="docutils literal "><span class="pre">setup.py</span></code> 文件来准备路径和命令。然后调用 <code class="docutils literal "><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">develop</span></code> 来安装扩展。</font></font></font></p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">如果扩展依赖于第三方库，您也可以指定
+<code class="docutils literal "><span class="pre">libraries_dirs</span></code> 和 <code class="docutils literal "><span class="pre">libraries</span></code> 到 cpp 扩展 API 中。请参阅
+<a class="reference external" href="https://github.com/openucx/torch-ucc">torch ucc</a>
+作为真实世界案例的项目。</font></font></font></p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="c1"># file name: setup.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">setuptools</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">cpp_extension</span>
+
+<span class="n">sources</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"src/dummy.cpp"</span><span class="p">]</span>
+<span class="n">include_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span><span class="si">}</span><span class="s2">/include/"</span><span class="p">]</span>
+
+<span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">cpp_extension</span><span class="o">.</span><span class="n">CUDAExtension</span><span class="p">(</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">"dummy_collectives"</span><span class="p">,</span>
+        <span class="n">sources</span> <span class="o">=</span> <span class="n">sources</span><span class="p">,</span>
+        <span class="n">include_dirs</span> <span class="o">=</span> <span class="n">include_dirs</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">cpp_extension</span><span class="o">.</span><span class="n">CppExtension</span><span class="p">(</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">"dummy_collectives"</span><span class="p">,</span>
+        <span class="n">sources</span> <span class="o">=</span> <span class="n">sources</span><span class="p">,</span>
+        <span class="n">include_dirs</span> <span class="o">=</span> <span class="n">include_dirs</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"Dummy-Collectives"</span><span class="p">,</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="s2">"0.0.1"</span><span class="p">,</span>
+    <span class="n">ext_modules</span> <span class="o">=</span> <span class="p">[</span><span class="n">module</span><span class="p">],</span>
+    <span class="n">cmdclass</span><span class="o">=</span><span class="p">{</span><span class="s1">'build_ext'</span><span class="p">:</span> <span class="n">cpp_extension</span><span class="o">.</span><span class="n">BuildExtension</span><span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-4-use-the-extension-in-application">
+<h2>步骤 4：在应用中使用扩展 <a class="headerlink" href="#step-4-use-the-extension-in-application" title="Permalink to this heading">¶</a></h2>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">安装后，您可以在调用时方便地使用 <code class="docutils literal "><span class="pre"> 模拟 </span></code> 后端
+<a class="reference external" href="https://pytorch.org/docs/stable/distributed.html#torch.distributed.init_process_group">初始化进程组</a>
+仿佛是一个内置的后端。</font></font></font></p>
+<p>我们可以通过改变 <code class="docutils literal "><span class="pre"> 后端 </span></code> 参数来指定基于后端的调度，通过改变 <code class="docutils literal "><span class="pre">init_process_group</span></code> 的 <code class="docutils literal "><span class="pre"> 后端 </span></code> 参数。我们可以将带有 CPU 张量的集体操作调度到 <code class="docutils literal "><span class="pre">gloo</span></code> 后端，将带有 CUDA 张量的集体操作调度到 <code class="docutils literal "><span class="pre">dummy</span></code> 后端，通过指定 <code id="10"><span id="11">cpu:gloo,cuda:dummy</span></code> 作为后端参数。</p>
+<p>要将所有张量发送到 <code class="docutils literal "><span class="pre">dummy</span></code> 后端，我们只需指定 <code class="docutils literal "><span class="pre">dummy</span></code> 作为后端参数。</p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="c1"># importing dummy_collectives makes torch.distributed recognize `dummy`</span>
+<span class="c1"># as a valid backend.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dummy_collectives</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.distributed</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dist</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'MASTER_ADDR'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'localhost'</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'MASTER_PORT'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'29500'</span>
+
+<span class="c1"># Alternatively:</span>
+<span class="c1"># dist.init_process_group("dummy", rank=0, world_size=1)</span>
+<span class="n">dist</span><span class="o">.</span><span class="n">init_process_group</span><span class="p">(</span><span class="s2">"cpu:gloo,cuda:dummy"</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">world_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># this goes through gloo</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">dist</span><span class="o">.</span><span class="n">all_reduce</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"cpu allreduce: </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="c1"># this goes through dummy</span>
+<span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+    <span class="n">dist</span><span class="o">.</span><span class="n">all_reduce</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"cuda allreduce: </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">dist</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"got RuntimeError when calling broadcast"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</article>
+</div>
+<footer>
+<div aria-label="footer navigation" class="rst-footer-buttons" role="navigation">
+<a accesskey="n" class="btn btn-neutral float-right" href="rpc_tutorial.html" rel="next" title="Getting Started with Distributed RPC Framework">下一个 <img height="16" width="16" src="../_static/images/chevron-right-orange.svg" class="next-page"> </a><a accesskey="p" class="btn btn-neutral" href="pipelining_tutorial.html" rel="prev" title="Introduction to Distributed Pipeline Parallelism"> <img height="16" width="16" src="../_static/images/chevron-right-orange.svg" class="previous-page"> 上一个</a>
+</div>
+<hr class="rating-hr hr-top">
+<div class="rating-container">
+<div class="rating-prompt">评分这个教程</div>
+<div class="stars-outer">
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="1" title="1 Star"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="2" title="2 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="3" title="3 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="4" title="4 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="5" title="5 Stars"></i>
+</div>
+</div>
+<hr class="rating-hr hr-bottom">
+<div role="contentinfo">
+<p>© 版权所有 2024，PyTorch。</p>
+</div>
+<div>使用 <a href="http://sphinx-doc.org/">Sphinx</a> 构建，并使用由 <a href="https://readthedocs.org">Read the Docs</a> 提供的 <a href="https://github.com/rtfd/sphinx_rtd_theme"> 主题 </a>。</div>
+</footer>
+</div>
+<script>
+if((window.location.href.indexOf("/prototype/")!= -1) && (window.location.href.indexOf("/prototype/prototype_index")< 1))
+  {
+    var div = '<div class="admonition note"><p class="admonition-title">Note</p><p><i class="fa fa-flask" aria-hidden="true">&nbsp</i> This tutorial describes a prototype feature. Prototype features are typically not available as part of binary distributions like PyPI or Conda, except sometimes behind run-time flags, and are at an early stage for feedback and testing.</p></div>'
+    document.getElementById("pytorch-article").insertAdjacentHTML('afterBegin', div)
+  }
+</script>
+</div>
+<div class="pytorch-content-right" id="pytorch-content-right">
+<div class="pytorch-right-menu" id="pytorch-right-menu">
+<div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+<ul>
+<li><a class="reference internal" href="#">使用 C++扩展自定义进程组后端</a><ul>
+<li><a class="reference internal" href="#basics">基础</a></li>
+<li><a class="reference internal" href="#step-1-implement-a-subclass-of-backend">步骤 1：实现 <code class="docutils literal "><span class="pre"> 后端 </span></code> 的子类</a></li>
+<li><a class="reference internal" href="#step-2-expose-the-extension-python-apis">步骤 2：公开扩展的 Python API</a></li>
+<li><a class="reference internal" href="#step-3-build-the-custom-extension">步骤 3：构建自定义扩展</a></li>
+<li><a class="reference internal" href="#step-4-use-the-extension-in-application">步骤 4：在应用程序中使用扩展</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js" type="text/javascript"></script>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+<script src="../_static/katex.min.js"></script>
+<script src="../_static/auto-render.min.js"></script>
+<script src="../_static/katex_autorenderer.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script src="../_static/js/custom.js"></script>
+<script src="../_static/js/vendor/popper.min.js" type="text/javascript"></script>
+<script src="../_static/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+<script src="../_static/js/theme.js" type="text/javascript"></script>
+<script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+<script>
+
+// Helper function to make it easier to call dataLayer.push()
+function gtag(){window.dataLayer.push(arguments);}
+
+//add microsoft link
+
+if(window.location.href.indexOf("/beginner/basics/")!= -1)
+{
+  var url="https://docs.microsoft.com/learn/paths/pytorch-fundamentals/?wt.mc_id=aiml-7486-cxa";
+  switch(window.location.pathname.split("/").pop().replace('.html',''))
+  {
+    case"quickstart_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/9-quickstart?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"tensorqs_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/2-tensors?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"data_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/3-data?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"transforms_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/4-transforms?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"buildmodel_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/5-model?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"autogradqs_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/6-autograd?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"optimization_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/7-optimization?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"saveloadrun_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/8-inference?WT.mc_id=aiml-7486-cxa";
+    }
+
+    $(".pytorch-call-to-action-links").children().first().before("<a href="+url+' data-behavior="call-to-action-event" data-response="Run in Microsoft Learn" target="_blank"><div id="microsoft-learn-link" style="padding-bottom: 0.625rem;border-bottom: 1px solid #f3f4f7;padding-right: 2.5rem;display: -webkit-box;  display: -ms-flexbox; display: flex; -webkit-box-align: center;-ms-flex-align: center;align-items: center;"><img class="call-to-action-img" src="../../_static/images/microsoft-logo.svg"/><div class="call-to-action-desktop-view">Run in Microsoft Learn</div><div class="call-to-action-mobile-view">Learn</div></div></a>')
+  }
+
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '243028289693773');
+  fbq('track', 'PageView');
+
+  $("[data-behavior='call-to-action-event']").on('click', function(){
+    fbq('trackCustom', "Download", {
+      tutorialTitle: $('h1:first').text(),
+      downloadLink: this.href,
+      tutorialLink: window.location.href,
+      downloadTitle: $(this).attr("data-response")
+    });
+    gtag('event', 'click', {
+      'event_category': $(this).attr("data-response"),
+      'event_label': $("h1").first().text(),
+      'tutorial_link': window.location.href
+    });
+   });
+
+   $("[data-behavior='tutorial-rating']").on('click', function(){
+    fbq('trackCustom', "Tutorial Rating", {
+      tutorialLink: window.location.href,
+      tutorialTitle: $('h1:first').text(),
+      rating: $(this).attr("data-count")
+    });
+    gtag('event', 'click', {
+      'event_category': 'Tutorial Rating',
+      'event_label': $("h1").first().text(),
+      'value': $(this).attr("data-count"),
+      'customEvent:Rating': $(this).attr("data-count") // send to GA custom dimension customEvent:Rating.
+    });
+   });
+
+   if (location.pathname == "/") {
+     $(".rating-container").hide();
+     $(".hr-bottom").hide();
+   }
+
+
+</script>
+<noscript>
+<img height="1" src="https://www.facebook.com/tr?id=243028289693773&amp;ev=PageView
+  &amp;noscript=1" width="1">
+</noscript>
+<script type="text/javascript">
+  var collapsedSections = ['PyTorch Recipes', 'Learning PyTorch', 'Image and Video', 'Audio', 'Text', 'Backends', 'Reinforcement Learning', 'Deploying PyTorch Models in Production', 'Profiling PyTorch', 'Code Transforms with FX', 'Frontend APIs', 'Extending PyTorch', 'Model Optimization', 'Parallel and Distributed Training', 'Edge with ExecuTorch', 'Recommendation Systems', 'Multimodality'];
+</script>
+<font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  "> <img width="1" style="border-style:none;" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0" height="1" alt=""> 
+
+//临时添加调查链接</font></font></font><script>
+    var survey = '<div class="survey-banner"><p><i class="fas fa-poll" aria-hidden="true">&nbsp </i> Take the <a href="https://forms.gle/KZ4xGL65VRMYNbbG6">PyTorch Docs/Tutorials survey</a>.</p></div>'
+    if ($(".pytorch-call-to-action-links").length) {
+        $(".pytorch-call-to-action-links").before(survey);
+    } else {
+        $("#pytorch-article").prepend(survey);
+    }
+</script>
+<!-- Begin Footer -->
+<div class="container-fluid docs-tutorials-resources" id="docs-tutorials-resources">
+<div class="container">
+<div class="row">
+<div class="col-md-4 text-center">
+<h2>文档</h2>
+<p>获取 PyTorch 的全面开发者文档</p>
+<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
+</div>
+<div class="col-md-4 text-center">
+<h2>教程</h2>
+<p>获取初学者和高级开发者的深入教程</p>
+<a class="with-right-arrow" href="https://maskerprc.github.io/tutorials">查看教程</a>
+</div>
+<div class="col-md-4 text-center">
+<h2>资源</h2>
+<p>查找开发资源并解答您的问题</p>
+<a class="with-right-arrow" href="https://pytorch.org/resources">查看资源</a>
+</div>
+</div>
+</div>
+</div>
+<footer class="site-footer">
+<div class="container footer-container">
+<div class="footer-logo-wrapper">
+<a class="footer-logo" href="https://pytorch.org/"></a>
+</div>
+<div class="footer-links-wrapper">
+<div class="footer-links-col">
+<ul>
+<li class="list-title"><a href="https://pytorch.org/">PyTorch</a></li>
+<li><a href="https://pytorch.org/get-started">开始使用</a></li>
+<li><a href="https://pytorch.org/features">特征</a></li>
+<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://pytorch.org/blog/">博客</a></li>
+<li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title"><a href="https://pytorch.org/resources">资源</a></li>
+<li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
+<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
+<li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
+<li><a href="https://pytorch.org/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title">保持更新</li>
+<li><a href="https://www.facebook.com/pytorch" target="_blank">Facebook</a></li>
+<li><a href="https://twitter.com/pytorch" target="_blank">Twitter</a></li>
+<li><a href="https://www.youtube.com/pytorch" target="_blank">YouTube</a></li>
+<li><a href="https://www.linkedin.com/company/pytorch" target="_blank">领英</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title">PyTorch 播客</li>
+<li><a href="https://open.spotify.com/show/6UzHKeiy368jKfQMKKvJY5" target="_blank">Spotify</a></li>
+<li><a href="https://podcasts.apple.com/us/podcast/pytorch-developer-podcast/id1566080008" target="_blank">苹果</a></li>
+<li><a href="https://www.google.com/podcasts?feed=aHR0cHM6Ly9mZWVkcy5zaW1wbGVjYXN0LmNvbS9PQjVGa0lsOA%3D%3D" target="_blank">谷歌</a></li>
+<li><a href="https://music.amazon.com/podcasts/7a4e6f0e-26c2-49e9-a478-41bd244197d0/PyTorch-Developer-Podcast?" target="_blank">亚马逊</a></li>
+</ul>
+</div>
+</div>
+<div class="privacy-policy">
+<ul>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/terms/" target="_blank">条款</a></li>
+<li class="privacy-policy-links">|</li>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/privacy-policy/" target="_blank">隐私</a></li>
+</ul>
+</div>
+<div class="copyright">
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">© 版权所有 Linux 基金会。PyTorch 基金会是 Linux 基金会的一个项目。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列、LF Projects, LLC 的政策，请参阅
+对于网站使用条款、商标政策以及其他适用于 PyTorch 基金会的政策，请参阅
+<a href="https://www.linuxfoundation.org/policies/">www.linuxfoundation.org/policies/</a>。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列、LF Projects, LLC 的政策，请参阅 <a href="https://www.lfprojects.org/policies/">www.lfprojects.org/policies/</a>。</font></font></font></p>
+</div>
+</div>
+</footer>
+<div class="cookie-banner-wrapper">
+<div class="container">
+<p class="gdpr-notice">为了分析交通并优化您的体验，我们在本网站上提供 cookies。通过点击或导航，您同意允许我们使用 cookies。作为本站点的当前维护者，Facebook 的 Cookies 政策适用。了解更多信息，包括可用的控制选项：[cookies 政策](<a href="https://www.facebook.com/policies/cookies/">cookies 政策 </a>)。</p>
+<img class="close-button" src="../_static/images/pytorch-x.svg" width="16" height="16">
+</div>
+</div>
+<!-- End Footer -->
+<!-- Begin Mobile Menu -->
+<div class="mobile-main-menu">
+<div class="container-fluid">
+<div class="container">
+<div class="mobile-main-menu-header-container">
+<a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
+<a class="main-menu-close-button" data-behavior="close-mobile-menu" href="#"></a>
+</div>
+</div>
+</div>
+<div class="mobile-main-menu-links-container">
+<div class="main-menu">
+<ul>
+<li class="resources-mobile-menu-title">
+<a>学习</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/get-started">开始使用</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials">教程</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">学习基础知识</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">PyTorch 食谱</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/beginner/introyt.html">PyTorch 入门 - YouTube 系列</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>生态系统</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/ecosystem">工具</a>
+</li>
+<li>
+<a href="https://pytorch.org/#community-module">社区</a>
+</li>
+<li>
+<a href="https://discuss.pytorch.org/">论坛</a>
+</li>
+<li>
+<a href="https://pytorch.org/resources">开发者资源</a>
+</li>
+<li>
+<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>边缘</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/edge">关于 PyTorch Edge</a>
+</li>
+<li>
+<a href="https://pytorch.org/executorch-overview">ExecuTorch</a>
+</li>
+<li>
+<a href="https://pytorch.org/executorch/stable/index.html">ExecuTorch 文档</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>文档</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
+</li>
+<li>
+<a href="https://pytorch.org/pytorch-domains">PyTorch 领域</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>博客 &amp; 新闻</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/blog/">PyTorch 博客</a>
+</li>
+<li>
+<a href="https://pytorch.org/community-blog">社区博客</a>
+</li>
+<li>
+<a href="https://pytorch.org/videos">视频</a>
+</li>
+<li>
+<a href="https://pytorch.org/community-stories">社区故事</a>
+</li>
+<li>
+<a href="https://pytorch.org/events">活动</a>
+</li>
+<li>
+<a href="https://pytorch.org/newsletter">通讯</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>关于</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
+</li>
+<li>
+<a href="https://pytorch.org/governing-board">管理委员会</a>
+</li>
+<li>
+<a href="https://pytorch.org/credits">云信用计划</a>
+</li>
+<li>
+<a href="https://pytorch.org/tac">技术顾问委员会</a>
+</li>
+<li>
+<a href="https://pytorch.org/staff">员工</a>
+</li>
+<li>
+<a href="https://pytorch.org/contact-us">联系我们</a>
+</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<!-- End Mobile Menu -->
+<script src="../_static/js/vendor/anchor.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+      mainMenuDropdown.bind();
+      filterTags.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function(e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+
+</body></html>

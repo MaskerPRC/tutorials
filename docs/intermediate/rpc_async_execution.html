@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Implementing Batch RPC Processing Using Asynchronous Executions — PyTorch Tutorials 2.3.0+cpu documentation</title>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<link href="../_static/copybutton.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/katex-math.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-binder.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-dataframe.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-rendered-html.css" rel="stylesheet" type="text/css">
+<link href="../_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom2.css" rel="stylesheet" type="text/css">
+<link href="../genindex.html" rel="index" title="Index">
+<link href="../search.html" rel="search" title="Search">
+<link href="../advanced/rpc_ddp_tutorial.html" rel="next" title="Combining Distributed DataParallel with Distributed RPC Framework">
+<link href="rpc_param_server_tutorial.html" rel="prev" title="Implementing a Parameter Server Using Distributed RPC Framework">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T8XT4PS');</script>
+<!-- End Google Tag Manager -->
+<script src="../_static/js/modernizr.min.js"></script>
+<!-- Preload the theme fonts -->
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-book.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" rel="preload" type="font/woff2">
+<!-- Preload the katex fonts -->
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" rel="preload" type="font/woff2">
+<link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" rel="stylesheet">
+</head><body class="pytorch-body"><div class="container-fluid header-holder tutorials-header" id="header-holder">
+<div class="container">
+<div class="header-container">
+<a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
+<div class="main-menu">
+<ul>
+<li class="main-menu-item">
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">学习</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/get-started">
+<span class="dropdown-title">开始使用</span>
+<p>在本地运行 PyTorch 或快速开始使用支持的云平台之一</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials">
+<span class="dropdown-title">教程</span>
+<p>PyTorch 教程中有什么新内容</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">
+<span class="dropdown-title">学习基础知识</span>
+<p>熟悉 PyTorch 的概念和模块</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">
+<span class="dropdown-title">PyTorch 食谱</span>
+<p>小巧便捷、即用型 PyTorch 代码示例</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/introyt.html">
+<span class="dropdown-title">PyTorch 入门 - YouTube 系列教程</span>
+<p>通过我们引人入胜的 YouTube 教程系列掌握 PyTorch 基础知识</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">生态系统</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
+<span class="dropdown-title">工具</span>
+<p>了解 PyTorch 生态系统中的工具和框架</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/#community-module">
+<span class="dropdown-title">社区</span>
+<p>加入 PyTorch 开发者社区，贡献、学习并解答你的问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://discuss.pytorch.org/" target="_blank">
+<span class="dropdown-title">论坛</span>
+<p>讨论 PyTorch 代码、问题、安装、研究的地方</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/resources">
+<span class="dropdown-title">开发者资源</span>
+<p>查找资源并解答问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
+<span class="dropdown-title">贡献者奖项 - 2024</span>
+<p>本届 PyTorch 大会揭晓获奖者</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">边缘</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/edge">
+<span class="dropdown-title">关于 PyTorch Edge</span>
+<p>为边缘设备构建创新且注重隐私的 AI 体验</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/executorch-overview">
+<span class="dropdown-title">ExecuTorch</span>
+<p>实现移动和边缘设备端到端推理能力的解决方案</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/executorch/stable/index.html">
+<span class="dropdown-title">ExecuTorch 文档</span>
+</a>
+</div>
+</div>
+</li>
+<li class="main-menu-item">
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">文档</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
+<span class="dropdown-title">PyTorch</span>
+<p>查阅文档以获取全面指导，了解如何使用 PyTorch</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/pytorch-domains">
+<span class="dropdown-title">PyTorch 领域</span>
+<p>阅读 PyTorch Domains 文档以了解更多关于特定领域库的信息</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">博客与新闻</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/blog/">
+<span class="dropdown-title">PyTorch 博客</span>
+<p>捕捉最新的技术新闻和事件</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
+<span class="dropdown-title">社区博客</span>
+<p>PyTorch 生态系统中的故事</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/videos">
+<span class="dropdown-title">视频</span>
+<p>了解最新的 PyTorch 教程、新内容等</p>
+</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+<span class="dropdown-title">社区故事</span>
+<p>学习如何我们的社区使用 PyTorch 解决真实、日常的机器学习问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/events">
+<span class="dropdown-title">活动</span>
+<p>查找活动、网络研讨会和播客</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
+<span class="dropdown-title">通讯</span>
+<p>保持最新更新</p>
+</a>
+</div>
+</div></li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">关于</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/foundation">
+<span class="dropdown-title">PyTorch 基金会</span>
+<p>了解更多关于 PyTorch 基金会</p>
+</a>
+管理委员会云信用计划技术顾问委员会员工联系我们
+</div>
+</div>
+</li>
+<li class="main-menu-item">
+<div class="no-dropdown">
+<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
+</div>
+</li>
+<li>
+<div class="main-menu-item">
+<a class="github-icon" href="https://github.com/pytorch/pytorch">
+</a>
+</div>
+</li>
+<!--- TODO: This block adds the search icon to the nav bar. We will enable it later. 
+          <li>
+            <div class="main-menu-item">
+             <a href="https://github.com/pytorch/pytorch" class="search-icon">
+             </a>
+            </div>
+          </li>
+          --->
+</ul>
+</div>
+<a class="main-menu-open-button" data-behavior="open-mobile-menu" href="#"></a>
+</div>
+</div>
+</div>
+
+<div class="table-of-contents-link-wrapper">
+<span>目录</span>
+<a class="toggle-table-of-contents" data-behavior="toggle-table-of-contents" href="#"></a>
+</div>
+<nav class="pytorch-left-menu" data-toggle="wy-nav-shift" id="pytorch-left-menu">
+<div class="pytorch-side-scroll">
+<div aria-label="main navigation" class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation">
+<div class="pytorch-left-menu-search">
+<div class="version">
+        2.3.0+cpu
+      </div>
+<!-- Search box -->
+<div id="searchBox">
+<div class="searchbox" id="googleSearchBox">
+<script async="" src="https://cse.google.com/cse.js?cx=e65585f8c3ea1440e"></script>
+<div class="gcse-search"></div>
+</div>
+<div id="sphinxSearchBox" style="display: none;">
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input name="q" placeholder="Search Docs" type="text">
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default">
+</form>
+</div>
+</div>
+</div>
+<form id="searchForm">
+<label style="margin-bottom: 1rem">
+<input checked="" name="searchType" type="radio" value="google">谷歌搜索</label>
+<label style="margin-bottom: 1rem">
+<input name="searchType" type="radio" value="sphinx">经典搜索</label>
+</form>
+<script>
+     document.addEventListener('DOMContentLoaded', function() {
+      const searchForm = document.getElementById('searchForm');
+      const googleSearchBox = document.getElementById('googleSearchBox');
+      const sphinxSearchBox = document.getElementById('sphinxSearchBox');
+      // Function to toggle search box visibility
+      function toggleSearchBox(searchType) {
+        googleSearchBox.style.display = searchType === 'google' ? 'block' : 'none';
+        sphinxSearchBox.style.display = searchType === 'sphinx' ? 'block' : 'none';
+      }
+      // Determine the default search type
+      let defaultSearchType = 'google';
+      if (window.location.href.startsWith('https://docs-preview.pytorch.org/')) {
+        defaultSearchType = 'sphinx';
+      } else {
+        defaultSearchType = localStorage.getItem('searchType') || 'google';
+      }
+      // Set the default search type
+      document.querySelector(`input[name="searchType"][value="${defaultSearchType}"]`).checked = true;
+      toggleSearchBox(defaultSearchType);
+      // Event listener for changes in search type
+      searchForm.addEventListener('change', function(event) {
+        const selectedSearchType = event.target.value;
+        localStorage.setItem('searchType', selectedSearchType);
+        toggleSearchBox(selectedSearchType);
+      });
+      // Set placeholder text for Google search box
+      window.onload = function() {
+        var placeholderText = "Search Docs";
+        var googleSearchboxText = document.querySelector("#gsc-i-id1");
+        if (googleSearchboxText) {
+          googleSearchboxText.placeholder = placeholderText;
+          googleSearchboxText.style.fontFamily = 'FreightSans';
+          googleSearchboxText.style.fontSize = "1.2rem";
+          googleSearchboxText.style.color = '#262626';
+        }
+      };
+    });
+  </script>
+</div>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 食谱</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/recipes_index.html">查看所有菜谱</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prototype/prototype_index.html">查看所有原型菜谱</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/basics/intro.html">学习基础知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/quickstart_tutorial.html">快速入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/tensorqs_tutorial.html">张量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/data_tutorial.html">数据集和数据加载器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/transforms_tutorial.html">转换</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/buildmodel_tutorial.html">构建神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/autogradqs_tutorial.html">自动微分与 <code class="docutils literal "><span class="pre">torch.autograd</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/optimization_tutorial.html">优化模型参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/saveloadrun_tutorial.html">保存和加载模型</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/introyt/introyt_index.html">PyTorch 入门 - YouTube 系列</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/introyt1_tutorial.html">PyTorch 入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensors_deeper_tutorial.html">PyTorch 张量入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/autogradyt_tutorial.html">Autograd 基础</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/modelsyt_tutorial.html">使用 PyTorch 构建模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensorboardyt_tutorial.html">PyTorch TensorBoard 支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/trainingyt.html">使用 PyTorch 进行训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/captumyt.html">使用 Captum 理解模型</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">学习 PyTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/deep_learning_60min_blitz.html">深度学习与 PyTorch：60 分钟速成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/pytorch_with_examples.html">通过示例学习 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/nn_tutorial.html"><cite>torch.nn</cite><em> 究竟</em>是什么？</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlp_from_scratch_index.html">从零开始学习自然语言处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tensorboard_tutorial.html">使用 TensorBoard 可视化模型、数据和训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pinmem_nonblock.html">PyTorch 中正确使用<code class="docutils literal "><span class="pre">非阻塞</span></code>和<code class="docutils literal "><span class="pre">固定内存</span></code>的指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">图像和视频</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="torchvision_tutorial.html">TorchVision 目标检测微调教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/transfer_learning_tutorial.html">计算机视觉迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/fgsm_tutorial.html">对抗样本生成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dcgan_faces_tutorial.html">DCGAN 教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial_transformer_tutorial.html">空间变换网络教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">优化视觉 Transformer 模型以部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiatoolbox_tutorial.html">使用 PyTorch 和 TIAToolbox 进行全切片图像分类</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">音频</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_io_tutorial.html">音频输入/输出</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_resampling_tutorial.html">音频重采样</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_data_augmentation_tutorial.html">音频数据增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_extractions_tutorial.html">音频特征提取</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_augmentation_tutorial.html">音频特征增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_datasets_tutorial.html">音频数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="speech_recognition_pipeline_tutorial.html">使用 Wav2Vec2 的语音识别</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text_to_speech_with_torchaudio.html">使用 Tacotron2 的文本到语音</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forced_alignment_with_torchaudio_tutorial.html">使用 Wav2Vec2 的强制对齐</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">后端</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">强化学习</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_q_learning.html">强化学习（DQN）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_ppo.html">使用 TorchRL 的强化学习（PPO）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mario_rl_tutorial.html">训练一个玩马里奥的强化学习智能体</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/pendulum.html">摆锤：使用 TorchRL 编写你的环境和转换</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">部署 PyTorch 模型到生产环境</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flask_rest_api_tutorial.html">使用 Flask 通过 REST API 部署 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/Intro_to_TorchScript_tutorial.html">TorchScript 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_export.html">在 C++中加载 TorchScript 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/super_resolution_with_onnxruntime.html">(可选) 将 PyTorch 模型导出为 ONNX 并使用 ONNX Runtime 运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="realtime_rpi.html">Raspberry Pi 4 上的实时推理（30 fps！）</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 性能分析</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">PyTorch 模块性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_intro_tutorial.html">全景式跟踪分析简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_trace_diff_tutorial.html">使用全景式跟踪分析进行跟踪差异</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">使用 FX 进行代码转换</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fx_conv_bn_fuser.html">(beta) 在 FX 中构建卷积/批量归一化融合器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fx_profiling_tutorial.html">(beta) 使用 FX 构建简单的 CPU 性能分析器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">前端 API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="memory_format_tutorial.html">(beta) PyTorch 中的通道最后内存格式</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forward_ad_usage.html">前向模式自动微分（Beta）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jacobians_hessians.html">雅可比矩阵、海森矩阵、HVP、vHP 以及更多：函数变换的组成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ensembling.html">模型集成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="per_sample_grads.html">每样本梯度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_frontend.html">使用 PyTorch C++前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch-script-parallelism.html">动态并行化在 TorchScript 中</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_autograd.html">C++前端中的自动微分</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">扩展 PyTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/custom_ops_landing_page.html">PyTorch 自定义算子</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/python_custom_ops.html">自定义 Python 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_custom_ops.html">自定义 C++和 CUDA 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_function_double_backward_tutorial.html">使用自定义函数的双向回传</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_function_conv_bn_tutorial.html">使用自定义函数融合卷积和批量归一化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_extension.html">自定义 C++ 和 CUDA 扩展</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_ops.html">使用自定义 C++ 操作符扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_classes.html">使用自定义 C++ 类扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dispatcher.html">在 C++ 中注册分派操作符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/extend_dispatcher.html">C++中扩展后端调度器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/privateuseone.html">通过 PrivateUse1 促进新后端集成</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">模型优化</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">PyTorch 模块性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tensorboard_profiler_tutorial.html">PyTorch 分析器与 TensorBoard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hyperparameter_tuning_tutorial.html">使用 Ray Tune 进行超参数调整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">优化视觉 Transformer 模型以部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametrizations.html">参数化教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruning_tutorial.html">剪枝教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dynamic_quantization_tutorial.html">(beta) 在 LSTM 词语言模型上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_quantization_bert_tutorial.html">(beta) 在 BERT 上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantized_transfer_learning_tutorial.html">(beta) 计算机视觉的量化迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/static_quantization_tutorial.html">(beta) PyTorch 中 Eager 模式下的静态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex.html">从原理出发掌握 PyTorch Intel CPU 性能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex_2.html">从原理出发掌握 PyTorch Intel CPU 性能（第二部分）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nvfuser_intro_tutorial.html">入门指南 - 使用 nvFuser 加速您的脚本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ax_multiobjective_nas_tutorial.html">基于 Ax 的多目标 NAS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torch_compile_tutorial.html"><code class="docutils literal "><span class="pre">torch.compile</span></code> 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compiled_autograd_tutorial.html">编译 Autograd：捕获更大的 <code class="docutils literal "><span class="pre">torch.compile</span></code> 反向图</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inductor_debug_cpu.html">电感 CPU 后端调试和性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scaled_dot_product_attention_tutorial.html">(Beta) 使用缩放点积注意力（SDPA）实现高性能 Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/knowledge_distillation_tutorial.html">知识蒸馏教程</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">并行和分布式训练</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../distributed/home.html">分布式和并行训练教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dist_overview.html">PyTorch 分布式概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/ddp_series_intro.html">PyTorch 分布式数据并行 - 视频教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_parallel_tutorial.html">单机模型并行最佳实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ddp_tutorial.html">PyTorch 分布式数据并行入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dist_tuto.html">使用 PyTorch 编写分布式应用程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FSDP_tutorial.html">开始使用完全分片数据并行（FSDP）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FSDP_advanced_tutorial.html">高级模型训练与完全分片数据并行（FSDP）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TCPStore_libuv_backend.html">Libuv TCPStore 后端简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TP_tutorial.html">使用 Tensor Parallel（TP）进行大规模 Transformer 模型训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelining_tutorial.html">分布式流水线并行简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process_group_cpp_extension_tutorial.html">使用 C++扩展自定义进程组后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_tutorial.html">分布式 RPC 框架入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_param_server_tutorial.html">使用分布式 RPC 框架实现参数服务器</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">使用异步执行实现批处理 RPC 处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/rpc_ddp_tutorial.html">结合分布式数据并行与分布式 RPC 框架</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/generic_join.html">使用 Join 上下文管理器进行不均匀输入的分布式训练</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Edge 与 ExecuTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html">导出至 ExecuTorch 教程</a></li>
+<li class="toctree-l1"><a class="reference external" href=" https://pytorch.org/executorch/stable/running-a-model-cpp-tutorial.html">在 C++中运行 ExecuTorch 模型教程</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/sdk-integration-tutorial.html">使用 ExecuTorch SDK 对模型进行性能分析</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-ios.html">构建 ExecuTorch iOS 演示应用</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-android.html">构建 ExecuTorch Android 演示应用</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/examples-end-to-end-to-lower-model-to-delegate.html">将模型作为代理降低</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">推荐系统</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="torchrec_intro_tutorial.html">火炬 Rec 入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/sharding.html">探索 TorchRec 分片</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">多模态</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/flava_finetuning_tutorial.html">TorchMultimodal 教程：微调 FLAVA</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="pytorch-container">
+<div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+<div class="pytorch-breadcrumbs-wrapper">
+<div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="pytorch-breadcrumbs">
+<li>
+<font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">教程
+
+         &gt;</font></font></font></li>
+<li>使用异步执行实现批处理 RPC 处理</li>
+<li class="pytorch-breadcrumbs-aside">
+<a href="../_sources/intermediate/rpc_async_execution.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg" width="16" height="16"></a>
+</li>
+</ul>
+</div>
+</div>
+<div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">快捷键</div>
+</div>
+<section class="pytorch-content-wrap" data-toggle="wy-nav-shift" id="pytorch-content-wrap">
+<div class="pytorch-content-left">
+<div class="pytorch-call-to-action-links">
+<div id="tutorial-type">中间件/异步 RPC 执行</div>
+<div id="google-colab-link">
+<img class="call-to-action-img" src="../_static/images/pytorch-colab.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 Google Colab 中运行</div>
+<div class="call-to-action-mobile-view">Colab</div>
+</div>
+<div id="download-notebook-link">
+<img class="call-to-action-notebook-img" src="../_static/images/pytorch-download.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">下载笔记本</div>
+<div class="call-to-action-mobile-view">笔记本</div>
+</div>
+<div id="github-view-link">
+<img class="call-to-action-img" src="../_static/images/pytorch-github.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 GitHub 上查看</div>
+<div class="call-to-action-mobile-view">GitHub</div>
+</div>
+</div>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-T8XT4PS" style="display:none;visibility:hidden" width="0"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="rst-content">
+<div class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<article class="pytorch-article" id="pytorch-article" itemprop="articleBody">
+<div class="section" id="implementing-batch-rpc-processing-using-asynchronous-executions">
+<h1>使用异步执行实现批处理 RPC 处理 <a class="headerlink" href="#implementing-batch-rpc-processing-using-asynchronous-executions" title="Permalink to this heading">¶</a></font></font></font></h1><p class="date-info-last-verified" style="color: #6c6c6d; font-size: small;"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">创建时间：2025年4月1日 | 最后更新时间：2025年4月1日 | 最后验证：未验证</p>
+<p><strong>作者 </strong>: <a class="reference external" href="https://mrshenli.github.io/"> 沈丽</a></p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><a class="reference internal" href="../_images/pencil-16.png"> <img height="16" width="16" style="width: 16px; height: 16px;" src="../_images/pencil-16.png" alt="edit"> </a> 在 <a class="reference external" href="https://github.com/pytorch/tutorials/blob/main/intermediate_source/rpc_async_execution.rst">github</a> 中查看和编辑此教程。</p>
+</div>
+<p>前提条件：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="../beginner/dist_overview.html">PyTorch 分布式概述</a></p></li>
+<li><p><a class="reference external" href="rpc_tutorial.html">分布式 RPC 框架入门</a></p></li>
+<li><p><a class="reference external" href="rpc_param_server_tutorial.html">使用分布式 RPC 框架实现参数服务器</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/docs/master/rpc.html#torch.distributed.rpc.functions.async_execution">RPC 异步执行装饰器</a></p></li>
+</ul>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">本教程演示了如何使用 <a class="reference external" href="https://pytorch.org/docs/master/rpc.html#torch.distributed.rpc.functions.async_execution">@rpc.functions.async_execution</a> 构建批量处理 RPC 应用程序。
+装饰器，有助于通过减少阻塞数量来加速训练
+RPC 线程和在被调用者上合并 CUDA 操作。这共享了
+与<a class="reference external" href="https://pytorch.org/serve/batch_inference_with_ts.html">使用 TorchServe 进行批量推理</a>相同的理念。</font></font></font></p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>本教程需要 PyTorch v1.6.0 或更高版本。</p>
+</div>
+<div class="section" id="basics">
+<h2>基础知识 <a class="headerlink" href="#basics" title="Permalink to this heading">¶</a></h2>
+<p>之前的教程已经展示了使用 <a class="reference external" href="https://pytorch.org/docs/stable/rpc.html">torch.distributed.rpc</a> 构建分布式训练应用的步骤，但它们没有详细说明在处理 RPC 请求时调用方会发生什么。从 PyTorch v1.5 开始，每个 RPC 请求都会阻塞调用方的一个线程来执行该请求中的函数，直到该函数返回。这对于许多用例来说都是可行的，但有一个缺点。如果用户函数在 IO 上阻塞，例如，在嵌套 RPC 调用或信号量，例如等待另一个 RPC 请求解除阻塞时，调用方的 RPC 线程将不得不空闲等待，直到 IO 完成或信号事件发生。因此，RPC 调用方可能会使用比必要的更多线程。这个问题产生的原因是 RPC 将用户函数视为黑盒，并且对函数内部发生的事情知之甚少。为了允许用户函数让出并释放 RPC 线程，需要向 RPC 系统提供更多的提示。</p>
+<p>从 v1.6.0 版本开始，PyTorch 通过引入两个新概念来解决此问题：</p>
+<ul class="simple">
+<li><p>一种封装异步执行的 <a class="reference external" href="https://pytorch.org/docs/master/futures.html">torch.futures.Future</a> 类型，同时支持安装回调函数。</p></li>
+<li><p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">一个 <a class="reference external" href="https://pytorch.org/docs/master/rpc.html#torch.distributed.rpc.functions.async_execution">@rpc.functions.async_execution</a>
+装饰器，允许应用程序通知调用方目标函数
+将返回一个 future，并在执行过程中可以暂停和多次 yield。</font></font></font></p></li>
+</ul>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">使用这两个工具，应用程序代码可以将用户函数拆分为多个更小的函数，将它们作为回调链在 <code class="docutils literal "><span class="pre">Future</span></code> 对象上串联起来
+对象中，并返回包含最终结果的 <code class="docutils literal "><span class="pre">Future</span></code> 对象。在调用方一侧，当获取到 <code class="docutils literal "><span class="pre">Future</span></code> 对象时，它会安装后续的 RPC 响应
+准备和通信作为回调，这将触发
+当最终结果准备好时。这样，调用方就不再需要阻塞
+一个线程并等待直到最终返回值就绪。请参阅
+API 文档的
+<a class="reference external" href="https://pytorch.org/docs/master/rpc.html#torch.distributed.rpc.functions.async_execution">@rpc.functions.async_execution</a>
+简单示例。</font></font></font></p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">除了减少被调用方的空闲线程数量外，这些工具还有助于
+为了使批量 RPC 处理更容易和更快。以下两节内容：
+本教程演示了如何构建分布式批量更新参数
+服务器和批处理强化学习应用程序使用
+<a class="reference external" href="https://pytorch.org/docs/master/rpc.html#torch.distributed.rpc.functions.async_execution">@rpc.functions.async_execution</a>
+装饰器。</font></font></font></p>
+</div>
+<div class="section" id="batch-updating-parameter-server">
+<h2>批量更新参数服务器 <a class="headerlink" href="#batch-updating-parameter-server" title="Permalink to this heading">¶</a></h2>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">考虑一个具有一个参数服务器（PS）和多个训练器的同步参数服务器训练应用。在这个应用中，PS 持有参数并等待所有训练器报告梯度。在每次迭代中，它等待接收所有训练器的梯度，然后一次性更新所有参数。下面的代码展示了 PS 类的实现。下面的 <code class="docutils literal "><span class="pre">update_and_fetch_model</span></code> 方法使用了装饰器
+ <code class="docutils literal "><span class="pre">@rpc.functions.async_execution</span></code> 将由训练师调用。每次调用都会返回一个 <code class="docutils literal "><span class="pre">Future</span></code> 对象，该对象将被填充为更新的
+模型。大多数训练师启动的调用只是将梯度累积到 <code class="docutils literal "><span class="pre">.grad</span></code> 字段，立即返回，并释放 RPC 线程到 PS。最后到达的训练师将触发优化器步骤并消耗所有之前报告的梯度。然后它将 <code class="docutils literal "><span class="pre">future_model</span></code> 设置为更新后的模型，
+这反过来又通过 <code class="docutils literal "><span class="pre"></span></code> 通知所有其他训练师之前的请求。然后它将 <code class="docutils literal "><span class="pre">future_model</span></code> 设置为更新后的模型，
+并将 <code id="10"><span id="11"></span></code> 通知所有其他训练师之前的请求。
+将下一行文本作为纯文本输入，并将其翻译为简体中文：
+
+输入文本:
+<code class="docutils literal "><span class="pre">Future</span></code> object and sends out the updated model to all trainers.
+
+翻译结果：
+<code class="docutils literal "><span class="pre"> 未来</span></code>对象并发送给所有训练师。</font></font></font></p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torchvision</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.distributed.rpc</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rpc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">optim</span>
+
+<span class="n">num_classes</span><span class="p">,</span> <span class="n">batch_update_size</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">5</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BatchUpdateParameterServer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_update_size</span><span class="o">=</span><span class="n">batch_update_size</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">torchvision</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">resnet50</span><span class="p">(</span><span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">future_model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_update_size</span> <span class="o">=</span> <span class="n">batch_update_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curr_update_size</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="nd">@rpc</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">async_execution</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_and_fetch_model</span><span class="p">(</span><span class="n">ps_rref</span><span class="p">,</span> <span class="n">grads</span><span class="p">):</span>
+        <span class="c1"># Using the RRef to retrieve the local PS instance</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="n">ps_rref</span><span class="o">.</span><span class="n">local_value</span><span class="p">()</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">curr_update_size</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># accumulate gradients into .grad field</span>
+            <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">grads</span><span class="p">):</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">grad</span> <span class="o">+=</span> <span class="n">g</span>
+
+            <span class="c1"># Save the current future_model and return it to make sure the</span>
+            <span class="c1"># returned Future object holds the correct model even if another</span>
+            <span class="c1"># thread modifies future_model before this thread returns.</span>
+            <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">future_model</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">curr_update_size</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_update_size</span><span class="p">:</span>
+                <span class="c1"># update the model</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+                    <span class="n">p</span><span class="o">.</span><span class="n">grad</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_update_size</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">curr_update_size</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+                <span class="c1"># by settiing the result on the Future object, all previous</span>
+                <span class="c1"># requests expecting this updated model will be notified and</span>
+                <span class="c1"># the their responses will be sent accordingly.</span>
+                <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">future_model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">fut</span>
+</pre></div>
+</div>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">对于训练器，它们都使用相同的集合初始化
+参数来自 PS。在每次迭代中，每个训练器首先运行正向
+然后，反向传播以在本地生成梯度。然后，每个训练器
+向 PS 报告其梯度使用 RPC，并检索回更新的
+通过相同 RPC 请求的返回值传递参数。在训练器中
+实现，无论目标函数是否标记为
+ <code class="docutils literal "><span class="pre">@rpc.functions.async_execution</span></code> 无论是与否都没有区别。训练器只是简单地使用 <code class="docutils literal "><span class="pre">rpc_sync</span></code> 调用 <code class="docutils literal "><span class="pre">update_and_fetch_model</span></code>，这将阻塞训练器，直到返回更新后的模型。</font></font></font></p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">batch_size</span><span class="p">,</span> <span class="n">image_w</span><span class="p">,</span> <span class="n">image_h</span>  <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Trainer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ps_rref</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ps_rref</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span> <span class="o">=</span> <span class="n">ps_rref</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span> \
+                                    <span class="o">.</span><span class="n">random_</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span> \
+                                    <span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_next_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">image_w</span><span class="p">,</span> <span class="n">image_h</span><span class="p">)</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span> \
+                        <span class="o">.</span><span class="n">scatter_</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">one_hot_indices</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">inputs</span><span class="o">.</span><span class="n">cuda</span><span class="p">(),</span> <span class="n">labels</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">rpc</span><span class="o">.</span><span class="n">get_worker_info</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+        <span class="c1"># get initial model parameters</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ps_rref</span><span class="o">.</span><span class="n">rpc_sync</span><span class="p">()</span><span class="o">.</span><span class="n">get_model</span><span class="p">()</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+        <span class="c1"># start training</span>
+        <span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_batch</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span><span class="p">(</span><span class="n">m</span><span class="p">(</span><span class="n">inputs</span><span class="p">),</span> <span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">rpc</span><span class="o">.</span><span class="n">rpc_sync</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ps_rref</span><span class="o">.</span><span class="n">owner</span><span class="p">(),</span>
+                <span class="n">BatchUpdateParameterServer</span><span class="o">.</span><span class="n">update_and_fetch_model</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ps_rref</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">grad</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">parameters</span><span class="p">()]),</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">我们在本教程中跳过了启动多个进程的代码，请参阅<a class="reference external" href="https://github.com/pytorch/examples/tree/master/distributed/rpc">示例</a>
+完整实现的代码库。注意，可以在不使用 <a class="reference external" href="https://pytorch.org/docs/master/rpc.html#torch.distributed.rpc.functions.async_execution">@rpc.functions.async_execution</a> 的情况下实现批量处理。
+处理。
+<a class="reference external" href="https://pytorch.org/docs/master/rpc.html#torch.distributed.rpc.functions.async_execution">@rpc.functions.async_execution</a>
+装饰器。然而，这需要阻止更多的 RPC 线程，或者使用另一轮 RPC 来获取更新的模型，后者会增加更多的代码复杂性和通信开销。
+PS 或使用另一轮 RPC 来获取更新的模型，后者会增加更多的代码复杂性和通信开销。
+本节使用一个简单的参数服务器训练示例来展示如何。</font></font></font></p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">这一部分使用一个简单的参数服务器训练示例来展示如何。
+使用批处理 RPC 应用程序实现
+<a class="reference external" href="https://pytorch.org/docs/master/rpc.html#torch.distributed.rpc.functions.async_execution">@rpc.functions.async_execution</a>
+装饰器。在下一节中，我们重新实现之前的强化学习
+示例
+<a class="reference external" href="https://maskerprc.github.io/tutorials/intermediate/rpc_tutorial.html">分布式 RPC 框架入门指南</a>
+使用批量处理教程，并展示其对训练的影响
+速度。</font></font></font></p>
+</div>
+<div class="section" id="batch-processing-cartpole-solver">
+<h2>批量处理 CartPole 求解器 <a class="headerlink" href="#batch-processing-cartpole-solver" title="Permalink to this heading">¶</a></h2>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">本节使用 OpenAI Gym 中的 CartPole-v1 作为
+一个示例，以展示批处理 RPC 的性能影响。请注意
+该目标是为了演示使用
+<a class="reference external" href="https://pytorch.org/docs/master/rpc.html#torch.distributed.rpc.functions.async_execution">@rpc.functions 异步执行</a>
+而不是构建最佳的 CartPole 求解器或解决大多数不同的强化学习问题
+问题，我们使用非常简单的策略和奖励计算策略
+关注多观察者单代理批量 RPC 实现。我们使用
+与下面的前一个教程中类似的策略模型。与前一个教程相比，其区别在于其构造函数接受一个额外的 <code class="docutils literal "><span class="pre">batch</span></code> 参数，该参数控制 <code class="docutils literal "><span class="pre">dim</span></code> 参数。
+<code class="docutils literal "><span class="pre">F.softmax</span></code> 因为批处理，<code class="docutils literal "><span class="pre">x</span></code> 参数在 <code class="docutils literal "><span class="pre">forward</span></code> 函数中包含来自多个观察者的状态，因此维度需要正确更改。其他一切保持不变。
+函数包含来自多个观察者的状态，因此维度需要相应更改。
+需要正确更改。其他一切保持不变。</font></font></font></p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">'PyTorch RPC Batch RL example'</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--gamma'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">'G'</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="s1">'discount factor (default: 1.0)'</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--seed'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">543</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">'N'</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="s1">'random seed (default: 543)'</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--num-episode'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">'E'</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="s1">'number of episodes (default: 10)'</span><span class="p">)</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Policy</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Policy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">affine1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">affine2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">batch</span> <span class="k">else</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">affine1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">action_scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">affine2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">action_scores</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  "><code class="docutils literal "><span class="pre">Observer</span></code> 的构造函数也相应调整。它还接受一个
+批量参数，它决定了使用哪个 <code class="docutils literal "><span class="pre">Agent</span></code> 函数来选择动作。在批量模式下，它会在 <code class="docutils literal "><span class="pre">Agent</span></code> 上调用 <code class="docutils literal "><span class="pre">select_action_batch</span></code> 函数
+将在稍后介绍，并且此函数将被装饰为
+<a class="reference external" href="https://pytorch.org/docs/master/rpc.html#torch.distributed.rpc.functions.async_execution">@rpc.functions.async_execution</a>.</font></font></font></p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gym</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.distributed.rpc</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rpc</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Observer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">rpc</span><span class="o">.</span><span class="n">get_worker_info</span><span class="p">()</span><span class="o">.</span><span class="n">id</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">'CartPole-v1'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">select_action</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">select_action_batch</span> <span class="k">if</span> <span class="n">batch</span> <span class="k">else</span> <span class="n">Agent</span><span class="o">.</span><span class="n">select_action</span>
+</pre></div>
+</div>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">与之前的教程相比
+《开始使用分布式 RPC 框架》，观察者的行为略有不同。当环境停止时，它不会退出，而是在每个回合中始终运行 <code class="docutils literal "><span class="pre">n_steps</span></code> 次迭代。当环境返回时，观察者简单地重置环境并重新开始。在这种设计下，代理将从每个观察者那里接收固定数量的状态，因此可以将它们打包成一个固定大小的张量。在每一步中，<code class="docutils literal "><span class="pre">Observer</span></code> 使用 RPC 将其状态发送到 <code class="docutils literal "><span class="pre">Agent</span></code>，并通过返回值获取动作。在每个回合结束时，它将所有步骤的奖励返回给 <code class="docutils literal "><span class="pre">Agent</span></code>。请注意，这个 <code class="docutils literal "><span class="pre">run_episode</span></code> 函数将由 <code class="docutils literal "><span class="pre">Agent</span></code> 使用 RPC 调用。因此，这个函数中的 <code class="docutils literal "><span class="pre">rpc_sync</span></code> 调用将是一个嵌套的 RPC 调用。我们可以将这个函数标记为 <code class="docutils literal "><span class="pre">@rpc.functions.async_execution</span></code> 
+为了避免阻塞一个线程在 <code class="docutils literal "><span class="pre"> 观察者 </span></code> 上。然而，瓶颈在于 <code class="docutils literal "><span class="pre"> 代理 </span></code> 而不是 <code class="docutils literal "><span class="pre"> 观察者 </span></code>，因此阻塞 <code class="docutils literal "><span class="pre"> 观察者 </span></code> 进程的一个线程应该是可以的。</font></font></font></p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Observer</span><span class="p">:</span>
+    <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_episode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_rref</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">):</span>
+        <span class="n">state</span><span class="p">,</span> <span class="n">ep_reward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(),</span> <span class="n">NUM_STEPS</span>
+        <span class="n">rewards</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_steps</span><span class="p">)</span>
+        <span class="n">start_step</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span><span class="p">):</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">state</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="c1"># send the state to the agent to get an action</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">rpc</span><span class="o">.</span><span class="n">rpc_sync</span><span class="p">(</span>
+                <span class="n">agent_rref</span><span class="o">.</span><span class="n">owner</span><span class="p">(),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">select_action</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">agent_rref</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="c1"># apply the action to the environment, and get the reward</span>
+            <span class="n">state</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+            <span class="n">rewards</span><span class="p">[</span><span class="n">step</span><span class="p">]</span> <span class="o">=</span> <span class="n">reward</span>
+
+            <span class="k">if</span> <span class="n">done</span> <span class="ow">or</span> <span class="n">step</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="n">n_steps</span><span class="p">:</span>
+                <span class="n">curr_rewards</span> <span class="o">=</span> <span class="n">rewards</span><span class="p">[</span><span class="n">start_step</span><span class="p">:(</span><span class="n">step</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+                <span class="n">R</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">curr_rewards</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="n">R</span> <span class="o">=</span> <span class="n">curr_rewards</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">R</span>
+                    <span class="n">curr_rewards</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">R</span>
+                <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">start_step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">ep_reward</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ep_reward</span><span class="p">,</span> <span class="n">step</span> <span class="o">-</span> <span class="n">start_step</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">start_step</span> <span class="o">=</span> <span class="n">step</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">rewards</span><span class="p">,</span> <span class="n">ep_reward</span><span class="p">]</span>
+</pre></div>
+</div>
+<p><code class="docutils literal "><span class="pre">代理 </span></code> 的构造函数也接受一个 <code class="docutils literal "><span class="pre"> 批处理 </span></code> 参数，该参数控制动作概率的批处理方式。在批处理模式下，<code class="docutils literal "><span class="pre">saved_log_probs</span></code> 包含一个张量列表，其中每个张量包含一个步骤中所有观察者的动作概率。在不进行批处理的情况下，<code class="docutils literal "><span class="pre">saved_log_probs</span></code> 是一个字典，其键是观察者 ID，值是该观察者的动作概率列表。</p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributed.rpc</span><span class="w"> </span><span class="kn">import</span> <span class="n">RRef</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Agent</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_size</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ob_rrefs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_rref</span> <span class="o">=</span> <span class="n">RRef</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rewards</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy</span> <span class="o">=</span> <span class="n">Policy</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running_reward</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">ob_rank</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">world_size</span><span class="p">):</span>
+            <span class="n">ob_info</span> <span class="o">=</span> <span class="n">rpc</span><span class="o">.</span><span class="n">get_worker_info</span><span class="p">(</span><span class="n">OBSERVER_NAME</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ob_rank</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ob_rrefs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rpc</span><span class="o">.</span><span class="n">remote</span><span class="p">(</span><span class="n">ob_info</span><span class="p">,</span> <span class="n">Observer</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">batch</span><span class="p">,)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rewards</span><span class="p">[</span><span class="n">ob_info</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ob_rrefs</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch</span> <span class="o">=</span> <span class="n">batch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saved_log_probs</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">batch</span> <span class="k">else</span> <span class="p">{</span><span class="n">k</span><span class="p">:[]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ob_rrefs</span><span class="p">))}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">future_actions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pending_states</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ob_rrefs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>非批处理的 <code class="docutils literal "><span class="pre">select_action</span></code> 简单地将状态传递给策略，保存动作概率，并立即将动作返回给观察者。</p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Categorical</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Agent</span><span class="p">:</span>
+    <span class="o">...</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select_action</span><span class="p">(</span><span class="n">agent_rref</span><span class="p">,</span> <span class="n">ob_id</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="n">agent_rref</span><span class="o">.</span><span class="n">local_value</span><span class="p">()</span>
+        <span class="n">probs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">cuda</span><span class="p">())</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saved_log_probs</span><span class="p">[</span><span class="n">ob_id</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">action</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">action</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>使用批处理，状态存储在一个 2D 张量 <code class="docutils literal "><span class="pre">self.states</span></code> 中，使用观察者 ID 作为行 ID。然后，通过安装回调函数到批生成的 <code class="docutils literal "><span class="pre">self.future_actions</span></code><code class="docutils literal "><span class="pre">Future</span></code> 对象，链式添加一个 <code class="docutils literal "><span class="pre">Future</span></code>，该对象将使用该观察者的 ID 索引特定的行。最后到达的观察者将所有批处理状态一次性通过策略，并相应地设置 <code class="docutils literal "><span class="pre">self.future_actions</span></code>。当发生这种情况时，所有安装到 <code class="docutils literal "><span class="pre">self.future_actions</span></code> 上的回调函数将被触发，它们的返回值将用于填充链式添加的 <code class="docutils literal "><span class="pre">Future</span></code> 对象，进而通知 <code class="docutils literal "><span class="pre">Agent</span></code> 准备并传达对其他观察者之前所有 RPC 请求的响应。</p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Agent</span><span class="p">:</span>
+    <span class="o">...</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="nd">@rpc</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">async_execution</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select_action_batch</span><span class="p">(</span><span class="n">agent_rref</span><span class="p">,</span> <span class="n">ob_id</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="n">agent_rref</span><span class="o">.</span><span class="n">local_value</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">ob_id</span><span class="p">]</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">future_action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">future_actions</span><span class="o">.</span><span class="n">then</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">future_actions</span><span class="p">:</span> <span class="n">future_actions</span><span class="o">.</span><span class="n">wait</span><span class="p">()[</span><span class="n">ob_id</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pending_states</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pending_states</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pending_states</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ob_rrefs</span><span class="p">)</span>
+                <span class="n">probs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">cuda</span><span class="p">())</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">Categorical</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
+                <span class="n">actions</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">saved_log_probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span><span class="o">.</span><span class="n">t</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">future_actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">future_actions</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">future_actions</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="p">()</span>
+                <span class="n">future_actions</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">actions</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">future_action</span>
+</pre></div>
+</div>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">现在我们来定义如何将不同的 RPC 函数拼接在一起。 <code class="docutils literal "><span class="pre">Agent</span></code>
+控制每个剧集的执行。它首先使用 <code class="docutils literal "><span class="pre">rpc_async</span></code> 来启动
+在所有观察者上启动剧集，并阻塞在返回的 futures 上，这些 futures 将被
+填充观察者奖励。注意，下面的代码使用了 RRef 辅助工具
+<code class="docutils literal "><span class="pre">ob_rref.rpc_async()</span></code> 来在 <code class="docutils literal "><span class="pre">run_episode</span></code> 函数的 <code class="docutils literal "><span class="pre">ob_rref</span></code> RRef 拥有者上启动，并提供相应的参数。然后，它将保存的动作概率和返回的观察者奖励转换为预期的数据格式，并启动训练步骤。最后，它重置所有状态并返回当前剧集的奖励。此函数是运行一个剧集的入口点。</font></font></font></p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Agent</span><span class="p">:</span>
+    <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_episode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_steps</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">futs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ob_rref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ob_rrefs</span><span class="p">:</span>
+            <span class="c1"># make async RPC to kick off an episode on all observers</span>
+            <span class="n">futs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ob_rref</span><span class="o">.</span><span class="n">rpc_async</span><span class="p">()</span><span class="o">.</span><span class="n">run_episode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_rref</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">))</span>
+
+        <span class="c1"># wait until all obervers have finished this episode</span>
+        <span class="n">rets</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">wait_all</span><span class="p">(</span><span class="n">futs</span><span class="p">)</span>
+        <span class="n">rewards</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">ret</span> <span class="ow">in</span> <span class="n">rets</span><span class="p">])</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
+        <span class="n">ep_rewards</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">ret</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">ret</span> <span class="ow">in</span> <span class="n">rets</span><span class="p">])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">rets</span><span class="p">)</span>
+
+        <span class="c1"># stack saved probs into one tensor</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch</span><span class="p">:</span>
+            <span class="n">probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_log_probs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">probs</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_log_probs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rets</span><span class="p">))]</span>
+            <span class="n">probs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span>
+
+        <span class="n">policy_loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">probs</span> <span class="o">*</span> <span class="n">rewards</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">rets</span><span class="p">)</span>
+        <span class="n">policy_loss</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+        <span class="c1"># reset variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saved_log_probs</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch</span> <span class="k">else</span> <span class="p">{</span><span class="n">k</span><span class="p">:[]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ob_rrefs</span><span class="p">))}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ob_rrefs</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+        <span class="c1"># calculate running rewards</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running_reward</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">ep_rewards</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">running_reward</span>
+        <span class="k">return</span> <span class="n">ep_rewards</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">running_reward</span>
+</pre></div>
+</div>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">代码的其余部分是正常的启动和日志记录过程
+与其他 RPC 教程类似。在本教程中，所有观察者都被动地等待代理的命令。请参阅
+<a class="reference external" href="https://github.com/pytorch/examples/tree/master/distributed/rpc">示例</a>
+<a class="reference external" href="https://github.com/pytorch/examples/tree/master/distributed/rpc">示例</a>
+全部实现的仓库。</font></font></font></p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run_worker</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span> <span class="n">world_size</span><span class="p">,</span> <span class="n">n_episode</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">print_log</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'MASTER_ADDR'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'localhost'</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'MASTER_PORT'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'29500'</span>
+    <span class="k">if</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># rank0 is the agent</span>
+        <span class="n">rpc</span><span class="o">.</span><span class="n">init_rpc</span><span class="p">(</span><span class="n">AGENT_NAME</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="n">rank</span><span class="p">,</span> <span class="n">world_size</span><span class="o">=</span><span class="n">world_size</span><span class="p">)</span>
+
+        <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">world_size</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i_episode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_episode</span><span class="p">):</span>
+            <span class="n">last_reward</span><span class="p">,</span> <span class="n">running_reward</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">run_episode</span><span class="p">(</span><span class="n">n_steps</span><span class="o">=</span><span class="n">NUM_STEPS</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">print_log</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">'Episode </span><span class="si">{}</span><span class="se">\t</span><span class="s1">Last reward: </span><span class="si">{:.2f}</span><span class="se">\t</span><span class="s1">Average reward: </span><span class="si">{:.2f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">i_episode</span><span class="p">,</span> <span class="n">last_reward</span><span class="p">,</span> <span class="n">running_reward</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># other ranks are the observer</span>
+        <span class="n">rpc</span><span class="o">.</span><span class="n">init_rpc</span><span class="p">(</span><span class="n">OBSERVER_NAME</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rank</span><span class="p">),</span> <span class="n">rank</span><span class="o">=</span><span class="n">rank</span><span class="p">,</span> <span class="n">world_size</span><span class="o">=</span><span class="n">world_size</span><span class="p">)</span>
+        <span class="c1"># observers passively waiting for instructions from agents</span>
+    <span class="n">rpc</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">world_size</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span>
+        <span class="n">delays</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
+            <span class="n">tik</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span>
+                <span class="n">run_worker</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">world_size</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">num_episode</span><span class="p">,</span> <span class="n">batch</span><span class="p">),</span>
+                <span class="n">nprocs</span><span class="o">=</span><span class="n">world_size</span><span class="p">,</span>
+                <span class="n">join</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="n">tok</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">delays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tok</span> <span class="o">-</span> <span class="n">tik</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">world_size</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">delays</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">delays</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>批量 RPC 有助于将动作推理合并为更少的 CUDA 操作，从而减少了摊销开销。上面的 <code class="docutils literal "><span class="pre"> 主 </span></code> 函数使用不同的观察者数量（从 1 到 10）在批量和无批量模式下运行相同的代码。下面的图显示了使用默认参数值的不同世界大小的执行时间。结果证实了我们的预期，即批量处理有助于加速训练。</p>
+<div class="figure align-default">
+<img alt="" src="../_images/batch.png">
+</div>
+</div>
+<div class="section" id="learn-more">
+<h2>了解更多 <a class="headerlink" href="#learn-more" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/pytorch/examples/blob/master/distributed/rpc/batch/parameter_server.py">批量更新参数服务器源代码</a></p></li>
+<li><p><a class="reference external" href="https://github.com/pytorch/examples/blob/master/distributed/rpc/batch/reinforce.py">批量处理 CartPole 求解器</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/docs/master/rpc.html#distributed-autograd-framework">分布式自动微分</a></p></li>
+</ul>
+</div>
+</div>
+</article>
+</div>
+<footer>
+<div aria-label="footer navigation" class="rst-footer-buttons" role="navigation">
+<a accesskey="n" class="btn btn-neutral float-right" href="../advanced/rpc_ddp_tutorial.html" rel="next" title="Combining Distributed DataParallel with Distributed RPC Framework">下一个 <img height="16" width="16" src="../_static/images/chevron-right-orange.svg" class="next-page"> </a><a accesskey="p" class="btn btn-neutral" href="rpc_param_server_tutorial.html" rel="prev" title="Implementing a Parameter Server Using Distributed RPC Framework"> <img height="16" width="16" src="../_static/images/chevron-right-orange.svg" class="previous-page"> 上一个</a>
+</div>
+<hr class="rating-hr hr-top">
+<div class="rating-container">
+<div class="rating-prompt">评分这个教程</div>
+<div class="stars-outer">
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="1" title="1 Star"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="2" title="2 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="3" title="3 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="4" title="4 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="5" title="5 Stars"></i>
+</div>
+</div>
+<hr class="rating-hr hr-bottom">
+<div role="contentinfo">
+<p>© 版权所有 2024，PyTorch。</p>
+</div>
+<div>使用 <a href="http://sphinx-doc.org/">Sphinx</a> 构建，并使用由 <a href="https://readthedocs.org">Read the Docs</a> 提供的 <a href="https://github.com/rtfd/sphinx_rtd_theme"> 主题 </a>。</div>
+</footer>
+</div>
+<script>
+if((window.location.href.indexOf("/prototype/")!= -1) && (window.location.href.indexOf("/prototype/prototype_index")< 1))
+  {
+    var div = '<div class="admonition note"><p class="admonition-title">Note</p><p><i class="fa fa-flask" aria-hidden="true">&nbsp</i> This tutorial describes a prototype feature. Prototype features are typically not available as part of binary distributions like PyPI or Conda, except sometimes behind run-time flags, and are at an early stage for feedback and testing.</p></div>'
+    document.getElementById("pytorch-article").insertAdjacentHTML('afterBegin', div)
+  }
+</script>
+</div>
+<div class="pytorch-content-right" id="pytorch-content-right">
+<div class="pytorch-right-menu" id="pytorch-right-menu">
+<div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+<ul>
+<li><a class="reference internal" href="#">使用异步执行实现批处理 RPC 处理</a><ul>
+<li><a class="reference internal" href="#basics">基础</a></li>
+<li><a class="reference internal" href="#batch-updating-parameter-server">批量更新参数服务器</a></li>
+<li><a class="reference internal" href="#batch-processing-cartpole-solver">批处理 CartPole 求解器</a></li>
+<li><a class="reference internal" href="#learn-more">了解更多</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js" type="text/javascript"></script>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+<script src="../_static/katex.min.js"></script>
+<script src="../_static/auto-render.min.js"></script>
+<script src="../_static/katex_autorenderer.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script src="../_static/js/custom.js"></script>
+<script src="../_static/js/vendor/popper.min.js" type="text/javascript"></script>
+<script src="../_static/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+<script src="../_static/js/theme.js" type="text/javascript"></script>
+<script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+<script>
+
+// Helper function to make it easier to call dataLayer.push()
+function gtag(){window.dataLayer.push(arguments);}
+
+//add microsoft link
+
+if(window.location.href.indexOf("/beginner/basics/")!= -1)
+{
+  var url="https://docs.microsoft.com/learn/paths/pytorch-fundamentals/?wt.mc_id=aiml-7486-cxa";
+  switch(window.location.pathname.split("/").pop().replace('.html',''))
+  {
+    case"quickstart_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/9-quickstart?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"tensorqs_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/2-tensors?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"data_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/3-data?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"transforms_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/4-transforms?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"buildmodel_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/5-model?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"autogradqs_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/6-autograd?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"optimization_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/7-optimization?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"saveloadrun_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/8-inference?WT.mc_id=aiml-7486-cxa";
+    }
+
+    $(".pytorch-call-to-action-links").children().first().before("<a href="+url+' data-behavior="call-to-action-event" data-response="Run in Microsoft Learn" target="_blank"><div id="microsoft-learn-link" style="padding-bottom: 0.625rem;border-bottom: 1px solid #f3f4f7;padding-right: 2.5rem;display: -webkit-box;  display: -ms-flexbox; display: flex; -webkit-box-align: center;-ms-flex-align: center;align-items: center;"><img class="call-to-action-img" src="../../_static/images/microsoft-logo.svg"/><div class="call-to-action-desktop-view">Run in Microsoft Learn</div><div class="call-to-action-mobile-view">Learn</div></div></a>')
+  }
+
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '243028289693773');
+  fbq('track', 'PageView');
+
+  $("[data-behavior='call-to-action-event']").on('click', function(){
+    fbq('trackCustom', "Download", {
+      tutorialTitle: $('h1:first').text(),
+      downloadLink: this.href,
+      tutorialLink: window.location.href,
+      downloadTitle: $(this).attr("data-response")
+    });
+    gtag('event', 'click', {
+      'event_category': $(this).attr("data-response"),
+      'event_label': $("h1").first().text(),
+      'tutorial_link': window.location.href
+    });
+   });
+
+   $("[data-behavior='tutorial-rating']").on('click', function(){
+    fbq('trackCustom', "Tutorial Rating", {
+      tutorialLink: window.location.href,
+      tutorialTitle: $('h1:first').text(),
+      rating: $(this).attr("data-count")
+    });
+    gtag('event', 'click', {
+      'event_category': 'Tutorial Rating',
+      'event_label': $("h1").first().text(),
+      'value': $(this).attr("data-count"),
+      'customEvent:Rating': $(this).attr("data-count") // send to GA custom dimension customEvent:Rating.
+    });
+   });
+
+   if (location.pathname == "/") {
+     $(".rating-container").hide();
+     $(".hr-bottom").hide();
+   }
+
+
+</script>
+<noscript>
+<img height="1" src="https://www.facebook.com/tr?id=243028289693773&amp;ev=PageView
+  &amp;noscript=1" width="1">
+</noscript>
+<script type="text/javascript">
+  var collapsedSections = ['PyTorch Recipes', 'Learning PyTorch', 'Image and Video', 'Audio', 'Text', 'Backends', 'Reinforcement Learning', 'Deploying PyTorch Models in Production', 'Profiling PyTorch', 'Code Transforms with FX', 'Frontend APIs', 'Extending PyTorch', 'Model Optimization', 'Parallel and Distributed Training', 'Edge with ExecuTorch', 'Recommendation Systems', 'Multimodality'];
+</script>
+<font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  "> <img width="1" style="border-style:none;" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0" height="1" alt=""> 
+
+//临时添加调查链接</font></font></font><script>
+    var survey = '<div class="survey-banner"><p><i class="fas fa-poll" aria-hidden="true">&nbsp </i> Take the <a href="https://forms.gle/KZ4xGL65VRMYNbbG6">PyTorch Docs/Tutorials survey</a>.</p></div>'
+    if ($(".pytorch-call-to-action-links").length) {
+        $(".pytorch-call-to-action-links").before(survey);
+    } else {
+        $("#pytorch-article").prepend(survey);
+    }
+</script>
+<!-- Begin Footer -->
+<div class="container-fluid docs-tutorials-resources" id="docs-tutorials-resources">
+<div class="container">
+<div class="row">
+<div class="col-md-4 text-center">
+<h2>文档</h2>
+<p>获取 PyTorch 的全面开发者文档</p>
+<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
+</div>
+<div class="col-md-4 text-center">
+<h2>教程</h2>
+<p>获取初学者和高级开发者的深入教程</p>
+<a class="with-right-arrow" href="https://maskerprc.github.io/tutorials">查看教程</a>
+</div>
+<div class="col-md-4 text-center">
+<h2>资源</h2>
+<p>查找开发资源并解答您的问题</p>
+<a class="with-right-arrow" href="https://pytorch.org/resources">查看资源</a>
+</div>
+</div>
+</div>
+</div>
+<footer class="site-footer">
+<div class="container footer-container">
+<div class="footer-logo-wrapper">
+<a class="footer-logo" href="https://pytorch.org/"></a>
+</div>
+<div class="footer-links-wrapper">
+<div class="footer-links-col">
+<ul>
+<li class="list-title"><a href="https://pytorch.org/">PyTorch</a></li>
+<li><a href="https://pytorch.org/get-started">开始使用</a></li>
+<li><a href="https://pytorch.org/features">特征</a></li>
+<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://pytorch.org/blog/">博客</a></li>
+<li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title"><a href="https://pytorch.org/resources">资源</a></li>
+<li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
+<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
+<li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
+<li><a href="https://pytorch.org/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title">保持更新</li>
+<li><a href="https://www.facebook.com/pytorch" target="_blank">Facebook</a></li>
+<li><a href="https://twitter.com/pytorch" target="_blank">Twitter</a></li>
+<li><a href="https://www.youtube.com/pytorch" target="_blank">YouTube</a></li>
+<li><a href="https://www.linkedin.com/company/pytorch" target="_blank">领英</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title">PyTorch 播客</li>
+<li><a href="https://open.spotify.com/show/6UzHKeiy368jKfQMKKvJY5" target="_blank">Spotify</a></li>
+<li><a href="https://podcasts.apple.com/us/podcast/pytorch-developer-podcast/id1566080008" target="_blank">苹果</a></li>
+<li><a href="https://www.google.com/podcasts?feed=aHR0cHM6Ly9mZWVkcy5zaW1wbGVjYXN0LmNvbS9PQjVGa0lsOA%3D%3D" target="_blank">谷歌</a></li>
+<li><a href="https://music.amazon.com/podcasts/7a4e6f0e-26c2-49e9-a478-41bd244197d0/PyTorch-Developer-Podcast?" target="_blank">亚马逊</a></li>
+</ul>
+</div>
+</div>
+<div class="privacy-policy">
+<ul>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/terms/" target="_blank">条款</a></li>
+<li class="privacy-policy-links">|</li>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/privacy-policy/" target="_blank">隐私</a></li>
+</ul>
+</div>
+<div class="copyright">
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">© 版权所有 Linux 基金会。PyTorch 基金会是 Linux 基金会的一个项目。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列、LF Projects, LLC 的政策，请参阅
+对于网站使用条款、商标政策以及其他适用于 PyTorch 基金会的政策，请参阅
+<a href="https://www.linuxfoundation.org/policies/">www.linuxfoundation.org/policies/</a>。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列、LF Projects, LLC 的政策，请参阅 <a href="https://www.lfprojects.org/policies/">www.lfprojects.org/policies/</a>。</font></font></font></p>
+</div>
+</div>
+</footer>
+<div class="cookie-banner-wrapper">
+<div class="container">
+<p class="gdpr-notice">为了分析交通并优化您的体验，我们在本网站上提供 cookies。通过点击或导航，您同意允许我们使用 cookies。作为本站点的当前维护者，Facebook 的 Cookies 政策适用。了解更多信息，包括可用的控制选项：[cookies 政策](<a href="https://www.facebook.com/policies/cookies/">cookies 政策 </a>)。</p>
+<img class="close-button" src="../_static/images/pytorch-x.svg" width="16" height="16">
+</div>
+</div>
+<!-- End Footer -->
+<!-- Begin Mobile Menu -->
+<div class="mobile-main-menu">
+<div class="container-fluid">
+<div class="container">
+<div class="mobile-main-menu-header-container">
+<a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
+<a class="main-menu-close-button" data-behavior="close-mobile-menu" href="#"></a>
+</div>
+</div>
+</div>
+<div class="mobile-main-menu-links-container">
+<div class="main-menu">
+<ul>
+<li class="resources-mobile-menu-title">
+<a>学习</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/get-started">开始使用</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials">教程</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">学习基础知识</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">PyTorch 食谱</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/beginner/introyt.html">PyTorch 入门 - YouTube 系列</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>生态系统</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/ecosystem">工具</a>
+</li>
+<li>
+<a href="https://pytorch.org/#community-module">社区</a>
+</li>
+<li>
+<a href="https://discuss.pytorch.org/">论坛</a>
+</li>
+<li>
+<a href="https://pytorch.org/resources">开发者资源</a>
+</li>
+<li>
+<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>边缘</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/edge">关于 PyTorch Edge</a>
+</li>
+<li>
+<a href="https://pytorch.org/executorch-overview">ExecuTorch</a>
+</li>
+<li>
+<a href="https://pytorch.org/executorch/stable/index.html">ExecuTorch 文档</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>文档</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
+</li>
+<li>
+<a href="https://pytorch.org/pytorch-domains">PyTorch 领域</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>博客 &amp; 新闻</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/blog/">PyTorch 博客</a>
+</li>
+<li>
+<a href="https://pytorch.org/community-blog">社区博客</a>
+</li>
+<li>
+<a href="https://pytorch.org/videos">视频</a>
+</li>
+<li>
+<a href="https://pytorch.org/community-stories">社区故事</a>
+</li>
+<li>
+<a href="https://pytorch.org/events">活动</a>
+</li>
+<li>
+<a href="https://pytorch.org/newsletter">通讯</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>关于</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
+</li>
+<li>
+<a href="https://pytorch.org/governing-board">管理委员会</a>
+</li>
+<li>
+<a href="https://pytorch.org/credits">云信用计划</a>
+</li>
+<li>
+<a href="https://pytorch.org/tac">技术顾问委员会</a>
+</li>
+<li>
+<a href="https://pytorch.org/staff">员工</a>
+</li>
+<li>
+<a href="https://pytorch.org/contact-us">联系我们</a>
+</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<!-- End Mobile Menu -->
+<script src="../_static/js/vendor/anchor.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+      mainMenuDropdown.bind();
+      filterTags.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function(e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+
+</body></html>

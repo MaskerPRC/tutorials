@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Grokking PyTorch Intel CPU performance from first principles — PyTorch Tutorials 2.3.0+cpu documentation</title>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<link href="../_static/copybutton.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/katex-math.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-binder.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-dataframe.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-rendered-html.css" rel="stylesheet" type="text/css">
+<link href="../_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom2.css" rel="stylesheet" type="text/css">
+<link href="../genindex.html" rel="index" title="Index">
+<link href="../search.html" rel="search" title="Search">
+<link href="torchserve_with_ipex_2.html" rel="next" title="Grokking PyTorch Intel CPU performance from first principles (Part 2)">
+<link href="../advanced/static_quantization_tutorial.html" rel="prev" title="(beta) Static Quantization with Eager Mode in PyTorch">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T8XT4PS');</script>
+<!-- End Google Tag Manager -->
+<script src="../_static/js/modernizr.min.js"></script>
+<!-- Preload the theme fonts -->
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-book.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" rel="preload" type="font/woff2">
+<!-- Preload the katex fonts -->
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" rel="preload" type="font/woff2">
+<link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" rel="stylesheet">
+</head><body class="pytorch-body"><div class="container-fluid header-holder tutorials-header" id="header-holder">
+<div class="container">
+<div class="header-container">
+<a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
+<div class="main-menu">
+<ul>
+<li class="main-menu-item">
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">学习</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/get-started">
+<span class="dropdown-title">开始使用</span>
+<p>在本地运行 PyTorch 或快速开始使用支持的云平台之一</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials">
+<span class="dropdown-title">教程</span>
+<p>PyTorch 教程中有什么新内容</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">
+<span class="dropdown-title">学习基础知识</span>
+<p>熟悉 PyTorch 的概念和模块</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">
+<span class="dropdown-title">PyTorch 食谱</span>
+<p>小巧便捷、即用型 PyTorch 代码示例</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/introyt.html">
+<span class="dropdown-title">PyTorch 入门 - YouTube 系列教程</span>
+<p>通过我们引人入胜的 YouTube 教程系列掌握 PyTorch 基础知识</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">生态系统</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
+<span class="dropdown-title">工具</span>
+<p>了解 PyTorch 生态系统中的工具和框架</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/#community-module">
+<span class="dropdown-title">社区</span>
+<p>加入 PyTorch 开发者社区，贡献、学习并解答你的问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://discuss.pytorch.org/" target="_blank">
+<span class="dropdown-title">论坛</span>
+<p>讨论 PyTorch 代码、问题、安装、研究的地方</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/resources">
+<span class="dropdown-title">开发者资源</span>
+<p>查找资源并解答问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
+<span class="dropdown-title">贡献者奖项 - 2024</span>
+<p>本届 PyTorch 大会揭晓获奖者</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">边缘</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/edge">
+<span class="dropdown-title">关于 PyTorch Edge</span>
+<p>为边缘设备构建创新且注重隐私的 AI 体验</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/executorch-overview">
+<span class="dropdown-title">ExecuTorch</span>
+<p>实现移动和边缘设备端到端推理能力的解决方案</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/executorch/stable/index.html">
+<span class="dropdown-title">ExecuTorch 文档</span>
+</a>
+</div>
+</div>
+</li>
+<li class="main-menu-item">
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">文档</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
+<span class="dropdown-title">PyTorch</span>
+<p>查阅文档以获取全面指导，了解如何使用 PyTorch</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/pytorch-domains">
+<span class="dropdown-title">PyTorch 领域</span>
+<p>阅读 PyTorch Domains 文档以了解更多关于特定领域库的信息</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">博客与新闻</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/blog/">
+<span class="dropdown-title">PyTorch 博客</span>
+<p>捕捉最新的技术新闻和事件</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
+<span class="dropdown-title">社区博客</span>
+<p>PyTorch 生态系统中的故事</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/videos">
+<span class="dropdown-title">视频</span>
+<p>了解最新的 PyTorch 教程、新内容等</p>
+</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+<span class="dropdown-title">社区故事</span>
+<p>学习如何我们的社区使用 PyTorch 解决真实、日常的机器学习问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/events">
+<span class="dropdown-title">活动</span>
+<p>查找活动、网络研讨会和播客</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
+<span class="dropdown-title">通讯</span>
+<p>保持最新更新</p>
+</a>
+</div>
+</div></li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">关于</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/foundation">
+<span class="dropdown-title">PyTorch 基金会</span>
+<p>了解更多关于 PyTorch 基金会</p>
+</a>
+管理委员会云信用计划技术顾问委员会员工联系我们
+</div>
+</div>
+</li>
+<li class="main-menu-item">
+<div class="no-dropdown">
+<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
+</div>
+</li>
+<li>
+<div class="main-menu-item">
+<a class="github-icon" href="https://github.com/pytorch/pytorch">
+</a>
+</div>
+</li>
+<!--- TODO: This block adds the search icon to the nav bar. We will enable it later. 
+          <li>
+            <div class="main-menu-item">
+             <a href="https://github.com/pytorch/pytorch" class="search-icon">
+             </a>
+            </div>
+          </li>
+          --->
+</ul>
+</div>
+<a class="main-menu-open-button" data-behavior="open-mobile-menu" href="#"></a>
+</div>
+</div>
+</div>
+
+<div class="table-of-contents-link-wrapper">
+<span>目录</span>
+<a class="toggle-table-of-contents" data-behavior="toggle-table-of-contents" href="#"></a>
+</div>
+<nav class="pytorch-left-menu" data-toggle="wy-nav-shift" id="pytorch-left-menu">
+<div class="pytorch-side-scroll">
+<div aria-label="main navigation" class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation">
+<div class="pytorch-left-menu-search">
+<div class="version">
+        2.3.0+cpu
+      </div>
+<!-- Search box -->
+<div id="searchBox">
+<div class="searchbox" id="googleSearchBox">
+<script async="" src="https://cse.google.com/cse.js?cx=e65585f8c3ea1440e"></script>
+<div class="gcse-search"></div>
+</div>
+<div id="sphinxSearchBox" style="display: none;">
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input name="q" placeholder="Search Docs" type="text">
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default">
+</form>
+</div>
+</div>
+</div>
+<form id="searchForm">
+<label style="margin-bottom: 1rem">
+<input checked="" name="searchType" type="radio" value="google">谷歌搜索</label>
+<label style="margin-bottom: 1rem">
+<input name="searchType" type="radio" value="sphinx">经典搜索</label>
+</form>
+<script>
+     document.addEventListener('DOMContentLoaded', function() {
+      const searchForm = document.getElementById('searchForm');
+      const googleSearchBox = document.getElementById('googleSearchBox');
+      const sphinxSearchBox = document.getElementById('sphinxSearchBox');
+      // Function to toggle search box visibility
+      function toggleSearchBox(searchType) {
+        googleSearchBox.style.display = searchType === 'google' ? 'block' : 'none';
+        sphinxSearchBox.style.display = searchType === 'sphinx' ? 'block' : 'none';
+      }
+      // Determine the default search type
+      let defaultSearchType = 'google';
+      if (window.location.href.startsWith('https://docs-preview.pytorch.org/')) {
+        defaultSearchType = 'sphinx';
+      } else {
+        defaultSearchType = localStorage.getItem('searchType') || 'google';
+      }
+      // Set the default search type
+      document.querySelector(`input[name="searchType"][value="${defaultSearchType}"]`).checked = true;
+      toggleSearchBox(defaultSearchType);
+      // Event listener for changes in search type
+      searchForm.addEventListener('change', function(event) {
+        const selectedSearchType = event.target.value;
+        localStorage.setItem('searchType', selectedSearchType);
+        toggleSearchBox(selectedSearchType);
+      });
+      // Set placeholder text for Google search box
+      window.onload = function() {
+        var placeholderText = "Search Docs";
+        var googleSearchboxText = document.querySelector("#gsc-i-id1");
+        if (googleSearchboxText) {
+          googleSearchboxText.placeholder = placeholderText;
+          googleSearchboxText.style.fontFamily = 'FreightSans';
+          googleSearchboxText.style.fontSize = "1.2rem";
+          googleSearchboxText.style.color = '#262626';
+        }
+      };
+    });
+  </script>
+</div>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 食谱</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/recipes_index.html">查看所有菜谱</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prototype/prototype_index.html">查看所有原型菜谱</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/basics/intro.html">学习基础知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/quickstart_tutorial.html">快速入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/tensorqs_tutorial.html">张量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/data_tutorial.html">数据集和数据加载器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/transforms_tutorial.html">转换</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/buildmodel_tutorial.html">构建神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/autogradqs_tutorial.html">自动微分与 <code class="docutils literal "><span class="pre">torch.autograd</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/optimization_tutorial.html">优化模型参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/saveloadrun_tutorial.html">保存和加载模型</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/introyt/introyt_index.html">PyTorch 入门 - YouTube 系列</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/introyt1_tutorial.html">PyTorch 入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensors_deeper_tutorial.html">PyTorch 张量入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/autogradyt_tutorial.html">Autograd 基础</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/modelsyt_tutorial.html">使用 PyTorch 构建模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensorboardyt_tutorial.html">PyTorch TensorBoard 支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/trainingyt.html">使用 PyTorch 进行训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/captumyt.html">使用 Captum 理解模型</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">学习 PyTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/deep_learning_60min_blitz.html">深度学习与 PyTorch：60 分钟速成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/pytorch_with_examples.html">通过示例学习 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/nn_tutorial.html"><cite>torch.nn</cite><em> 究竟</em>是什么？</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlp_from_scratch_index.html">从零开始学习自然语言处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tensorboard_tutorial.html">使用 TensorBoard 可视化模型、数据和训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pinmem_nonblock.html">PyTorch 中正确使用<code class="docutils literal "><span class="pre">非阻塞</span></code>和<code class="docutils literal "><span class="pre">固定内存</span></code>的指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">图像和视频</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="torchvision_tutorial.html">TorchVision 目标检测微调教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/transfer_learning_tutorial.html">计算机视觉迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/fgsm_tutorial.html">对抗样本生成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dcgan_faces_tutorial.html">DCGAN 教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial_transformer_tutorial.html">空间变换网络教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">优化视觉 Transformer 模型以部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiatoolbox_tutorial.html">使用 PyTorch 和 TIAToolbox 进行全切片图像分类</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">音频</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_io_tutorial.html">音频输入/输出</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_resampling_tutorial.html">音频重采样</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_data_augmentation_tutorial.html">音频数据增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_extractions_tutorial.html">音频特征提取</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_augmentation_tutorial.html">音频特征增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_datasets_tutorial.html">音频数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="speech_recognition_pipeline_tutorial.html">使用 Wav2Vec2 的语音识别</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text_to_speech_with_torchaudio.html">使用 Tacotron2 的文本到语音</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forced_alignment_with_torchaudio_tutorial.html">使用 Wav2Vec2 的强制对齐</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">后端</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">强化学习</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_q_learning.html">强化学习（DQN）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_ppo.html">使用 TorchRL 的强化学习（PPO）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mario_rl_tutorial.html">训练一个玩马里奥的强化学习智能体</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/pendulum.html">摆锤：使用 TorchRL 编写你的环境和转换</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">部署 PyTorch 模型到生产环境</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flask_rest_api_tutorial.html">使用 Flask 通过 REST API 部署 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/Intro_to_TorchScript_tutorial.html">TorchScript 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_export.html">在 C++中加载 TorchScript 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/super_resolution_with_onnxruntime.html">(可选) 将 PyTorch 模型导出为 ONNX 并使用 ONNX Runtime 运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="realtime_rpi.html">Raspberry Pi 4 上的实时推理（30 fps！）</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 性能分析</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">PyTorch 模块性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_intro_tutorial.html">全景式跟踪分析简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_trace_diff_tutorial.html">使用全景式跟踪分析进行跟踪差异</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">使用 FX 进行代码转换</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fx_conv_bn_fuser.html">(beta) 在 FX 中构建卷积/批量归一化融合器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fx_profiling_tutorial.html">(beta) 使用 FX 构建简单的 CPU 性能分析器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">前端 API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="memory_format_tutorial.html">(beta) PyTorch 中的通道最后内存格式</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forward_ad_usage.html">前向模式自动微分（Beta）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jacobians_hessians.html">雅可比矩阵、海森矩阵、HVP、vHP 以及更多：函数变换的组成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ensembling.html">模型集成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="per_sample_grads.html">每样本梯度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_frontend.html">使用 PyTorch C++前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch-script-parallelism.html">动态并行化在 TorchScript 中</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_autograd.html">C++前端中的自动微分</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">扩展 PyTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/custom_ops_landing_page.html">PyTorch 自定义算子</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/python_custom_ops.html">自定义 Python 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_custom_ops.html">自定义 C++和 CUDA 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_function_double_backward_tutorial.html">使用自定义函数的双向回传</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_function_conv_bn_tutorial.html">使用自定义函数融合卷积和批量归一化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_extension.html">自定义 C++ 和 CUDA 扩展</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_ops.html">使用自定义 C++ 操作符扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_classes.html">使用自定义 C++ 类扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dispatcher.html">在 C++ 中注册分派操作符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/extend_dispatcher.html">C++中扩展后端调度器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/privateuseone.html">通过 PrivateUse1 促进新后端集成</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">模型优化</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">PyTorch 模块性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tensorboard_profiler_tutorial.html">PyTorch 分析器与 TensorBoard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hyperparameter_tuning_tutorial.html">使用 Ray Tune 进行超参数调整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">优化视觉 Transformer 模型以部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametrizations.html">参数化教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruning_tutorial.html">剪枝教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dynamic_quantization_tutorial.html">(beta) 在 LSTM 词语言模型上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_quantization_bert_tutorial.html">(beta) 在 BERT 上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantized_transfer_learning_tutorial.html">(beta) 计算机视觉的量化迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/static_quantization_tutorial.html">(beta) PyTorch 中 Eager 模式下的静态量化</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">从原理出发掌握 PyTorch Intel CPU 性能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex_2.html">从原理出发掌握 PyTorch Intel CPU 性能（第二部分）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nvfuser_intro_tutorial.html">入门指南 - 使用 nvFuser 加速您的脚本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ax_multiobjective_nas_tutorial.html">基于 Ax 的多目标 NAS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torch_compile_tutorial.html"><code class="docutils literal "><span class="pre">torch.compile</span></code> 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compiled_autograd_tutorial.html">编译 Autograd：捕获更大的 <code class="docutils literal "><span class="pre">torch.compile</span></code> 反向图</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inductor_debug_cpu.html">电感 CPU 后端调试和性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scaled_dot_product_attention_tutorial.html">(Beta) 使用缩放点积注意力（SDPA）实现高性能 Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/knowledge_distillation_tutorial.html">知识蒸馏教程</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">并行和分布式训练</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../distributed/home.html">分布式和并行训练教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dist_overview.html">PyTorch 分布式概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/ddp_series_intro.html">PyTorch 分布式数据并行 - 视频教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_parallel_tutorial.html">单机模型并行最佳实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ddp_tutorial.html">PyTorch 分布式数据并行入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dist_tuto.html">使用 PyTorch 编写分布式应用程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FSDP_tutorial.html">开始使用完全分片数据并行（FSDP）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FSDP_advanced_tutorial.html">高级模型训练与完全分片数据并行（FSDP）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TCPStore_libuv_backend.html">Libuv TCPStore 后端简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TP_tutorial.html">使用 Tensor Parallel（TP）进行大规模 Transformer 模型训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelining_tutorial.html">分布式流水线并行简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process_group_cpp_extension_tutorial.html">使用 C++扩展自定义进程组后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_tutorial.html">分布式 RPC 框架入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_param_server_tutorial.html">使用分布式 RPC 框架实现参数服务器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_async_execution.html">使用异步执行实现批处理 RPC 处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/rpc_ddp_tutorial.html">结合分布式数据并行与分布式 RPC 框架</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/generic_join.html">使用 Join 上下文管理器进行不均匀输入的分布式训练</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Edge 与 ExecuTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html">导出至 ExecuTorch 教程</a></li>
+<li class="toctree-l1"><a class="reference external" href=" https://pytorch.org/executorch/stable/running-a-model-cpp-tutorial.html">在 C++中运行 ExecuTorch 模型教程</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/sdk-integration-tutorial.html">使用 ExecuTorch SDK 对模型进行性能分析</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-ios.html">构建 ExecuTorch iOS 演示应用</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-android.html">构建 ExecuTorch Android 演示应用</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/examples-end-to-end-to-lower-model-to-delegate.html">将模型作为代理降低</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">推荐系统</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="torchrec_intro_tutorial.html">火炬 Rec 入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/sharding.html">探索 TorchRec 分片</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">多模态</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/flava_finetuning_tutorial.html">TorchMultimodal 教程：微调 FLAVA</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="pytorch-container">
+<div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+<div class="pytorch-breadcrumbs-wrapper">
+<div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="pytorch-breadcrumbs">
+<li>
+<font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">教程
+
+         &gt;</font></font></font></li>
+<li>从原理出发掌握 PyTorch Intel CPU 性能</li>
+<li class="pytorch-breadcrumbs-aside">
+<a href="../_sources/intermediate/torchserve_with_ipex.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg" width="16" height="16"></a>
+</li>
+</ul>
+</div>
+</div>
+<div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">快捷键</div>
+</div>
+<section class="pytorch-content-wrap" data-toggle="wy-nav-shift" id="pytorch-content-wrap">
+<div class="pytorch-content-left">
+<div class="pytorch-call-to-action-links">
+<div id="tutorial-type">intermediate/torchserve_with_ipex</div>
+<div id="google-colab-link">
+<img class="call-to-action-img" src="../_static/images/pytorch-colab.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 Google Colab 中运行</div>
+<div class="call-to-action-mobile-view">Colab</div>
+</div>
+<div id="download-notebook-link">
+<img class="call-to-action-notebook-img" src="../_static/images/pytorch-download.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">下载笔记本</div>
+<div class="call-to-action-mobile-view">笔记本</div>
+</div>
+<div id="github-view-link">
+<img class="call-to-action-img" src="../_static/images/pytorch-github.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 GitHub 上查看</div>
+<div class="call-to-action-mobile-view">GitHub</div>
+</div>
+</div>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-T8XT4PS" style="display:none;visibility:hidden" width="0"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="rst-content">
+<div class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<article class="pytorch-article" id="pytorch-article" itemprop="articleBody">
+<div class="section" id="grokking-pytorch-intel-cpu-performance-from-first-principles">
+<h1>从原理出发深入理解 PyTorch Intel CPU 性能 <a class="headerlink" href="#grokking-pytorch-intel-cpu-performance-from-first-principles" title="Permalink to this heading">¶</a></font></font></font></h1><p class="date-info-last-verified" style="color: #6c6c6d; font-size: small;"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">创建时间：2025年4月1日 | 最后更新时间：2025年4月1日 | 最后验证时间：2024年11月5日</p>
+<p>使用 <a class="reference external" href="https://github.com/intel/intel-extension-for-pytorch">Intel® Extension for PyTorch*</a> 优化的 TorchServe 推理框架案例研究。</p>
+<p>作者：Min Jean Cho, Mark Saroufim</p>
+<p>审稿人：Ashok Emani, Jiong Gong</p>
+<p>在 CPU 上获得强大的开箱即用性能可能很棘手，但如果你了解影响性能的主要问题、如何衡量它们以及如何解决它们，那就容易多了。</p>
+<p>TL;DR</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 59%">
+<col style="width: 30%">
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>问题</p></td>
+<td><p>如何进行测量</p></td>
+<td><p>解决方案</p></td>
+</tr>
+<tr class="row-even"><td><p>拥塞的 GEMM 执行单元</p></td>
+<td><ul class="simple">
+<li><p><a class="reference external" href="https://www.intel.com/content/www/us/en/develop/documentation/vtune-help/top/reference/cpu-metrics-reference/spin-time/imbalance-or-serial-spinning-1.html">不平衡或串行自旋</a></p></li>
+<li><p><a class="reference external" href="https://www.intel.com/content/www/us/en/develop/documentation/vtune-help/top/reference/cpu-metrics-reference/front-end-bound.html">前端绑定</a></p></li>
+<li><p><a class="reference external" href="https://www.intel.com/content/www/us/en/develop/documentation/vtune-help/top/reference/cpu-metrics-reference/back-end-bound.html">核心绑定</a></p></li>
+</ul>
+</td>
+<td><p>通过核心绑定设置线程亲和性以避免使用逻辑核心</p></td>
+</tr>
+<tr class="row-odd"><td><p>非均匀内存访问（NUMA）</p></td>
+<td><ul class="simple">
+<li><p>本地与远程内存访问</p></li>
+<li><p><a class="reference external" href="https://www.intel.com/content/www/us/en/develop/documentation/vtune-help/top/reference/cpu-metrics-reference/memory-bound/dram-bound/upi-utilization-bound.html">UPI 利用率</a></p></li>
+<li><p>内存访问的延迟</p></li>
+<li><p>线程迁移</p></li>
+</ul>
+</td>
+<td><p>通过设置线程亲和性到特定插座来避免跨插座计算</p></td>
+</tr>
+</tbody>
+</table>
+<p><em>通用矩阵乘法（GEMM）</em> 在融合乘加（FMA）或点积（DP）执行单元上运行，当启用超线程时，将导致瓶颈并造成线程等待/<em> 在同步屏障处旋转</em>延迟，因为使用逻辑核心会导致所有工作线程的并发性不足，因为每个逻辑线程/<em> 争夺相同的核心资源 </em>。相反，如果我们每个物理核心使用一个线程，我们就可以避免这种竞争。因此，我们通常建议通过设置 CPU/<em> 线程亲和性</em>到物理核心/<em> 核心固定</em>来避免使用逻辑核心。</p>
+<p>多插槽系统具有<em>非一致性内存访问（NUMA）</em>，这是一种共享内存架构，描述了主内存模块相对于处理器的放置。但如果一个进程不是 NUMA 感知的，当<em>远程内存</em>在运行时通过<em>英特尔超路径互连（UPI）</em> 跨插槽迁移时，就会频繁访问慢速的远程内存。我们通过设置 CPU<em> 线程亲和性</em>到特定的插槽，通过<em>核心绑定</em>来解决这个问题。</p>
+<p>了解这些原则，适当的 CPU 运行时配置可以显著提高即插即用性能。</p>
+<p>在这篇博客中，我们将向您介绍您应该了解的重要运行时配置，从 <a class="reference external" href="https://maskerprc.github.io/tutorials/recipes/recipes/tuning_guide.html#cpu-specific-optimizations">CPU 性能调整指南</a>中解释它们的工作原理，如何进行性能分析以及如何通过我们内置的简单<a class="reference external" href="https://github.com/intel/intel-extension-for-pytorch/blob/master/docs/tutorials/performance_tuning/launch_script.md">启动脚本</a>将它们集成到模型服务框架如 <a class="reference external" href="https://github.com/pytorch/serve">TorchServe</a> 中。</p>
+<p>我们将用视觉方式解释这些想法 <strong> 直观地 </strong> 从 <strong> 基本原理 </strong> 出发，结合众多 <strong> 配置文件 </strong>，向您展示我们如何将所学应用于使 TorchServe 的 CPU 性能更出色。</p>
+<ol class="arabic simple">
+<li><p>该功能必须通过在 <em>config.properties</em> 中设置 <em>cpu_launcher_enable=true</em> 来显式启用。</p></li>
+</ol>
+<div class="section" id="avoid-logical-cores-for-deep-learning">
+<h2>避免逻辑核心进行深度学习 <a class="headerlink" href="#avoid-logical-cores-for-deep-learning" title="Permalink to this heading">¶</a></h2>
+<p>避免逻辑核心进行深度学习工作负载通常可以提高性能。为了理解这一点，让我们回顾一下 GEMM。</p>
+<p><strong>优化 GEMM 优化深度学习</strong></p>
+<p>深度学习训练或推理的大部分时间都花在了数百万次的 GEMM 重复操作上，而 GEMM 是全连接层的核心。全连接层自多层感知器（MLP）<a class="reference external" href="https://en.wikipedia.org/wiki/Universal_approximation_theorem"> 被证明是任何连续函数的通用逼近器</a>以来已经使用了数十年。任何 MLP 都可以完全表示为 GEMM。甚至通过使用 <a class="reference external" href="https://en.wikipedia.org/wiki/Toeplitz_matrix">Toepliz 矩阵 </a>，卷积也可以表示为 GEMM。</p>
+<p>回到原始主题，大多数 GEMM 算子从使用非超线程中受益，因为在深度学习训练或推理的大部分时间都花在了数百万次的 GEMM 重复操作上，这些操作运行在由超线程核心共享的融合乘加（FMA）或点积（DP）执行单元上。启用超线程时，OpenMP 线程将争夺相同的 GEMM 执行单元。</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/1_.png"><img alt="../_images/1_.png" src="../_images/1_.png" style="width: 70%;"></a>
+</div>
+<p>如果两个逻辑线程同时运行 GEMM，它们将共享相同的核心资源，导致前端绑定，从而使这种前端绑定的开销大于同时运行两个逻辑线程的收益。</p>
+<p>因此，我们通常建议避免使用逻辑核心进行深度学习工作负载以获得良好的性能。启动脚本默认仅使用物理核心；然而，用户可以通过简单地切换启动脚本中的 <code class="docutils literal "><span class="pre">--use_logical_core</span></code> 旋钮来轻松地实验逻辑核心与物理核心。</p>
+<p><strong>练习</strong></p>
+<p>我们将使用以下示例来演示向 ResNet50 输入虚拟张量：</p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torchvision.models</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">models</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet50</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+
+<span class="c1"># warm up</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Inference took </span><span class="si">{:.2f}</span><span class="s1"> ms in average'</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span><span class="o">*</span><span class="mi">1000</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>在本博客中，我们将使用<a class="reference external" href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/vtune-profiler.html#gs.v4egjg">英特尔® VTune™ 分析器</a>进行性能分析和验证优化。所有练习将在配备两颗英特尔(R) Xeon(R) Platinum 8180M CPU 的机器上运行。CPU 信息如图 2.1 所示。</p>
+<p>环境变量 <code class="docutils literal "><span class="pre">OMP_NUM_THREADS</span></code> 用于设置并行区域的线程数。我们将比较 <code class="docutils literal "><span class="pre">OMP_NUM_THREADS=2</span></code> 与（1）使用逻辑核心和（2）仅使用物理核心。</p>
+<ol class="arabic simple">
+<li><p>两个 OpenMP 线程试图利用超线程核心（0，56）共享的同一组 GEMM 执行单元。</p></li>
+</ol>
+<p>我们可以通过在 Linux 上运行 <code class="docutils literal "><span class="pre">htop</span></code> 命令来可视化这一点，如下所示。</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/2.png"><img alt="../_images/2.png" src="../_images/2.png" style="width: 100%;"></a>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/3.png"><img alt="../_images/3.png" src="../_images/3.png" style="width: 100%;"></a>
+</div>
+<p>我们注意到 Spin Time 被标记，不平衡或串行自旋导致了其中大部分 - 总计 8.982 秒中的 4.980 秒。使用逻辑核心时的不平衡或串行自旋是由于工作线程的并发不足，因为每个逻辑线程都在争夺相同的核心资源。</p>
+<p>执行摘要中的“热点区域”部分显示，<code class="docutils literal "><span class="pre">__kmp_fork_barrier</span></code> 消耗了 4.589 秒的 CPU 时间 - 在 9.33%的 CPU 执行时间内，线程因线程同步在此屏障处空转。</p>
+<ol class="arabic simple" start="2">
+<li><p>每个 OpenMP 线程在各自的物理核心（0，1）中利用 GEMM 执行单元。</p></li>
+</ol>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/4.png"><img alt="../_images/4.png" src="../_images/4.png" style="width: 80%;"></a>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/5.png"><img alt="../_images/5.png" src="../_images/5.png" style="width: 80%;"></a>
+</div>
+<p>我们首先注意到，通过避免使用逻辑核心，执行时间从32秒降低到23秒。虽然仍然存在一些不可忽视的不平衡或串行空转，但我们注意到相对改进从4.980秒到3.887秒。</p>
+<p>通过不使用逻辑线程（而是每个物理核心使用一个线程），我们避免了逻辑线程争夺相同的核心资源。热点区域部分也显示，<code class="docutils literal "><span class="pre">__kmp_fork_barrier</span></code> 的时间相对改进从 4.589 秒到 3.530 秒。</p>
+</div>
+<div class="section" id="local-memory-access-is-always-faster-than-remote-memory-access">
+<h2>本地内存访问总是比远程内存访问快 <a class="headerlink" href="#local-memory-access-is-always-faster-than-remote-memory-access" title="Permalink to this heading">¶</a></h2>
+<p>我们通常建议将进程绑定到本地套接字，这样进程就不会跨越套接字迁移。这样做的一般目的是利用本地内存上的高速缓存，并避免远程内存访问，这可能会慢2倍左右。</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/6.png"><img alt="../_images/6.png" src="../_images/6.png" style="width: 80%;"></a>
+</div>
+<p>图1. 双路配置</p>
+<p>图 1. 展示了一个典型的双路配置。请注意，每个套接字都有自己的本地内存。套接字通过英特尔超路径互连（UPI）相互连接，允许每个套接字访问另一个套接字的本地内存，称为远程内存。本地内存访问总是比远程内存访问快。</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/7.png"><img alt="../_images/7.png" src="../_images/7.png" style="width: 50%;"></a>
+</div>
+<p>图 2.1. CPU 信息</p>
+<p>用户可以通过在 Linux 机器上运行 <code class="docutils literal "><span class="pre">lscpu</span></code> 命令来获取他们的 CPU 信息。图 2.1.展示了在一个具有两个 Intel(R) Xeon(R) Platinum 8180M CPU 的机器上执行 <code class="docutils literal "><span class="pre">lscpu</span></code> 的示例。注意，每个插槽有 28 个核心，每个核心有 2 个线程（即启用了超线程）。换句话说，除了 28 个物理核心外，还有 28 个逻辑核心，每个插槽总共 56 个核心。并且有 2 个插槽，总共 112 个核心（<code class="docutils literal "><span class="pre"> 线程 </span> <span class="pre"> 每 </span> <span class="pre"> 核心 </span></code> x <code class="docutils literal "><span class="pre"> 核心 </span> <span class="pre"> 每 </span> <span class="pre"> 插槽 </span></code> x <code class="docutils literal "><span class="pre"> 插槽 </span></code>）。</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/8.png"><img alt="../_images/8.png" src="../_images/8.png" style="width: 100%;"></a>
+</div>
+<p>图 2.2. CPU 信息</p>
+<p>2 个插座分别映射到 2 个 NUMA 节点（NUMA 节点 0，NUMA 节点 1）。物理核心的索引先于逻辑核心。如图 2.2 所示，第一个插座上的前 28 个物理核心（0-27）和前 28 个逻辑核心（56-83）位于 NUMA 节点 0。第二个插座上的后 28 个物理核心（28-55）和后 28 个逻辑核心（84-111）位于 NUMA 节点 1。同一插座上的核心共享本地内存和最后一级缓存（LLC），这比通过英特尔 UPI 的跨插座通信要快得多。</p>
+<p>现在我们已经了解了 NUMA、跨插座（UPI）流量、多处理器系统中的本地与远程内存访问，让我们来分析和验证我们的理解。</p>
+<p><strong>练习</strong></p>
+<p>我们将重用上面的 ResNet50 示例。</p>
+<p>由于我们没有将线程固定到特定插槽的处理器核心，操作系统会定期将线程调度到不同插槽的处理器核心上。</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/9.gif"><img alt="../_images/9.gif" src="../_images/9.gif" style="width: 100%;"></a>
+</div>
+<p>图 3. 非 NUMA 感知应用程序的 CPU 使用情况。启动了 1 个主工作线程，然后在该系统的所有核心上启动了物理核心数（56）的线程，包括逻辑核心。</p>
+<p>（旁白：如果没有通过 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.set_num_threads.html">torch.set_num_threads</a> 设置线程数，则默认线程数是启用超线程的系统中的物理核心数。这可以通过 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.get_num_threads.html">torch.get_num_threads</a> 来验证。因此，我们上面看到大约一半的核心正忙于运行示例脚本。）</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/10.png"><img alt="../_images/10.png" src="../_images/10.png" style="width: 100%;"></a>
+</div>
+<p>图4. 非均匀内存访问分析图</p>
+<p>图4. 比较了随时间变化的本地与远程内存访问。我们验证了远程内存的使用情况，这可能导致性能不佳。</p>
+<p><strong>设置线程亲和性以减少远程内存访问和跨套接字（UPI）流量。</strong></p>
+<p>将线程固定在相同套接字上的核心有助于保持内存访问的局部性。在本例中，我们将固定到第一个 NUMA 节点（0-27）的物理核心。通过启动脚本，用户可以通过简单地切换启动脚本旋钮 <code class="docutils literal "><span class="pre">--node_id</span></code> 来轻松地实验 NUMA 节点的配置。</p>
+<p>现在让我们可视化 CPU 使用情况。</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/11.gif"><img alt="../_images/11.gif" src="../_images/11.gif" style="width: 100%;"></a>
+</div>
+<p>图 5. NUMA 感知应用程序的 CPU 使用情况</p>
+<p>启动了 1 个主工作线程，然后在该 NUMA 节点的所有物理核心上启动了线程。</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/12.png"><img alt="../_images/12.png" src="../_images/12.png" style="width: 100%;"></a>
+</div>
+<p>图6. 非均匀内存访问分析图</p>
+<p>如图6所示，现在几乎所有内存访问都是本地访问。</p>
+</div>
+<div class="section" id="efficient-cpu-usage-with-core-pinning-for-multi-worker-inference">
+<h2>使用核心绑定实现多工作线程推理的 CPU 高效使用 <a class="headerlink" href="#efficient-cpu-usage-with-core-pinning-for-multi-worker-inference" title="Permalink to this heading">¶</a></h2>
+<p>在运行多工作线程推理时，核心被工作线程重叠（或共享），导致 CPU 使用效率低下。为了解决这个问题，启动脚本将可用的核心数平均分配给工作线程，使得每个工作线程在运行时被绑定到指定的核心。</p>
+<p><strong>TorchServe 练习</strong></p>
+<p>在这个练习中，让我们将我们之前讨论过的 CPU 性能调整原则和建议应用到 <a class="reference external" href="https://github.com/pytorch/serve/tree/master/benchmarks#benchmarking-with-apache-bench">TorchServe apache-bench 基准测试 </a>。</p>
+<p>我们将使用 ResNet50，4 个工作线程，并发 100，请求数量 10,000。所有其他参数（例如，batch_size、input 等）与<a class="reference external" href="https://github.com/pytorch/serve/blob/master/benchmarks/benchmark-ab.py#L18">默认参数</a>相同。</p>
+<p>我们将比较以下三个配置：</p>
+<ol class="arabic simple">
+<li><p>默认 TorchServe 设置（无核心绑定）</p></li>
+<li><p><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.set_num_threads.html">torch.set_num_threads</a> = <code class="docutils literal "><span class="pre">number</span> <span class="pre">of</span> <span class="pre">physical</span> <span class="pre">cores</span> <span class="pre">/</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">workers</span></code>  （无核心绑定）</p></li>
+<li><p>通过启动脚本进行核心固定（必需 Torchserve&gt;=0.6.1）</p></li>
+</ol>
+<p>在这个练习之后，我们将验证我们更喜欢避免逻辑核心，并更喜欢通过核心固定使用本地内存访问，以实际的 TorchServe 用例为例。</p>
+</div>
+<div class="section" id="default-torchserve-setting-no-core-pinning">
+<h2>1. 默认 TorchServe 设置（无核心固定）<a class="headerlink" href="#default-torchserve-setting-no-core-pinning" title="Permalink to this heading">¶</a></h2>
+<p><a class="reference external" href="https://github.com/pytorch/serve/blob/master/ts/torch_handler/base_handler.py">base_handler</a> 没有显式设置 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.set_num_threads.html">torch.set_num_threads</a>。因此，默认的线程数是物理 CPU 核心的数量，如<a class="reference external" href="https://pytorch.org/docs/stable/notes/cpu_threading_torchscript_inference.html#runtime-api">此处</a>所述。用户可以通过 base_handler 中的 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.get_num_threads.html">torch.get_num_threads</a> 检查线程数。每个 4 个主要工作线程启动一个物理核心编号（56）的线程，总共启动 56x4 = 224 个线程，这比核心总数 112 多。因此，核心保证会高度重叠，逻辑核心利用率高——多个工作线程同时使用多个核心。此外，由于线程没有绑定到特定的 CPU 核心，操作系统会定期调度线程到位于不同插槽的核心。</p>
+<ol class="arabic simple">
+<li><p>CPU 使用率</p></li>
+</ol>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/13.png"><img alt="../_images/13.png" src="../_images/13.png" style="width: 100%;"></a>
+</div>
+<p>启动了4个主要工作线程，然后每个线程在所有核心上启动了物理核心数（56）的线程，包括逻辑核心。</p>
+<ol class="arabic simple" start="2">
+<li><p>核绑定停顿</p></li>
+</ol>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/14.png"><img alt="../_images/14.png" src="../_images/14.png" style="width: 80%;"></a>
+</div>
+<p>我们观察到非常高的核绑定停顿率为 88.4%，降低了流水线效率。核绑定停顿表明 CPU 中可用执行单元的使用不理想。例如，连续的几个 GEMM 指令可能因为超线程核心共享的融合乘加（FMA）或点积（DP）执行单元而引起核绑定停顿。正如前文所述，使用逻辑核心会放大这个问题。</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/15.png"><img alt="../_images/15.png" src="../_images/15.png" style="width: 40%;"></a>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/16.png"><img alt="../_images/16.png" src="../_images/16.png" style="width: 50%;"></a>
+</div>
+<p>空的流水线槽位未填充微操作（uOps）会被认为是停顿。例如，如果没有核心固定，CPU 的使用可能不会有效地用于计算，而是用于其他操作，如 Linux 内核的线程调度。上面我们看到，<code class="docutils literal "><span class="pre">__sched_yield</span></code> 导致了大部分的自旋时间。</p>
+<ol class="arabic simple" start="3">
+<li><p>线程迁移</p></li>
+</ol>
+<p>没有核心固定时，调度器可能会将运行在某个核心上的线程迁移到另一个核心。线程迁移可能会导致线程与已经加载到缓存中的数据解关联，从而增加数据访问的延迟。在 NUMA 系统中，当线程跨越插槽迁移时，这个问题会加剧。现在被加载到本地内存的高速缓存中的数据变成了远程内存，这要慢得多。</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/17.png"><img alt="../_images/17.png" src="../_images/17.png" style="width: 50%;"></a>
+</div>
+<p>通常线程的总数应该小于或等于核心支持的线程总数。在上面的例子中，我们注意到在 core_51 上执行了大量的线程，而不是预期的 2 个线程（因为 Intel(R) Xeon(R) Platinum 8180 CPU 启用了超线程）。这表明发生了线程迁移。</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/18.png"><img alt="../_images/18.png" src="../_images/18.png" style="width: 80%;"></a>
+</div>
+<p>此外，请注意线程（TID:97097）在大量 CPU 核心上执行，表明 CPU 迁移。例如，此线程在 cpu_81 上执行，然后迁移到 cpu_14，然后迁移到 cpu_5，依此类推。此外，请注意此线程在多个节点间来回迁移，导致内存访问效率非常低。例如，此线程在 cpu_70（NUMA 节点 0）上执行，然后迁移到 cpu_100（NUMA 节点 1），然后迁移到 cpu_24（NUMA 节点 0）。</p>
+<ol class="arabic simple" start="4">
+<li><p>非均匀内存访问分析</p></li>
+</ol>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/19.png"><img alt="../_images/19.png" src="../_images/19.png" style="width: 100%;"></a>
+</div>
+<p>比较本地与远程内存访问随时间的变化。我们观察到大约一半，即 51.09%的内存访问是远程访问，表明 NUMA 配置不理想。</p>
+</div>
+<div class="section" id="torch-set-num-threads-number-of-physical-cores-number-of-workers-no-core-pinning">
+<h2>2. torch.set_num_threads = <code class="docutils literal "><span class="pre">number</span> <span class="pre">of</span> <span class="pre">physical</span> <span class="pre">cores</span> <span class="pre">/</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">workers</span></code>  (无核心绑定)<a class="headerlink" href="#torch-set-num-threads-number-of-physical-cores-number-of-workers-no-core-pinning" title="Permalink to this heading">¶</a></h2>
+<p>与启动器的核心绑定进行苹果对苹果的比较时，我们将线程数设置为核心数除以工作线程数（启动器内部会这样做）。在 <a class="reference external" href="https://github.com/pytorch/serve/blob/master/ts/torch_handler/base_handler.py">base_handler</a> 中添加以下代码片段：</p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="n">num_physical_cores</span><span class="o">/</span><span class="n">num_workers</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>如前所述，没有核心绑定，这些线程没有绑定到特定的 CPU 核心，导致操作系统定期在不同的插槽上调度线程。</p>
+<ol class="arabic simple">
+<li><p>CPU 使用率</p></li>
+</ol>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/20.gif"><img alt="../_images/20.gif" src="../_images/20.gif" style="width: 100%;"></a>
+</div>
+<p>启动了4个主要工作线程，然后每个线程在所有核心上（包括逻辑核心）启动了 <code class="docutils literal "><span class="pre">num_physical_cores/num_workers</span></code>  个线程（14个线程）。</p>
+<ol class="arabic simple" start="2">
+<li><p>核绑定停滞</p></li>
+</ol>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/21.png"><img alt="../_images/21.png" src="../_images/21.png" style="width: 80%;"></a>
+</div>
+<p>尽管核绑定停滞的百分比从88.4%下降到73.5%，但核绑定仍然非常高。</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/22.png"><img alt="../_images/22.png" src="../_images/22.png" style="width: 40%;"></a>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/23.png"><img alt="../_images/23.png" src="../_images/23.png" style="width: 50%;"></a>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>线程迁移</p></li>
+</ol>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/24.png"><img alt="../_images/24.png" src="../_images/24.png" style="width: 75%;"></a>
+</div>
+<p>与之前相似，没有核心固定线程（TID:94290）在大量 CPU 核心上执行，表明 CPU 迁移。我们再次注意到跨插槽线程迁移，导致内存访问非常低效。例如，此线程在 cpu_78（NUMA 节点 0）上执行，然后迁移到 cpu_108（NUMA 节点 1）。</p>
+<ol class="arabic simple" start="4">
+<li><p>非均匀内存访问分析</p></li>
+</ol>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/25.png"><img alt="../_images/25.png" src="../_images/25.png" style="width: 100%;"></a>
+</div>
+<p>尽管比原始的 51.09%有所改进，但仍有 40.45%的内存访问是远程的，表明 NUMA 配置不理想。</p>
+</div>
+<div class="section" id="launcher-core-pinning">
+<h2>3. 启动器核心绑定 <a class="headerlink" href="#launcher-core-pinning" title="Permalink to this heading">¶</a></h2>
+<p>启动器将内部平均分配物理核心给工作进程，并将它们绑定到每个工作进程。提醒一下，启动器默认只使用物理核心。在这个例子中，启动器将工作进程 0 绑定到核心 0-13（NUMA 节点 0），工作进程 1 绑定到核心 14-27（NUMA 节点 0），工作进程 2 绑定到核心 28-41（NUMA 节点 1），工作进程 3 绑定到核心 42-55（NUMA 节点 1）。这样做确保了核心在工作进程之间不会重叠，并避免了逻辑核心的使用。</p>
+<ol class="arabic simple">
+<li><p>CPU 使用率</p></li>
+</ol>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/26.gif"><img alt="../_images/26.gif" src="../_images/26.gif" style="width: 100%;"></a>
+</div>
+<p>启动了4个主要工作线程，然后每个线程又启动了 <code class="docutils literal "><span class="pre">num_physical_cores/num_workers</span></code> 个（14个）绑定到分配的物理核心的线程。</p>
+<ol class="arabic simple" start="2">
+<li><p>核绑定停顿</p></li>
+</ol>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/27.png"><img alt="../_images/27.png" src="../_images/27.png" style="width: 80%;"></a>
+</div>
+<p>核绑定停顿从原始的88.4%显著降低到46.2% - 几乎是2倍的性能提升。</p>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/28.png"><img alt="../_images/28.png" src="../_images/28.png" style="width: 40%;"></a>
+</div>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/29.png"><img alt="../_images/29.png" src="../_images/29.png" style="width: 50%;"></a>
+</div>
+<p>我们验证，使用核心绑定，大部分 CPU 时间被有效地用于计算 - 旋转时间为 0.256 秒。</p>
+<ol class="arabic simple" start="3">
+<li><p>线程迁移</p></li>
+</ol>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/30.png"><img alt="../_images/30.png" src="../_images/30.png" style="width: 100%;"></a>
+</div>
+<p>我们验证，<cite>OMP 主线程#0</cite> 被绑定到指定的物理核心（42-55），并且没有跨插槽迁移。</p>
+<ol class="arabic simple" start="4">
+<li><p>非均匀内存访问分析</p></li>
+</ol>
+<div class="figure align-center">
+<a class="reference internal image-reference" href="../_images/31.png"><img alt="../_images/31.png" src="../_images/31.png" style="width: 100%;"></a>
+</div>
+<p>现在几乎所有，89.52%，的内存访问都是局部访问。</p>
+</div>
+<div class="section" id="conclusion">
+<h2>结论 <a class="headerlink" href="#conclusion" title="Permalink to this heading">¶</a></h2>
+<p>在这篇博客中，我们展示了正确设置 CPU 运行时配置可以显著提升 CPU 的出厂性能。</p>
+<p>我们已经介绍了一些通用的 CPU 性能调优原则和建议：</p>
+<ul class="simple">
+<li><p>在启用超线程的系统上，通过设置线程亲和性到物理核心来避免使用逻辑核心。</p></li>
+<li><p>在具有 NUMA 的多插槽系统中，通过设置线程亲和性到特定插槽，避免跨插槽远程内存访问。</p></li>
+</ul>
+<p>我们从第一性原理出发对这些想法进行了可视化解释，并通过性能分析验证了性能提升。最后，我们将所学知识应用于 TorchServe，以提升 TorchServe 的 CPU 性能。</p>
+<p>这些原则可以通过一个易于使用的启动脚本自动配置，该脚本已集成到 TorchServe 中。</p>
+<p>欢迎感兴趣的读者查阅以下文档：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://maskerprc.github.io/tutorials/recipes/recipes/tuning_guide.html#cpu-specific-optimizations">CPU 特定优化</a></p></li>
+<li><p><a class="reference external" href="https://www.intel.com/content/www/us/en/developer/articles/technical/how-to-get-better-performance-on-pytorchcaffe2-with-intel-acceleration.html">最大化 Intel®软件优化 PyTorch*在 CPU 上的性能</a></p></li>
+<li><p><a class="reference external" href="https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/performance_tuning/tuning_guide.html">性能调优指南</a></p></li>
+<li><p><a class="reference external" href="https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/performance_tuning/launch_script.html">启动脚本使用指南</a></p></li>
+<li><p><a class="reference external" href="https://www.intel.com/content/www/us/en/develop/documentation/vtune-cookbook/top/methodologies/top-down-microarchitecture-analysis-method.html">自顶向下微架构分析方法</a></p></li>
+<li><p><a class="reference external" href="https://oneapi-src.github.io/oneDNN/dev_guide_performance_settings.html#benchmarking-settings">配置 oneDNN 进行基准测试</a></p></li>
+<li><p><a class="reference external" href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/vtune-profiler.html#gs.tcbgpa">Intel® VTune™ 分析器</a></p></li>
+<li><p><a class="reference external" href="https://www.intel.com/content/www/us/en/develop/documentation/vtune-help/top.html">Intel® VTune™ 分析器用户指南</a></p></li>
+</ul>
+<p>关注后续关于通过 <a class="reference external" href="https://github.com/intel/intel-extension-for-pytorch">Intel® Extension for PyTorch*</a> 优化内核在 CPU 上的使用以及高级启动器配置（如内存分配器）的帖子。</p>
+</div>
+<div class="section" id="acknowledgement">
+<h2>致谢 <a class="headerlink" href="#acknowledgement" title="Permalink to this heading">¶</a></h2>
+<p>我们想感谢 Ashok Emani（英特尔）和 Jiong Gong（英特尔）在许多步骤中的巨大指导和支持，以及详尽的反馈和审查。我们还要感谢 Hamid Shojanazeri（Meta）、Li Ning（AWS）和 Jing Xu（英特尔）在代码审查中的有益反馈。同时，也要感谢 Suraj Subramanian（Meta）和 Geeta Chauhan（Meta）对博客的有益反馈。</p>
+</div>
+</div>
+</article>
+</div>
+<footer>
+<div aria-label="footer navigation" class="rst-footer-buttons" role="navigation">
+<a accesskey="n" class="btn btn-neutral float-right" href="torchserve_with_ipex_2.html" rel="next" title="Grokking PyTorch Intel CPU performance from first principles (Part 2)">下一个 <img height="16" width="16" src="../_static/images/chevron-right-orange.svg" class="next-page"> </a><a accesskey="p" class="btn btn-neutral" href="../advanced/static_quantization_tutorial.html" rel="prev" title="(beta) Static Quantization with Eager Mode in PyTorch"> <img height="16" width="16" src="../_static/images/chevron-right-orange.svg" class="previous-page"> 上一个</a>
+</div>
+<hr class="rating-hr hr-top">
+<div class="rating-container">
+<div class="rating-prompt">评分这个教程</div>
+<div class="stars-outer">
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="1" title="1 Star"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="2" title="2 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="3" title="3 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="4" title="4 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="5" title="5 Stars"></i>
+</div>
+</div>
+<hr class="rating-hr hr-bottom">
+<div role="contentinfo">
+<p>© 版权所有 2024，PyTorch。</p>
+</div>
+<div>使用 <a href="http://sphinx-doc.org/">Sphinx</a> 构建，并使用由 <a href="https://readthedocs.org">Read the Docs</a> 提供的 <a href="https://github.com/rtfd/sphinx_rtd_theme"> 主题 </a>。</div>
+</footer>
+</div>
+<script>
+if((window.location.href.indexOf("/prototype/")!= -1) && (window.location.href.indexOf("/prototype/prototype_index")< 1))
+  {
+    var div = '<div class="admonition note"><p class="admonition-title">Note</p><p><i class="fa fa-flask" aria-hidden="true">&nbsp</i> This tutorial describes a prototype feature. Prototype features are typically not available as part of binary distributions like PyPI or Conda, except sometimes behind run-time flags, and are at an early stage for feedback and testing.</p></div>'
+    document.getElementById("pytorch-article").insertAdjacentHTML('afterBegin', div)
+  }
+</script>
+</div>
+<div class="pytorch-content-right" id="pytorch-content-right">
+<div class="pytorch-right-menu" id="pytorch-right-menu">
+<div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+<ul>
+<li><a class="reference internal" href="#">从原理出发掌握 PyTorch Intel CPU 性能</a><ul>
+<li><a class="reference internal" href="#avoid-logical-cores-for-deep-learning">避免在深度学习中使用逻辑核心。</a></li>
+<li><a class="reference internal" href="#local-memory-access-is-always-faster-than-remote-memory-access">本地内存访问总是比远程内存访问快</a></li>
+<li><a class="reference internal" href="#efficient-cpu-usage-with-core-pinning-for-multi-worker-inference">多工作者推理的 CPU 高效使用与核心绑定</a></li>
+<li><a class="reference internal" href="#default-torchserve-setting-no-core-pinning">1. 默认 TorchServe 设置（无核心绑定）</a></li>
+<li><a class="reference internal" href="#torch-set-num-threads-number-of-physical-cores-number-of-workers-no-core-pinning">2. torch.set_num_threads = <code class="docutils literal "><span class="pre">number</span> <span class="pre">of</span> <span class="pre">physical</span> <span class="pre">cores</span> <span class="pre">/</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">workers</span></code> （无核心绑定）</a></li>
+<li><a class="reference internal" href="#launcher-core-pinning">3. 启动器核心固定</a></li>
+<li><a class="reference internal" href="#conclusion">结论</a></li>
+<li><a class="reference internal" href="#acknowledgement">致谢</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js" type="text/javascript"></script>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+<script src="../_static/katex.min.js"></script>
+<script src="../_static/auto-render.min.js"></script>
+<script src="../_static/katex_autorenderer.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script src="../_static/js/custom.js"></script>
+<script src="../_static/js/vendor/popper.min.js" type="text/javascript"></script>
+<script src="../_static/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+<script src="../_static/js/theme.js" type="text/javascript"></script>
+<script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+<script>
+
+// Helper function to make it easier to call dataLayer.push()
+function gtag(){window.dataLayer.push(arguments);}
+
+//add microsoft link
+
+if(window.location.href.indexOf("/beginner/basics/")!= -1)
+{
+  var url="https://docs.microsoft.com/learn/paths/pytorch-fundamentals/?wt.mc_id=aiml-7486-cxa";
+  switch(window.location.pathname.split("/").pop().replace('.html',''))
+  {
+    case"quickstart_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/9-quickstart?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"tensorqs_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/2-tensors?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"data_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/3-data?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"transforms_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/4-transforms?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"buildmodel_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/5-model?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"autogradqs_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/6-autograd?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"optimization_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/7-optimization?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"saveloadrun_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/8-inference?WT.mc_id=aiml-7486-cxa";
+    }
+
+    $(".pytorch-call-to-action-links").children().first().before("<a href="+url+' data-behavior="call-to-action-event" data-response="Run in Microsoft Learn" target="_blank"><div id="microsoft-learn-link" style="padding-bottom: 0.625rem;border-bottom: 1px solid #f3f4f7;padding-right: 2.5rem;display: -webkit-box;  display: -ms-flexbox; display: flex; -webkit-box-align: center;-ms-flex-align: center;align-items: center;"><img class="call-to-action-img" src="../../_static/images/microsoft-logo.svg"/><div class="call-to-action-desktop-view">Run in Microsoft Learn</div><div class="call-to-action-mobile-view">Learn</div></div></a>')
+  }
+
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '243028289693773');
+  fbq('track', 'PageView');
+
+  $("[data-behavior='call-to-action-event']").on('click', function(){
+    fbq('trackCustom', "Download", {
+      tutorialTitle: $('h1:first').text(),
+      downloadLink: this.href,
+      tutorialLink: window.location.href,
+      downloadTitle: $(this).attr("data-response")
+    });
+    gtag('event', 'click', {
+      'event_category': $(this).attr("data-response"),
+      'event_label': $("h1").first().text(),
+      'tutorial_link': window.location.href
+    });
+   });
+
+   $("[data-behavior='tutorial-rating']").on('click', function(){
+    fbq('trackCustom', "Tutorial Rating", {
+      tutorialLink: window.location.href,
+      tutorialTitle: $('h1:first').text(),
+      rating: $(this).attr("data-count")
+    });
+    gtag('event', 'click', {
+      'event_category': 'Tutorial Rating',
+      'event_label': $("h1").first().text(),
+      'value': $(this).attr("data-count"),
+      'customEvent:Rating': $(this).attr("data-count") // send to GA custom dimension customEvent:Rating.
+    });
+   });
+
+   if (location.pathname == "/") {
+     $(".rating-container").hide();
+     $(".hr-bottom").hide();
+   }
+
+
+</script>
+<noscript>
+<img height="1" src="https://www.facebook.com/tr?id=243028289693773&amp;ev=PageView
+  &amp;noscript=1" width="1">
+</noscript>
+<script type="text/javascript">
+  var collapsedSections = ['PyTorch Recipes', 'Learning PyTorch', 'Image and Video', 'Audio', 'Text', 'Backends', 'Reinforcement Learning', 'Deploying PyTorch Models in Production', 'Profiling PyTorch', 'Code Transforms with FX', 'Frontend APIs', 'Extending PyTorch', 'Model Optimization', 'Parallel and Distributed Training', 'Edge with ExecuTorch', 'Recommendation Systems', 'Multimodality'];
+</script>
+<font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  "> <img width="1" style="border-style:none;" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0" height="1" alt=""> 
+
+//临时添加调查链接</font></font></font><script>
+    var survey = '<div class="survey-banner"><p><i class="fas fa-poll" aria-hidden="true">&nbsp </i> Take the <a href="https://forms.gle/KZ4xGL65VRMYNbbG6">PyTorch Docs/Tutorials survey</a>.</p></div>'
+    if ($(".pytorch-call-to-action-links").length) {
+        $(".pytorch-call-to-action-links").before(survey);
+    } else {
+        $("#pytorch-article").prepend(survey);
+    }
+</script>
+<!-- Begin Footer -->
+<div class="container-fluid docs-tutorials-resources" id="docs-tutorials-resources">
+<div class="container">
+<div class="row">
+<div class="col-md-4 text-center">
+<h2>文档</h2>
+<p>获取 PyTorch 的全面开发者文档</p>
+<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
+</div>
+<div class="col-md-4 text-center">
+<h2>教程</h2>
+<p>获取初学者和高级开发者的深入教程</p>
+<a class="with-right-arrow" href="https://maskerprc.github.io/tutorials">查看教程</a>
+</div>
+<div class="col-md-4 text-center">
+<h2>资源</h2>
+<p>查找开发资源并解答您的问题</p>
+<a class="with-right-arrow" href="https://pytorch.org/resources">查看资源</a>
+</div>
+</div>
+</div>
+</div>
+<footer class="site-footer">
+<div class="container footer-container">
+<div class="footer-logo-wrapper">
+<a class="footer-logo" href="https://pytorch.org/"></a>
+</div>
+<div class="footer-links-wrapper">
+<div class="footer-links-col">
+<ul>
+<li class="list-title"><a href="https://pytorch.org/">PyTorch</a></li>
+<li><a href="https://pytorch.org/get-started">开始使用</a></li>
+<li><a href="https://pytorch.org/features">特征</a></li>
+<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://pytorch.org/blog/">博客</a></li>
+<li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title"><a href="https://pytorch.org/resources">资源</a></li>
+<li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
+<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
+<li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
+<li><a href="https://pytorch.org/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title">保持更新</li>
+<li><a href="https://www.facebook.com/pytorch" target="_blank">Facebook</a></li>
+<li><a href="https://twitter.com/pytorch" target="_blank">Twitter</a></li>
+<li><a href="https://www.youtube.com/pytorch" target="_blank">YouTube</a></li>
+<li><a href="https://www.linkedin.com/company/pytorch" target="_blank">领英</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title">PyTorch 播客</li>
+<li><a href="https://open.spotify.com/show/6UzHKeiy368jKfQMKKvJY5" target="_blank">Spotify</a></li>
+<li><a href="https://podcasts.apple.com/us/podcast/pytorch-developer-podcast/id1566080008" target="_blank">苹果</a></li>
+<li><a href="https://www.google.com/podcasts?feed=aHR0cHM6Ly9mZWVkcy5zaW1wbGVjYXN0LmNvbS9PQjVGa0lsOA%3D%3D" target="_blank">谷歌</a></li>
+<li><a href="https://music.amazon.com/podcasts/7a4e6f0e-26c2-49e9-a478-41bd244197d0/PyTorch-Developer-Podcast?" target="_blank">亚马逊</a></li>
+</ul>
+</div>
+</div>
+<div class="privacy-policy">
+<ul>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/terms/" target="_blank">条款</a></li>
+<li class="privacy-policy-links">|</li>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/privacy-policy/" target="_blank">隐私</a></li>
+</ul>
+</div>
+<div class="copyright">
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">© 版权所有 Linux 基金会。PyTorch 基金会是 Linux 基金会的一个项目。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列、LF Projects, LLC 的政策，请参阅
+对于网站使用条款、商标政策以及其他适用于 PyTorch 基金会的政策，请参阅
+<a href="https://www.linuxfoundation.org/policies/">www.linuxfoundation.org/policies/</a>。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列、LF Projects, LLC 的政策，请参阅 <a href="https://www.lfprojects.org/policies/">www.lfprojects.org/policies/</a>。</font></font></font></p>
+</div>
+</div>
+</footer>
+<div class="cookie-banner-wrapper">
+<div class="container">
+<p class="gdpr-notice">为了分析交通并优化您的体验，我们在本网站上提供 cookies。通过点击或导航，您同意允许我们使用 cookies。作为本站点的当前维护者，Facebook 的 Cookies 政策适用。了解更多信息，包括可用的控制选项：[cookies 政策](<a href="https://www.facebook.com/policies/cookies/">cookies 政策 </a>)。</p>
+<img class="close-button" src="../_static/images/pytorch-x.svg" width="16" height="16">
+</div>
+</div>
+<!-- End Footer -->
+<!-- Begin Mobile Menu -->
+<div class="mobile-main-menu">
+<div class="container-fluid">
+<div class="container">
+<div class="mobile-main-menu-header-container">
+<a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
+<a class="main-menu-close-button" data-behavior="close-mobile-menu" href="#"></a>
+</div>
+</div>
+</div>
+<div class="mobile-main-menu-links-container">
+<div class="main-menu">
+<ul>
+<li class="resources-mobile-menu-title">
+<a>学习</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/get-started">开始使用</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials">教程</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">学习基础知识</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">PyTorch 食谱</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/beginner/introyt.html">PyTorch 入门 - YouTube 系列</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>生态系统</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/ecosystem">工具</a>
+</li>
+<li>
+<a href="https://pytorch.org/#community-module">社区</a>
+</li>
+<li>
+<a href="https://discuss.pytorch.org/">论坛</a>
+</li>
+<li>
+<a href="https://pytorch.org/resources">开发者资源</a>
+</li>
+<li>
+<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>边缘</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/edge">关于 PyTorch Edge</a>
+</li>
+<li>
+<a href="https://pytorch.org/executorch-overview">ExecuTorch</a>
+</li>
+<li>
+<a href="https://pytorch.org/executorch/stable/index.html">ExecuTorch 文档</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>文档</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
+</li>
+<li>
+<a href="https://pytorch.org/pytorch-domains">PyTorch 领域</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>博客 &amp; 新闻</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/blog/">PyTorch 博客</a>
+</li>
+<li>
+<a href="https://pytorch.org/community-blog">社区博客</a>
+</li>
+<li>
+<a href="https://pytorch.org/videos">视频</a>
+</li>
+<li>
+<a href="https://pytorch.org/community-stories">社区故事</a>
+</li>
+<li>
+<a href="https://pytorch.org/events">活动</a>
+</li>
+<li>
+<a href="https://pytorch.org/newsletter">通讯</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>关于</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
+</li>
+<li>
+<a href="https://pytorch.org/governing-board">管理委员会</a>
+</li>
+<li>
+<a href="https://pytorch.org/credits">云信用计划</a>
+</li>
+<li>
+<a href="https://pytorch.org/tac">技术顾问委员会</a>
+</li>
+<li>
+<a href="https://pytorch.org/staff">员工</a>
+</li>
+<li>
+<a href="https://pytorch.org/contact-us">联系我们</a>
+</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<!-- End Mobile Menu -->
+<script src="../_static/js/vendor/anchor.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+      mainMenuDropdown.bind();
+      filterTags.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function(e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+
+</body></html>

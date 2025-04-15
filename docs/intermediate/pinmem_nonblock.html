@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>A guide on good usage of non_blocking and pin_memory() in PyTorch — PyTorch Tutorials 2.3.0+cpu documentation</title>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<link href="../_static/copybutton.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/katex-math.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-binder.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-dataframe.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-rendered-html.css" rel="stylesheet" type="text/css">
+<link href="../_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom2.css" rel="stylesheet" type="text/css">
+<link href="../genindex.html" rel="index" title="Index">
+<link href="../search.html" rel="search" title="Search">
+<link href="torchvision_tutorial.html" rel="next" title="TorchVision Object Detection Finetuning Tutorial">
+<link href="tensorboard_tutorial.html" rel="prev" title="Visualizing Models, Data, and Training with TensorBoard">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T8XT4PS');</script>
+<!-- End Google Tag Manager -->
+<script src="../_static/js/modernizr.min.js"></script>
+<!-- Preload the theme fonts -->
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-book.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" rel="preload" type="font/woff2">
+<!-- Preload the katex fonts -->
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" rel="preload" type="font/woff2">
+<link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" rel="stylesheet">
+</head><body class="pytorch-body"><div class="container-fluid header-holder tutorials-header" id="header-holder">
+<div class="container">
+<div class="header-container">
+<a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
+<div class="main-menu">
+<ul>
+<li class="main-menu-item">
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">学习</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/get-started">
+<span class="dropdown-title">开始使用</span>
+<p>在本地运行 PyTorch 或快速开始使用支持的云平台之一</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials">
+<span class="dropdown-title">教程</span>
+<p>PyTorch 教程中有什么新内容</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">
+<span class="dropdown-title">学习基础知识</span>
+<p>熟悉 PyTorch 的概念和模块</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">
+<span class="dropdown-title">PyTorch 食谱</span>
+<p>小巧便捷、即用型 PyTorch 代码示例</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/introyt.html">
+<span class="dropdown-title">PyTorch 入门 - YouTube 系列教程</span>
+<p>通过我们引人入胜的 YouTube 教程系列掌握 PyTorch 基础知识</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">生态系统</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
+<span class="dropdown-title">工具</span>
+<p>了解 PyTorch 生态系统中的工具和框架</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/#community-module">
+<span class="dropdown-title">社区</span>
+<p>加入 PyTorch 开发者社区，贡献、学习并解答你的问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://discuss.pytorch.org/" target="_blank">
+<span class="dropdown-title">论坛</span>
+<p>讨论 PyTorch 代码、问题、安装、研究的地方</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/resources">
+<span class="dropdown-title">开发者资源</span>
+<p>查找资源并解答问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
+<span class="dropdown-title">贡献者奖项 - 2024</span>
+<p>本届 PyTorch 大会揭晓获奖者</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">边缘</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/edge">
+<span class="dropdown-title">关于 PyTorch Edge</span>
+<p>为边缘设备构建创新且注重隐私的 AI 体验</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/executorch-overview">
+<span class="dropdown-title">ExecuTorch</span>
+<p>实现移动和边缘设备端到端推理能力的解决方案</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/executorch/stable/index.html">
+<span class="dropdown-title">ExecuTorch 文档</span>
+</a>
+</div>
+</div>
+</li>
+<li class="main-menu-item">
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">文档</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
+<span class="dropdown-title">PyTorch</span>
+<p>查阅文档以获取全面指导，了解如何使用 PyTorch</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/pytorch-domains">
+<span class="dropdown-title">PyTorch 领域</span>
+<p>阅读 PyTorch Domains 文档以了解更多关于特定领域库的信息</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">博客与新闻</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/blog/">
+<span class="dropdown-title">PyTorch 博客</span>
+<p>捕捉最新的技术新闻和事件</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
+<span class="dropdown-title">社区博客</span>
+<p>PyTorch 生态系统中的故事</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/videos">
+<span class="dropdown-title">视频</span>
+<p>了解最新的 PyTorch 教程、新内容等</p>
+</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+<span class="dropdown-title">社区故事</span>
+<p>学习如何我们的社区使用 PyTorch 解决真实、日常的机器学习问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/events">
+<span class="dropdown-title">活动</span>
+<p>查找活动、网络研讨会和播客</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
+<span class="dropdown-title">通讯</span>
+<p>保持最新更新</p>
+</a>
+</div>
+</div></li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">关于</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/foundation">
+<span class="dropdown-title">PyTorch 基金会</span>
+<p>了解更多关于 PyTorch 基金会</p>
+</a>
+管理委员会云信用计划技术顾问委员会员工联系我们
+</div>
+</div>
+</li>
+<li class="main-menu-item">
+<div class="no-dropdown">
+<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
+</div>
+</li>
+<li>
+<div class="main-menu-item">
+<a class="github-icon" href="https://github.com/pytorch/pytorch">
+</a>
+</div>
+</li>
+<!--- TODO: This block adds the search icon to the nav bar. We will enable it later. 
+          <li>
+            <div class="main-menu-item">
+             <a href="https://github.com/pytorch/pytorch" class="search-icon">
+             </a>
+            </div>
+          </li>
+          --->
+</ul>
+</div>
+<a class="main-menu-open-button" data-behavior="open-mobile-menu" href="#"></a>
+</div>
+</div>
+</div>
+
+<div class="table-of-contents-link-wrapper">
+<span>目录</span>
+<a class="toggle-table-of-contents" data-behavior="toggle-table-of-contents" href="#"></a>
+</div>
+<nav class="pytorch-left-menu" data-toggle="wy-nav-shift" id="pytorch-left-menu">
+<div class="pytorch-side-scroll">
+<div aria-label="main navigation" class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation">
+<div class="pytorch-left-menu-search">
+<div class="version">
+        2.3.0+cpu
+      </div>
+<!-- Search box -->
+<div id="searchBox">
+<div class="searchbox" id="googleSearchBox">
+<script async="" src="https://cse.google.com/cse.js?cx=e65585f8c3ea1440e"></script>
+<div class="gcse-search"></div>
+</div>
+<div id="sphinxSearchBox" style="display: none;">
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input name="q" placeholder="Search Docs" type="text">
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default">
+</form>
+</div>
+</div>
+</div>
+<form id="searchForm">
+<label style="margin-bottom: 1rem">
+<input checked="" name="searchType" type="radio" value="google">谷歌搜索</label>
+<label style="margin-bottom: 1rem">
+<input name="searchType" type="radio" value="sphinx">经典搜索</label>
+</form>
+<script>
+     document.addEventListener('DOMContentLoaded', function() {
+      const searchForm = document.getElementById('searchForm');
+      const googleSearchBox = document.getElementById('googleSearchBox');
+      const sphinxSearchBox = document.getElementById('sphinxSearchBox');
+      // Function to toggle search box visibility
+      function toggleSearchBox(searchType) {
+        googleSearchBox.style.display = searchType === 'google' ? 'block' : 'none';
+        sphinxSearchBox.style.display = searchType === 'sphinx' ? 'block' : 'none';
+      }
+      // Determine the default search type
+      let defaultSearchType = 'google';
+      if (window.location.href.startsWith('https://docs-preview.pytorch.org/')) {
+        defaultSearchType = 'sphinx';
+      } else {
+        defaultSearchType = localStorage.getItem('searchType') || 'google';
+      }
+      // Set the default search type
+      document.querySelector(`input[name="searchType"][value="${defaultSearchType}"]`).checked = true;
+      toggleSearchBox(defaultSearchType);
+      // Event listener for changes in search type
+      searchForm.addEventListener('change', function(event) {
+        const selectedSearchType = event.target.value;
+        localStorage.setItem('searchType', selectedSearchType);
+        toggleSearchBox(selectedSearchType);
+      });
+      // Set placeholder text for Google search box
+      window.onload = function() {
+        var placeholderText = "Search Docs";
+        var googleSearchboxText = document.querySelector("#gsc-i-id1");
+        if (googleSearchboxText) {
+          googleSearchboxText.placeholder = placeholderText;
+          googleSearchboxText.style.fontFamily = 'FreightSans';
+          googleSearchboxText.style.fontSize = "1.2rem";
+          googleSearchboxText.style.color = '#262626';
+        }
+      };
+    });
+  </script>
+</div>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 食谱</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/recipes_index.html">查看所有菜谱</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prototype/prototype_index.html">查看所有原型菜谱</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/basics/intro.html">学习基础知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/quickstart_tutorial.html">快速入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/tensorqs_tutorial.html">张量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/data_tutorial.html">数据集和数据加载器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/transforms_tutorial.html">转换</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/buildmodel_tutorial.html">构建神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/autogradqs_tutorial.html">自动微分与 <code class="docutils literal "><span class="pre">torch.autograd</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/optimization_tutorial.html">优化模型参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/saveloadrun_tutorial.html">保存和加载模型</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/introyt/introyt_index.html">PyTorch 入门 - YouTube 系列</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/introyt1_tutorial.html">PyTorch 入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensors_deeper_tutorial.html">PyTorch 张量入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/autogradyt_tutorial.html">Autograd 基础</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/modelsyt_tutorial.html">使用 PyTorch 构建模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensorboardyt_tutorial.html">PyTorch TensorBoard 支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/trainingyt.html">使用 PyTorch 进行训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/captumyt.html">使用 Captum 理解模型</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">学习 PyTorch</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../beginner/deep_learning_60min_blitz.html">深度学习与 PyTorch：60 分钟速成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/pytorch_with_examples.html">通过示例学习 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/nn_tutorial.html"><cite>torch.nn</cite><em> 究竟</em>是什么？</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlp_from_scratch_index.html">从零开始学习自然语言处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tensorboard_tutorial.html">使用 TensorBoard 可视化模型、数据和训练</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">PyTorch 中正确使用<code class="docutils literal "><span class="pre">非阻塞</span></code>和<code class="docutils literal "><span class="pre">固定内存</span></code>的指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">图像和视频</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="torchvision_tutorial.html">TorchVision 目标检测微调教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/transfer_learning_tutorial.html">计算机视觉迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/fgsm_tutorial.html">对抗样本生成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dcgan_faces_tutorial.html">DCGAN 教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial_transformer_tutorial.html">空间变换网络教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">优化视觉 Transformer 模型以部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiatoolbox_tutorial.html">使用 PyTorch 和 TIAToolbox 进行全切片图像分类</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">音频</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_io_tutorial.html">音频输入/输出</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_resampling_tutorial.html">音频重采样</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_data_augmentation_tutorial.html">音频数据增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_extractions_tutorial.html">音频特征提取</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_augmentation_tutorial.html">音频特征增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_datasets_tutorial.html">音频数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="speech_recognition_pipeline_tutorial.html">使用 Wav2Vec2 的语音识别</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text_to_speech_with_torchaudio.html">使用 Tacotron2 的文本到语音</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forced_alignment_with_torchaudio_tutorial.html">使用 Wav2Vec2 的强制对齐</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">后端</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">强化学习</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_q_learning.html">强化学习（DQN）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_ppo.html">使用 TorchRL 的强化学习（PPO）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mario_rl_tutorial.html">训练一个玩马里奥的强化学习智能体</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/pendulum.html">摆锤：使用 TorchRL 编写你的环境和转换</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">部署 PyTorch 模型到生产环境</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flask_rest_api_tutorial.html">使用 Flask 通过 REST API 部署 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/Intro_to_TorchScript_tutorial.html">TorchScript 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_export.html">在 C++中加载 TorchScript 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/super_resolution_with_onnxruntime.html">(可选) 将 PyTorch 模型导出为 ONNX 并使用 ONNX Runtime 运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="realtime_rpi.html">Raspberry Pi 4 上的实时推理（30 fps！）</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 性能分析</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">PyTorch 模块性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_intro_tutorial.html">全景式跟踪分析简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_trace_diff_tutorial.html">使用全景式跟踪分析进行跟踪差异</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">使用 FX 进行代码转换</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fx_conv_bn_fuser.html">(beta) 在 FX 中构建卷积/批量归一化融合器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fx_profiling_tutorial.html">(beta) 使用 FX 构建简单的 CPU 性能分析器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">前端 API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="memory_format_tutorial.html">(beta) PyTorch 中的通道最后内存格式</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forward_ad_usage.html">前向模式自动微分（Beta）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jacobians_hessians.html">雅可比矩阵、海森矩阵、HVP、vHP 以及更多：函数变换的组成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ensembling.html">模型集成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="per_sample_grads.html">每样本梯度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_frontend.html">使用 PyTorch C++前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch-script-parallelism.html">动态并行化在 TorchScript 中</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_autograd.html">C++前端中的自动微分</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">扩展 PyTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/custom_ops_landing_page.html">PyTorch 自定义算子</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/python_custom_ops.html">自定义 Python 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_custom_ops.html">自定义 C++和 CUDA 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_function_double_backward_tutorial.html">使用自定义函数的双向回传</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_function_conv_bn_tutorial.html">使用自定义函数融合卷积和批量归一化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_extension.html">自定义 C++ 和 CUDA 扩展</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_ops.html">使用自定义 C++ 操作符扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_classes.html">使用自定义 C++ 类扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dispatcher.html">在 C++ 中注册分派操作符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/extend_dispatcher.html">C++中扩展后端调度器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/privateuseone.html">通过 PrivateUse1 促进新后端集成</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">模型优化</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">PyTorch 模块性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tensorboard_profiler_tutorial.html">PyTorch 分析器与 TensorBoard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hyperparameter_tuning_tutorial.html">使用 Ray Tune 进行超参数调整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">优化视觉 Transformer 模型以部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametrizations.html">参数化教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruning_tutorial.html">剪枝教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dynamic_quantization_tutorial.html">(beta) 在 LSTM 词语言模型上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_quantization_bert_tutorial.html">(beta) 在 BERT 上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantized_transfer_learning_tutorial.html">(beta) 计算机视觉的量化迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/static_quantization_tutorial.html">(beta) PyTorch 中 Eager 模式下的静态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex.html">从原理出发掌握 PyTorch Intel CPU 性能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex_2.html">从原理出发掌握 PyTorch Intel CPU 性能（第二部分）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nvfuser_intro_tutorial.html">入门指南 - 使用 nvFuser 加速您的脚本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ax_multiobjective_nas_tutorial.html">基于 Ax 的多目标 NAS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torch_compile_tutorial.html"><code class="docutils literal "><span class="pre">torch.compile</span></code> 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compiled_autograd_tutorial.html">编译 Autograd：捕获更大的 <code class="docutils literal "><span class="pre">torch.compile</span></code> 反向图</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inductor_debug_cpu.html">电感 CPU 后端调试和性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scaled_dot_product_attention_tutorial.html">(Beta) 使用缩放点积注意力（SDPA）实现高性能 Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/knowledge_distillation_tutorial.html">知识蒸馏教程</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">并行和分布式训练</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../distributed/home.html">分布式和并行训练教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dist_overview.html">PyTorch 分布式概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/ddp_series_intro.html">PyTorch 分布式数据并行 - 视频教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_parallel_tutorial.html">单机模型并行最佳实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ddp_tutorial.html">PyTorch 分布式数据并行入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dist_tuto.html">使用 PyTorch 编写分布式应用程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FSDP_tutorial.html">开始使用完全分片数据并行（FSDP）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FSDP_advanced_tutorial.html">高级模型训练与完全分片数据并行（FSDP）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TCPStore_libuv_backend.html">Libuv TCPStore 后端简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TP_tutorial.html">使用 Tensor Parallel（TP）进行大规模 Transformer 模型训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelining_tutorial.html">分布式流水线并行简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process_group_cpp_extension_tutorial.html">使用 C++扩展自定义进程组后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_tutorial.html">分布式 RPC 框架入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_param_server_tutorial.html">使用分布式 RPC 框架实现参数服务器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_async_execution.html">使用异步执行实现批处理 RPC 处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/rpc_ddp_tutorial.html">结合分布式数据并行与分布式 RPC 框架</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/generic_join.html">使用 Join 上下文管理器进行不均匀输入的分布式训练</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Edge 与 ExecuTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html">导出至 ExecuTorch 教程</a></li>
+<li class="toctree-l1"><a class="reference external" href=" https://pytorch.org/executorch/stable/running-a-model-cpp-tutorial.html">在 C++中运行 ExecuTorch 模型教程</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/sdk-integration-tutorial.html">使用 ExecuTorch SDK 对模型进行性能分析</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-ios.html">构建 ExecuTorch iOS 演示应用</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-android.html">构建 ExecuTorch Android 演示应用</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/examples-end-to-end-to-lower-model-to-delegate.html">将模型作为代理降低</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">推荐系统</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="torchrec_intro_tutorial.html">火炬 Rec 入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/sharding.html">探索 TorchRec 分片</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">多模态</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/flava_finetuning_tutorial.html">TorchMultimodal 教程：微调 FLAVA</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="pytorch-container">
+<div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+<div class="pytorch-breadcrumbs-wrapper">
+<div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="pytorch-breadcrumbs">
+<li>
+<font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">教程
+
+         &gt;</font></font></font></li>
+<li>PyTorch 中正确使用<code class="docutils literal "><span class="pre">非阻塞</span></code>和<code class="docutils literal "><span class="pre">固定内存</span></code>的指南</li>
+<li class="pytorch-breadcrumbs-aside">
+<a href="../_sources/intermediate/pinmem_nonblock.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg" width="16" height="16"></a>
+</li>
+</ul>
+</div>
+</div>
+<div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">快捷键</div>
+</div>
+<section class="pytorch-content-wrap" data-toggle="wy-nav-shift" id="pytorch-content-wrap">
+<div class="pytorch-content-left">
+<div class="pytorch-call-to-action-links">
+<div id="tutorial-type">intermediate/pinmem_nonblock</div>
+<div id="google-colab-link">
+<img class="call-to-action-img" src="../_static/images/pytorch-colab.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 Google Colab 中运行</div>
+<div class="call-to-action-mobile-view">Colab</div>
+</div>
+<div id="download-notebook-link">
+<img class="call-to-action-notebook-img" src="../_static/images/pytorch-download.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">下载笔记本</div>
+<div class="call-to-action-mobile-view">笔记本</div>
+</div>
+<div id="github-view-link">
+<img class="call-to-action-img" src="../_static/images/pytorch-github.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 GitHub 上查看</div>
+<div class="call-to-action-mobile-view">GitHub</div>
+</div>
+</div>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-T8XT4PS" style="display:none;visibility:hidden" width="0"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="rst-content">
+<div class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<article class="pytorch-article" id="pytorch-article" itemprop="articleBody">
+<div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">备注</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">点击 <a class="reference internal" href="#sphx-glr-download-intermediate-pinmem-nonblock-py"><span class="std std-ref"> 这里</span></a>
+下载完整示例代码</font></font></font></p>
+</div>
+<div class="sphx-glr-example-title section" id="a-guide-on-good-usage-of-non-blocking-and-pin-memory-in-pytorch">
+<span id="sphx-glr-intermediate-pinmem-nonblock-py"></span><h1>PyTorch 中正确使用<code class="docutils literal "><span class="pre">非阻塞</span></code>和<code class="docutils literal "><span class="pre">固定内存</span></code>的指南 <a class="headerlink" href="#a-guide-on-good-usage-of-non-blocking-and-pin-memory-in-pytorch" title="Permalink to this heading">¶</a></font></font></font></h1><p class="date-info-last-verified" style="color: #6c6c6d; font-size: small;"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">创建时间：2025年4月1日 | 最后更新时间：2025年4月1日 | 最后验证时间：2024年11月5日</p>
+<p><strong>作者 </strong>: <a class="reference external" href="https://github.com/vmoens"> 文森特·莫恩斯</a></p>
+<div class="section" id="introduction">
+<h2>简介 <a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">在许多 PyTorch 应用中，将数据从 CPU 传输到 GPU 是基本操作。
+对于用户来说，了解在设备间移动数据的最有效工具和选项至关重要。
+本教程探讨了 PyTorch 中两种关键的设备间数据传输方法：
+<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.Tensor.pin_memory.html#torch.Tensor.pin_memory" title="(in PyTorch v2.6)"><code class="xref py py-meth docutils literal "><span class="pre">pin_memory()</span></code></a> 和 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.Tensor.to.html#torch.Tensor.to" title="(in PyTorch v2.6)"><code class="xref py py-meth docutils literal "><span class="pre">to()</span></code></a>，并使用 <code class="docutils literal "><span class="pre">non_blocking=True</span></code> 选项。</font></font></font></p>
+<div class="section" id="what-you-will-learn">
+<h3>你将学习 <a class="headerlink" href="#what-you-will-learn" title="Permalink to this heading">¶</a></h3>
+<p>通过异步传输和内存固定，可以优化张量从 CPU 到 GPU 的传输。然而，还有一些重要的考虑因素：</p>
+<ul class="simple">
+<li><p>使用 <code class="docutils literal "><span class="pre">tensor.pin_memory().to(device,</span> <span class="pre">non_blocking=True)</span></code> 可能比直接 <code class="docutils literal "><span class="pre">tensor.to(device)</span></code> 慢两倍。</p></li>
+<li><p>通常， <code class="docutils literal "><span class="pre">tensor.to(device,</span> <span class="pre">non_blocking=True)</span></code> 是提高传输速度的有效选择。</p></li>
+<li><p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">虽然 <code class="docutils literal "><span class="pre">cpu_tensor.to("cuda",</span> <span class="pre">non_blocking=True).mean()</span></code> 执行正确，但尝试
+ <code class="docutils literal "><span class="pre">cuda_tensor.to("cpu",</span> <span class="pre">non_blocking=True).mean()</span></code> 将导致错误输出。</font></font></font></p></li>
+</ul>
+</div>
+<div class="section" id="preamble">
+<h3>前言 <a class="headerlink" href="#preamble" title="Permalink to this heading">¶</a></h3>
+<p>本教程中报告的性能取决于构建教程所使用的系统。尽管结论适用于不同的系统，但具体观察结果可能会因可用硬件而略有不同，尤其是在较旧的硬件上。本教程的主要目标是提供一个理论框架，以理解 CPU 到 GPU 的数据传输。然而，任何设计决策都应针对个别案例进行调整，并受基准吞吐量测量以及具体任务要求的指导。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="k">assert</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">(),</span> <span class="s2">"A cuda device is required to run this tutorial"</span>
+</pre></div>
+</div>
+<p>本教程需要安装 tensordict。如果您环境中还没有 tensordict，请在单独的单元中运行以下命令进行安装：</p>
+<div class="highlight-bash "><div class="highlight"><pre><span></span><span class="c1"># Install tensordict with the following command</span>
+!pip3<span class="w"> </span>install<span class="w"> </span>tensordict
+</pre></div>
+</div>
+<p>我们首先概述这些概念的理论，然后转向具体的功能测试示例。</p>
+</div>
+</div>
+<div class="section" id="background">
+<h2>背景 <a class="headerlink" href="#background" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div></div></blockquote>
+<div class="section" id="memory-management-basics">
+<span id="pinned-memory-background"></span><h3>内存管理基础 <a class="headerlink" href="#memory-management-basics" title="Permalink to this heading">¶</a></h3>
+<blockquote>
+<div></div></blockquote>
+<p id="pinned-memory-memory">当在 PyTorch 中创建一个 CPU 张量时，该张量的内容需要放置在内存中。这里所说的内存是一个相当复杂的概念，值得仔细研究。我们区分两种由内存管理单元处理的内存类型：RAM（为了简单起见）和磁盘上的交换空间（这可能是硬盘）。磁盘和 RAM（物理内存）的可用地空间共同构成了虚拟内存，它是总可用资源的抽象。简而言之，虚拟内存使得可用空间大于单独的 RAM 所能提供的空间，并创造出主内存比实际更大的错觉。</p>
+<p>在正常情况下，常规 CPU 张量是可分页的，这意味着它被分成称为页面的块，可以存在于虚拟内存的任何地方（既在 RAM 上也在磁盘上）。如前所述，这有一个优点，那就是内存看起来比主内存实际要大。</p>
+<p>通常，当程序访问不在 RAM 中的页面时，会发生“页面错误”，然后操作系统（OS）将此页面带回 RAM（“交换入”或“页面入”）。反过来，操作系统可能需要交换出（或“页面出”）另一个页面来为新页面腾出空间。</p>
+<p>与可分页内存相比，固定（或页面锁定或不可分页）内存是一种不能交换到磁盘的内存类型。它允许更快的访问时间和更可预测的访问时间，但缺点是它比可分页内存（即主内存）更有限。</p>
+<div class="figure align-default">
+<img alt="" src="../_images/pinmem.png">
+</div>
+</div>
+<div class="section" id="cuda-and-non-pageable-memory">
+<h3>CUDA 和（非）可分页内存</h3>
+<blockquote>
+<div></div></blockquote>
+<p id="pinned-memory-cuda-pageable-memory">要了解 CUDA 如何将张量从 CPU 复制到 CUDA，让我们考虑上述两种情况：</p>
+<ul class="simple">
+<li><p>如果内存是页面锁定状态，设备可以直接在主内存中访问内存。内存地址定义良好，需要读取这些数据的函数可以显著加速。</p></li>
+<li><p>如果内存是可分页的，所有页面都必须先被载入主内存，然后才能发送到 GPU。这个操作可能需要时间，并且比在页面锁定张量上执行时更不可预测。</p></li>
+</ul>
+<p>更精确地说，当 CUDA 从 CPU 向 GPU 发送可分页数据时，它必须首先创建该数据的页面锁定副本，然后再进行传输。</p>
+</div>
+<div class="section" id="asynchronous-vs-synchronous-operations-with-non-blocking-true-cuda-cudamemcpyasync">
+<h3>异步与同步操作（使用 <code class="docutils literal "><span class="pre">non_blocking=True</span></code> （CUDA <code class="docutils literal "><span class="pre">cudaMemcpyAsync</span></code>）<a class="headerlink" href="#asynchronous-vs-synchronous-operations-with-non-blocking-true-cuda-cudamemcpyasync" title="Permalink to this heading">¶</a>）</h3>
+<blockquote>
+<div></div></blockquote>
+<p id="pinned-memory-async-sync">当从主机（例如，CPU）向设备（例如，GPU）执行复制操作时，CUDA 工具包提供了同步或异步执行这些操作的方式，相对于主机而言。</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">在实际操作中，当调用 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.Tensor.to.html#torch.Tensor.to" title="(in PyTorch v2.6)"><code class="xref py py-meth docutils literal "><span class="pre">to()</span></code></a> 时，PyTorch 总是调用
+<a class="reference external" href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY_1g85073372f776b4c4d5f89f7124b7bf79">cudaMemcpyAsync</a>。如果 <code class="docutils literal "><span class="pre">non_blocking=False</span></code>（默认），每次调用 <code class="docutils literal "><span class="pre">cudaStreamSynchronize</span></code> 后都会调用，使得对 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.Tensor.to.html#torch.Tensor.to" title="(in PyTorch v2.6)"><code class="xref py py-meth docutils literal "><span class="pre">to()</span></code></a> 的调用在主线程中阻塞。如果 <code class="docutils literal "><span class="pre">non_blocking=True</span></code>，则不会触发同步，主机上的主线程不会被阻塞。因此，从主机角度来看，可以同时向设备发送多个张量，因为线程不需要等待一个传输完成就可以启动另一个传输。</font></font></font></p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>通常情况下，传输在设备端是阻塞的（即使主机端不是）：在执行另一个操作时，设备上的复制无法发生。然而，在某些高级场景中，GPU 端可以同时进行复制和内核执行。以下示例将展示，要启用此功能，必须满足以下三个要求：</p>
+<ol class="arabic simple">
+<li><p>设备必须至少有一个空闲的 DMA（直接内存访问）引擎。现代 GPU 架构，如 Volterra、Tesla 或 H100 设备，拥有多个 DMA 引擎。</p></li>
+<li><p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">传输必须在单独的非默认 cuda 流上完成。在 PyTorch 中，可以使用以下方式处理 cuda 流：
+<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.cuda.Stream.html#torch.cuda.Stream" title="(in PyTorch v2.6)"><code class="xref py py-class docutils literal "><span class="pre">Stream</span></code></a>。</font></font></font></p></li>
+<li><p>源数据必须位于固定内存中。</p></li>
+</ol>
+<p>我们通过在以下脚本上运行配置文件来演示这一点。</p>
+</div>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.cuda</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.cuda.Stream.html#torch.cuda.Stream" title="torch.cuda.Stream"><span class="n">Stream</span></a>
+
+
+<span class="n">s</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.cuda.Stream.html#torch.cuda.Stream" title="torch.cuda.Stream"><span class="n">Stream</span></a><span class="p">()</span>
+
+<a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.manual_seed.html#torch.manual_seed" title="torch.manual_seed"><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span></a><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">t1_cpu_pinned</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">1024</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">t2_cpu_paged</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">1024</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">t3_cuda</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">1024</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">"cuda:0"</span><span class="p">)</span>
+
+<span class="k">assert</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">()</span>
+<span class="n">device</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s2">"cuda"</span><span class="p">,</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.current_device.html#torch.cuda.current_device" title="torch.cuda.current_device"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">current_device</span></a><span class="p">())</span>
+
+
+<span class="c1"># The function we want to profile</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">inner</span><span class="p">(</span><span class="n">pinned</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">streamed</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+    <span class="k">with</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.stream.html#torch.cuda.stream" title="torch.cuda.stream"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">stream</span></a><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">if</span> <span class="n">streamed</span> <span class="k">else</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">nullcontext</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">pinned</span><span class="p">:</span>
+            <span class="n">t1_cuda</span> <span class="o">=</span> <span class="n">t1_cpu_pinned</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">t2_cuda</span> <span class="o">=</span> <span class="n">t2_cpu_paged</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">t_star_cuda_h2d_event</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">record_event</span><span class="p">()</span>
+    <span class="c1"># This operation can be executed during the CPU to GPU copy if and only if the tensor is pinned and the copy is</span>
+    <span class="c1">#  done in the other stream</span>
+    <span class="n">t3_cuda_mul</span> <span class="o">=</span> <span class="n">t3_cuda</span> <span class="o">*</span> <span class="n">t3_cuda</span> <span class="o">*</span> <span class="n">t3_cuda</span>
+    <span class="n">t3_cuda_h2d_event</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.current_stream.html#torch.cuda.current_stream" title="torch.cuda.current_stream"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">current_stream</span></a><span class="p">()</span><span class="o">.</span><span class="n">record_event</span><span class="p">()</span>
+    <span class="n">t_star_cuda_h2d_event</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
+    <span class="n">t3_cuda_h2d_event</span><span class="o">.</span><span class="n">synchronize</span><span class="p">()</span>
+
+
+<span class="c1"># Our profiler: profiles the `inner` function and stores the results in a .json file</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">benchmark_with_profiler</span><span class="p">(</span>
+    <span class="n">pinned</span><span class="p">,</span>
+    <span class="n">streamed</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">_C</span><span class="o">.</span><span class="n">_profiler</span><span class="o">.</span><span class="n">_set_cuda_sync_enabled_val</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">wait</span><span class="p">,</span> <span class="n">warmup</span><span class="p">,</span> <span class="n">active</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>
+    <span class="n">num_steps</span> <span class="o">=</span> <span class="n">wait</span> <span class="o">+</span> <span class="n">warmup</span> <span class="o">+</span> <span class="n">active</span>
+    <span class="n">rank</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">torch</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">profile</span></a><span class="p">(</span>
+        <span class="n">activities</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">ProfilerActivity</span><span class="o">.</span><span class="n">CPU</span><span class="p">,</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">ProfilerActivity</span><span class="o">.</span><span class="n">CUDA</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">schedule</span><span class="o">=</span><a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.schedule" title="torch.profiler.schedule"><span class="n">torch</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">schedule</span></a><span class="p">(</span>
+            <span class="n">wait</span><span class="o">=</span><span class="n">wait</span><span class="p">,</span> <span class="n">warmup</span><span class="o">=</span><span class="n">warmup</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">skip_first</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">),</span>
+    <span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">step_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">inner</span><span class="p">(</span><span class="n">streamed</span><span class="o">=</span><span class="n">streamed</span><span class="p">,</span> <span class="n">pinned</span><span class="o">=</span><span class="n">pinned</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">rank</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">prof</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="n">prof</span><span class="o">.</span><span class="n">export_chrome_trace</span><span class="p">(</span><span class="sa">f</span><span class="s2">"trace_streamed</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">streamed</span><span class="p">)</span><span class="si">}</span><span class="s2">_pinned</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">pinned</span><span class="p">)</span><span class="si">}</span><span class="s2">.json"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>在 chrome 中（<code class="docutils literal "><span class="pre">chrome://tracing</span></code>）加载这些配置文件跟踪结果如下：首先，让我们看看如果对 <code class="docutils literal "><span class="pre">t3_cuda</span></code> 的算术运算在将可分页张量发送到主流 GPU 之后执行会发生什么：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">benchmark_with_profiler</span><span class="p">(</span><span class="n">streamed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pinned</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="" src="../_images/trace_streamed0_pinned0.png">
+</div>
+<p>使用固定张量并不会对跟踪结果产生太大影响，两个操作仍然连续执行：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">benchmark_with_profiler</span><span class="p">(</span><span class="n">streamed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pinned</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="" src="../_images/trace_streamed0_pinned1.png">
+</div>
+<p>将可分页的 tensor 发送到 GPU 上的单独流也是一个阻塞操作：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">benchmark_with_profiler</span><span class="p">(</span><span class="n">streamed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pinned</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="" src="../_images/trace_streamed1_pinned0.png">
+</div>
+<p>只有固定内存的 tensor 在单独的流上复制到 GPU 时，才会与主流上执行的另一个 cuda 内核重叠：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">benchmark_with_profiler</span><span class="p">(</span><span class="n">streamed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pinned</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="" src="../_images/trace_streamed1_pinned1.png">
+</div>
+</div>
+</div>
+<div class="section" id="a-pytorch-perspective">
+<h2>PyTorch 视角 <a class="headerlink" href="#a-pytorch-perspective" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div></div></blockquote>
+<div class="section" id="pin-memory">
+<span id="pinned-memory-pt-perspective"></span><h3><code class="docutils literal "><span class="pre">pin_memory()</span></code><a class="headerlink" href="#pin-memory" title="Permalink to this heading">¶</a></h3>
+<blockquote>
+<div></div></blockquote>
+<p id="pinned-memory-pinned"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">PyTorch 提供了创建并发送张量到页锁定内存的可能性
+通过 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.Tensor.pin_memory.html#torch.Tensor.pin_memory" title="(in PyTorch v2.6)"><code class="xref py py-meth docutils literal "><span class="pre">pin_memory()</span></code></a> 方法和构造函数参数。在 CUDA 已初始化的机器上，CPU 张量可以通过 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.Tensor.pin_memory.html#torch.Tensor.pin_memory" title="(in PyTorch v2.6)"><code class="xref py py-meth docutils literal "><span class="pre">pin_memory()</span></code></a> 方法转换为页锁定内存。
+重要的是，<code class="docutils literal "><span class="pre">pin_memory</span></code> 会在主机的主线程上阻塞：它将在将张量复制到页锁定内存之前等待，然后执行下一个操作。可以使用 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.zeros.html#torch.zeros" title="(in PyTorch v2.6)"><code class="xref py py-func docutils literal "><span class="pre">zeros()</span></code></a>、<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.ones.html#torch.ones" title="(in PyTorch v2.6)"><code class="xref py py-func docutils literal "><span class="pre">ones()</span></code></a> 和其他构造函数直接在页锁定内存中创建新张量。</font></font></font></p>
+<p>让我们检查页锁定内存和将张量发送到 CUDA 的速度：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.benchmark</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-utils-benchmark sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/benchmark_utils.html#torch.utils.benchmark.Timer" title="torch.utils.benchmark.Timer"><span class="n">Timer</span></a>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">timer</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
+    <span class="n">median</span> <span class="o">=</span> <span class="p">(</span>
+        <a class="sphx-glr-backref-module-torch-utils-benchmark sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/benchmark_utils.html#torch.utils.benchmark.Timer" title="torch.utils.benchmark.Timer"><span class="n">Timer</span></a><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
+        <span class="o">.</span><span class="n">adaptive_autorange</span><span class="p">(</span><span class="n">min_run_time</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">max_run_time</span><span class="o">=</span><span class="mf">20.0</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">median</span>
+        <span class="o">*</span> <span class="mi">1000</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">median</span><span class="si">:</span><span class="s2"> 4.4f</span><span class="si">}</span><span class="s2"> ms"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">median</span>
+
+
+<span class="c1"># A tensor in pageable memory</span>
+<span class="n">pageable_tensor</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">1_000_000</span><span class="p">)</span>
+
+<span class="c1"># A tensor in page-locked (pinned) memory</span>
+<span class="n">pinned_tensor</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">1_000_000</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Runtimes:</span>
+<span class="n">pageable_to_device</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"pageable_tensor.to('cuda:0')"</span><span class="p">)</span>
+<span class="n">pinned_to_device</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"pinned_tensor.to('cuda:0')"</span><span class="p">)</span>
+<span class="n">pin_mem</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"pageable_tensor.pin_memory()"</span><span class="p">)</span>
+<span class="n">pin_mem_to_device</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"pageable_tensor.pin_memory().to('cuda:0')"</span><span class="p">)</span>
+
+<span class="c1"># Ratios:</span>
+<span class="n">r1</span> <span class="o">=</span> <span class="n">pinned_to_device</span> <span class="o">/</span> <span class="n">pageable_to_device</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">pin_mem_to_device</span> <span class="o">/</span> <span class="n">pageable_to_device</span>
+
+<span class="c1"># Create a figure with the results</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">xlabels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">bar_labels</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"pageable_tensor.to(device) (1x)"</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">"pinned_tensor.to(device) (</span><span class="si">{</span><span class="n">r1</span><span class="si">:</span><span class="s2">4.2f</span><span class="si">}</span><span class="s2">x)"</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">"pageable_tensor.pin_memory().to(device) (</span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">4.2f</span><span class="si">}</span><span class="s2">x)"</span>
+    <span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">pin_memory()=</span><span class="si">{</span><span class="mi">100</span><span class="o">*</span><span class="n">pin_mem</span><span class="o">/</span><span class="n">pin_mem_to_device</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% of runtime."</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">pageable_to_device</span><span class="p">,</span> <span class="n">pinned_to_device</span><span class="p">,</span> <span class="n">pin_mem_to_device</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"tab:blue"</span><span class="p">,</span> <span class="s2">"tab:red"</span><span class="p">,</span> <span class="s2">"tab:orange"</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">xlabels</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">bar_labels</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Runtime (ms)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Device casting runtime (pin-memory)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Clear tensors</span>
+<span class="k">del</span> <span class="n">pageable_tensor</span><span class="p">,</span> <span class="n">pinned_tensor</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>我们可以观察到，将固定内存张量转换为 GPU 确实比可分页张量快得多，因为底层，可分页张量必须在发送到 GPU 之前被复制到固定内存中。</p>
+<p>然而，与一种普遍的看法相反，在将可分页张量转换为 GPU 之前调用 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.Tensor.pin_memory.html#torch.Tensor.pin_memory" title="(in PyTorch v2.6)"><code class="xref py py-meth docutils literal "><span class="pre">pin_memory()</span></code></a> 并不会带来任何显著的加速，相反，这个调用通常比仅仅执行传输要慢。这很有道理，因为我们实际上是在要求 Python 执行 CUDA 在将数据从主机复制到设备之前就会执行的操作。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">PyTorch 的
+<a class="reference external" href="https://github.com/pytorch/pytorch/blob/5298acb5c76855bc5a99ae10016efc86b27949bd/aten/src/ATen/native/Memory.cpp#L58">pin_memory</a>
+通过 <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html#group__CUDART__MEMORY_1gb65da58f444e7230d3322b6126bb4902">cudaHostAlloc</a> 创建一个新的品牌存储，这依赖于
+在罕见情况下，可能比 <code class="docutils literal "><span class="pre">cudaMemcpy</span></code> 分块传输数据更快。这里，观察结果也可能因可用硬件、发送的张量大小或可用 RAM 量而异。</font></font></font></p>
+</div>
+</div>
+<div class="section" id="non-blocking-true">
+<h3><code class="docutils literal "><span class="pre">non_blocking=True</span></code><a class="headerlink" href="#non-blocking-true" title="Permalink to this heading">¶</a></h3>
+<blockquote>
+<div></div></blockquote>
+<p id="pinned-memory-non-blocking">如前所述，许多 PyTorch 操作可以通过 <code class="docutils literal "><span class="pre">non_blocking</span></code> 参数选择以异步方式相对于主机执行。</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">这里，为了准确计算使用<code class="docutils literal "><span class="pre">非阻塞</span></code>的好处，我们将设计一个稍微复杂一些的
+实验，因为我们想评估在有和没有调用的情况下，发送多个张量到 GPU 的速度有多快
+<code class="docutils literal "><span class="pre">非阻塞 </span></code>.</font></font></font></p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="c1"># A simple loop that copies all tensors to cuda</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">copy_to_device</span><span class="p">(</span><span class="o">*</span><span class="n">tensors</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">tensor</span> <span class="ow">in</span> <span class="n">tensors</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">"cuda:0"</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="c1"># A loop that copies all tensors to cuda asynchronously</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">copy_to_device_nonblocking</span><span class="p">(</span><span class="o">*</span><span class="n">tensors</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">tensor</span> <span class="ow">in</span> <span class="n">tensors</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">"cuda:0"</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="c1"># We need to synchronize</span>
+    <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.synchronize.html#torch.cuda.synchronize" title="torch.cuda.synchronize"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span></a><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="c1"># Create a list of tensors</span>
+<span class="n">tensors</span> <span class="o">=</span> <span class="p">[</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">1000</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
+<span class="n">to_device</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"copy_to_device(*tensors)"</span><span class="p">)</span>
+<span class="n">to_device_nonblocking</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"copy_to_device_nonblocking(*tensors)"</span><span class="p">)</span>
+
+<span class="c1"># Ratio</span>
+<span class="n">r1</span> <span class="o">=</span> <span class="n">to_device_nonblocking</span> <span class="o">/</span> <span class="n">to_device</span>
+
+<span class="c1"># Plot the results</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">xlabels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">bar_labels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"to(device) (1x)"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"to(device, non_blocking=True) (</span><span class="si">{</span><span class="n">r1</span><span class="si">:</span><span class="s2">4.2f</span><span class="si">}</span><span class="s2">x)"</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"tab:blue"</span><span class="p">,</span> <span class="s2">"tab:red"</span><span class="p">]</span>
+<span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">to_device</span><span class="p">,</span> <span class="n">to_device_nonblocking</span><span class="p">]</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">xlabels</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">bar_labels</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Runtime (ms)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Device casting runtime (non-blocking)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>为了更好地了解这里发生的情况，让我们分析这两个函数：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.profiler</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">,</span> <span class="n">ProfilerActivity</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">profile_mem</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
+    <span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="p">[</span><span class="n">ProfilerActivity</span><span class="o">.</span><span class="n">CPU</span><span class="p">])</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
+        <span class="n">exec</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">prof</span><span class="o">.</span><span class="n">key_averages</span><span class="p">()</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">row_limit</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>首先让我们看看带有常规 <code class="docutils literal "><span class="pre">to(device)</span></code> 的调用栈：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Call to `to(device)`"</span><span class="p">,</span> <span class="n">profile_mem</span><span class="p">(</span><span class="s2">"copy_to_device(*tensors)"</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>现在看看 <code class="docutils literal "><span class="pre">non_blocking</span></code> 版本：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
+    <span class="s2">"Call to `to(device, non_blocking=True)`"</span><span class="p">,</span>
+    <span class="n">profile_mem</span><span class="p">(</span><span class="s2">"copy_to_device_nonblocking(*tensors)"</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>使用 <code class="docutils literal "><span class="pre">non_blocking=True</span></code> 时，结果无疑更好，因为所有传输都在主机端同时启动，并且只进行一次同步。</p>
+<p>利益将根据张量的数量和大小以及所使用的硬件而变化。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>有趣的是，阻塞的 <code class="docutils literal "><span class="pre">to("cuda")</span></code> 实际上执行与带有 <code class="docutils literal "><span class="pre">non_blocking=True</span></code> 的相同异步设备转换操作 (<code class="docutils literal "><span class="pre">cudaMemcpyAsync</span></code>)，在每个复制后都有一个同步点。</p>
+</div>
+</div>
+<div class="section" id="synergies">
+<h3>协同效应 <a class="headerlink" href="#synergies" title="Permalink to this heading">¶</a></h3>
+<blockquote>
+<div></div></blockquote>
+<p id="pinned-memory-synergies"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">既然我们已经指出，将已在固定内存中的张量传输到 GPU 的速度比从可分页内存中传输更快，并且我们知道异步执行这些传输也比同步执行更快，我们可以对这些方法的组合进行基准测试。首先，让我们编写一些新的函数，这些函数将调用每个张量的 <code class="docutils literal "><span class="pre">pin_memory</span></code>
+和 <code class="docutils literal "><span class="pre">to(device)</span></code>：</font></font></font></p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">pin_copy_to_device</span><span class="p">(</span><span class="o">*</span><span class="n">tensors</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">tensor</span> <span class="ow">in</span> <span class="n">tensors</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">pin_memory</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">"cuda:0"</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pin_copy_to_device_nonblocking</span><span class="p">(</span><span class="o">*</span><span class="n">tensors</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">tensor</span> <span class="ow">in</span> <span class="n">tensors</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tensor</span><span class="o">.</span><span class="n">pin_memory</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">"cuda:0"</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="c1"># We need to synchronize</span>
+    <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.synchronize.html#torch.cuda.synchronize" title="torch.cuda.synchronize"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span></a><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p>使用 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.Tensor.pin_memory.html#torch.Tensor.pin_memory" title="(in PyTorch v2.6)"><code class="xref py py-meth docutils literal "><span class="pre">pin_memory()</span></code></a> 的好处在处理较大批量的大型张量时更为明显：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">tensors</span> <span class="o">=</span> <span class="p">[</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">1_000_000</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
+<span class="n">page_copy</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"copy_to_device(*tensors)"</span><span class="p">)</span>
+<span class="n">page_copy_nb</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"copy_to_device_nonblocking(*tensors)"</span><span class="p">)</span>
+
+<span class="n">tensors_pinned</span> <span class="o">=</span> <span class="p">[</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">1_000_000</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
+<span class="n">pinned_copy</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"copy_to_device(*tensors_pinned)"</span><span class="p">)</span>
+<span class="n">pinned_copy_nb</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"copy_to_device_nonblocking(*tensors_pinned)"</span><span class="p">)</span>
+
+<span class="n">pin_and_copy</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"pin_copy_to_device(*tensors)"</span><span class="p">)</span>
+<span class="n">pin_and_copy_nb</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"pin_copy_to_device_nonblocking(*tensors)"</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">strategies</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"pageable copy"</span><span class="p">,</span> <span class="s2">"pinned copy"</span><span class="p">,</span> <span class="s2">"pin and copy"</span><span class="p">)</span>
+<span class="n">blocking</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"blocking"</span><span class="p">:</span> <span class="p">[</span><span class="n">page_copy</span><span class="p">,</span> <span class="n">pinned_copy</span><span class="p">,</span> <span class="n">pin_and_copy</span><span class="p">],</span>
+    <span class="s2">"non-blocking"</span><span class="p">:</span> <span class="p">[</span><span class="n">page_copy_nb</span><span class="p">,</span> <span class="n">pinned_copy_nb</span><span class="p">,</span> <span class="n">pin_and_copy_nb</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">x</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.arange.html#torch.arange" title="torch.arange"><span class="n">torch</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="n">multiplier</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">runtimes</span> <span class="ow">in</span> <span class="n">blocking</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="n">multiplier</span>
+    <span class="n">rects</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">offset</span><span class="p">,</span> <span class="n">runtimes</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">attribute</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar_label</span><span class="p">(</span><span class="n">rects</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">"</span><span class="si">%.2f</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">multiplier</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="c1"># Add some text for labels, title and custom x-axis tick labels, etc.</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Runtime (ms)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Runtime (pin-mem and non-blocking)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">strategies</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">(),</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"right"</span><span class="p">,</span> <span class="n">rotation_mode</span><span class="o">=</span><span class="s2">"anchor"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"upper left"</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="k">del</span> <span class="n">tensors</span><span class="p">,</span> <span class="n">tensors_pinned</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="other-copy-directions-gpu-cpu-cpu-mps">
+<h3>其他复制方向（GPU -&gt; CPU，CPU -&gt; MPS）<a class="headerlink" href="#other-copy-directions-gpu-cpu-cpu-mps" title="Permalink to this heading">¶</a></h3>
+<blockquote>
+<div></div></blockquote>
+<p id="pinned-memory-other-direction">迄今为止，我们一直假设从 CPU 到 GPU 的异步复制是安全的。这通常是正确的，因为 CUDA 会自动处理同步以确保在读取数据时数据是有效的 __无论张量处于可分页内存 <a href="#id2"><span class="problematic" id="id3"> 状态__</span></a>。</p>
+<p>然而，在其他情况下，我们不能做出同样的假设：当一个张量被放置在固定内存中时，在调用主机到设备传输之后修改原始副本可能会损坏 GPU 上接收到的数据。同样，当在相反方向上完成传输，即从 GPU 到 CPU，或者从任何不是 CPU 或 GPU 的设备到任何不是 CUDA 处理的 GPU（例如，MPS）的设备时，没有保证 GPU 上读取的数据是有效的，除非进行显式同步。</p>
+<p>在这些场景中，这些传输并不能保证在数据访问时副本是完整的。因此，主机上的数据可能是不完整或错误的，实际上变成了垃圾。</p>
+<p>让我们先通过一个固定内存的张量来演示这一点：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">DELAY</span> <span class="o">=</span> <span class="mi">100000000</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="c1"># Create a tensor in pin-memory</span>
+        <span class="n">cpu_tensor</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.ones.html#torch.ones" title="torch.ones"><span class="n">torch</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.synchronize.html#torch.cuda.synchronize" title="torch.cuda.synchronize"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span></a><span class="p">()</span>
+        <span class="c1"># Send the tensor to CUDA</span>
+        <span class="n">cuda_tensor</span> <span class="o">=</span> <span class="n">cpu_tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">"cuda"</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">_sleep</span><span class="p">(</span><span class="n">DELAY</span><span class="p">)</span>
+        <span class="c1"># Corrupt the original tensor</span>
+        <span class="n">cpu_tensor</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="n">cuda_tensor</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"No test failed with non_blocking and pinned tensor"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">th test failed with non_blocking and pinned tensor. Skipping remaining tests"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>使用可分页的张量总是可行的：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="c1"># Create a tensor in pageable memory</span>
+    <span class="n">cpu_tensor</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.ones.html#torch.ones" title="torch.ones"><span class="n">torch</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
+    <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.synchronize.html#torch.cuda.synchronize" title="torch.cuda.synchronize"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span></a><span class="p">()</span>
+    <span class="c1"># Send the tensor to CUDA</span>
+    <span class="n">cuda_tensor</span> <span class="o">=</span> <span class="n">cpu_tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">"cuda"</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">_sleep</span><span class="p">(</span><span class="n">DELAY</span><span class="p">)</span>
+    <span class="c1"># Corrupt the original tensor</span>
+    <span class="n">cpu_tensor</span><span class="o">.</span><span class="n">zero_</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">cuda_tensor</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"No test failed with non_blocking and pageable tensor"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>现在我们来演示一下，没有同步，CUDA 到 CPU 也无法产生可靠的输出：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">tensor</span> <span class="o">=</span> <span class="p">(</span>
+    <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.arange.html#torch.arange" title="torch.arange"><span class="n">torch</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1_000_000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">double</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">"cuda"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">999999</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="p">)</span>
+<a class="sphx-glr-backref-module-torch-testing sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/testing.html#torch.testing.assert_close" title="torch.testing.assert_close"><span class="n">torch</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_close</span></a><span class="p">(</span>
+    <span class="n">tensor</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">(</span><span class="mi">500_000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">double</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">"cuda"</span><span class="p">)</span>
+<span class="p">),</span> <span class="n">tensor</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="n">cpu_tensor</span> <span class="o">=</span> <span class="n">tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <a class="sphx-glr-backref-module-torch-testing sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/testing.html#torch.testing.assert_close" title="torch.testing.assert_close"><span class="n">torch</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_close</span></a><span class="p">(</span>
+            <span class="n">cpu_tensor</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">(</span><span class="mi">500_000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"No test failed with non_blocking"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">th test failed with non_blocking. Skipping remaining tests"</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+        <span class="n">cpu_tensor</span> <span class="o">=</span> <span class="n">tensor</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">"cpu"</span><span class="p">,</span> <span class="n">non_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.synchronize.html#torch.cuda.synchronize" title="torch.cuda.synchronize"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">synchronize</span></a><span class="p">()</span>
+        <a class="sphx-glr-backref-module-torch-testing sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/testing.html#torch.testing.assert_close" title="torch.testing.assert_close"><span class="n">torch</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_close</span></a><span class="p">(</span>
+            <span class="n">cpu_tensor</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">(</span><span class="mi">500_000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"No test failed with synchronize"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"One test failed with synchronize: </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">th assertion!"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>通常情况下，当目标设备是 CUDA 启用设备且原始张量在可分页内存中时，异步复制到设备是安全的，无需显式同步。</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">总结来说，当使用 <code class="docutils literal "><span class="pre">non_blocking=True</span></code> 时，从 CPU 复制数据到 GPU 是安全的，但对于任何其他方向，
+<code class="docutils literal "><span class="pre">non_blocking=True</span></code> 仍然可以使用，但用户必须确保在访问数据之前执行设备同步。</font></font></font></p>
+</div>
+</div>
+<div class="section" id="practical-recommendations">
+<h2>实践建议 <a class="headerlink" href="#practical-recommendations" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div></div></blockquote>
+<p id="pinned-memory-recommendations">我们现在可以根据我们的观察提出一些初步建议：</p>
+<p>通常情况下，<code class="docutils literal "><span class="pre">non_blocking=True</span></code> 将提供良好的吞吐量，无论原始张量是否已在固定内存中。如果张量已在固定内存中，传输可以加速，但从 Python 主线程手动将其发送到固定内存是一个在主机上的阻塞操作，因此会抵消使用 <code class="docutils literal "><span class="pre">non_blocking=True</span></code>（因为 CUDA 无论如何都会执行 <cite>pin_memory</cite> 传输）的大部分好处。</p>
+<p>人们现在可能会合法地询问 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.Tensor.pin_memory.html#torch.Tensor.pin_memory" title="(in PyTorch v2.6)"><code class="xref py py-meth docutils literal "><span class="pre">pin_memory()</span></code></a> 方法有什么用途。在下一节中，我们将进一步探讨如何使用它来进一步加速数据传输。</p>
+</div>
+<div class="section" id="additional-considerations">
+<h2>其他考虑事项 <a class="headerlink" href="#additional-considerations" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div></div></blockquote>
+<p id="pinned-memory-considerations"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">PyTorch 臭名昭著地提供了一个 <a class="reference external" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="(in PyTorch v2.6)"><code class="xref py py-class docutils literal "><span class="pre"> 数据加载器 </span></code></a> 类，其构造函数接受一个
+<code class="docutils literal "><span class="pre">固定内存 </span></code> 参数。考虑到我们之前关于 <code class="docutils literal "><span class="pre"> 固定内存 </span></code> 的讨论，你可能会想知道如果内存固定本身是阻塞的，那么 <code class="docutils literal "><span class="pre"> 数据加载器 </span></code> 是如何加速数据传输的。</font></font></font></p>
+<p>关键在于数据加载器使用一个单独的线程来处理数据从可分页内存到固定内存的传输，从而防止主线程阻塞。</p>
+<p>为了说明这一点，我们将使用同名的库中的 TensorDict 原语。当调用 <code class="xref py py-meth docutils literal "><span class="pre">to()</span></code> 时，默认行为是将张量异步发送到设备，之后通过调用 <code class="docutils literal "><span class="pre">torch.device.synchronize()</span></code> 进行同步。</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">此外，<code class="docutils literal "><span class="pre">TensorDict.to()</span></code> 包含一个 <code class="docutils literal "><span class="pre">non_blocking_pin</span></code> 选项，该选项会启动多个线程来执行
+在进行 <code class="docutils literal "><span class="pre">to(device)</span></code> 操作之前，先执行 <code class="docutils literal "><span class="pre">pin_memory()</span></code>。这种方法可以进一步加速数据传输，如下例所示。</font></font></font></p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tensordict</span><span class="w"> </span><span class="kn">import</span> <span class="n">TensorDict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.utils.benchmark</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-utils-benchmark sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/benchmark_utils.html#torch.utils.benchmark.Timer" title="torch.utils.benchmark.Timer"><span class="n">Timer</span></a>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Create the dataset</span>
+<span class="n">td</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">({</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">1_000_000</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)})</span>
+
+<span class="c1"># Runtimes</span>
+<span class="n">copy_blocking</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"td.to('cuda:0', non_blocking=False)"</span><span class="p">)</span>
+<span class="n">copy_non_blocking</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"td.to('cuda:0')"</span><span class="p">)</span>
+<span class="n">copy_pin_nb</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"td.to('cuda:0', non_blocking_pin=True, num_threads=0)"</span><span class="p">)</span>
+<span class="n">copy_pin_multithread_nb</span> <span class="o">=</span> <span class="n">timer</span><span class="p">(</span><span class="s2">"td.to('cuda:0', non_blocking_pin=True, num_threads=4)"</span><span class="p">)</span>
+
+<span class="c1"># Rations</span>
+<span class="n">r1</span> <span class="o">=</span> <span class="n">copy_non_blocking</span> <span class="o">/</span> <span class="n">copy_blocking</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="n">copy_pin_nb</span> <span class="o">/</span> <span class="n">copy_blocking</span>
+<span class="n">r3</span> <span class="o">=</span> <span class="n">copy_pin_multithread_nb</span> <span class="o">/</span> <span class="n">copy_blocking</span>
+
+<span class="c1"># Figure</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">xlabels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">bar_labels</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"Blocking copy (1x)"</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">"Non-blocking copy (</span><span class="si">{</span><span class="n">r1</span><span class="si">:</span><span class="s2">4.2f</span><span class="si">}</span><span class="s2">x)"</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">"Blocking pin, non-blocking copy (</span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">4.2f</span><span class="si">}</span><span class="s2">x)"</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">"Non-blocking pin, non-blocking copy (</span><span class="si">{</span><span class="n">r3</span><span class="si">:</span><span class="s2">4.2f</span><span class="si">}</span><span class="s2">x)"</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">copy_blocking</span><span class="p">,</span> <span class="n">copy_non_blocking</span><span class="p">,</span> <span class="n">copy_pin_nb</span><span class="p">,</span> <span class="n">copy_pin_multithread_nb</span><span class="p">]</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"tab:blue"</span><span class="p">,</span> <span class="s2">"tab:red"</span><span class="p">,</span> <span class="s2">"tab:orange"</span><span class="p">,</span> <span class="s2">"tab:green"</span><span class="p">]</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">xlabels</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">bar_labels</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Runtime (ms)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Device casting runtime"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>在这个例子中，我们正在将许多大型张量从 CPU 传输到 GPU。这种场景非常适合使用多线程的 <code class="docutils literal "><span class="pre">pin_memory()</span></code>，这可以显著提高性能。然而，如果张量很小，多线程带来的开销可能会超过其带来的好处。同样，如果有很少的张量，将张量固定在单独的线程上的优势也会变得有限。</p>
+<p>另外值得一提的是，虽然创建永久缓冲区在固定内存中，以便在将张量传输到 GPU 之前从可分页内存中传输张量可能看起来有利，但这种策略并不一定能加快计算速度。将数据复制到固定内存中的固有瓶颈仍然是限制因素。</p>
+<p>此外，将存储在磁盘上的数据（无论是在共享内存中还是文件中）传输到 GPU 通常需要一个中间步骤，即将数据复制到固定内存（位于 RAM 中）。在这种情况下使用 non_blocking 进行大数据传输可以显著增加 RAM 消耗，可能产生不利影响。</p>
+<p>实际上，没有一种适合所有情况的解决方案。使用多线程 <code class="docutils literal "><span class="pre">pin_memory</span></code> 与 <code class="docutils literal "><span class="pre">non_blocking</span></code> 传输的有效性取决于多种因素，包括特定系统、操作系统、硬件以及执行的任务性质。以下是在尝试加速 CPU 和 GPU 之间的数据传输或比较不同场景的吞吐量时需要检查的因素列表：</p>
+<ul>
+<li><p><strong>可用核心数</strong></p>
+<p>有多少 CPU 核心可用？系统是否与其他用户或进程共享，这些用户或进程可能会竞争资源？</p>
+</li>
+<li><p><strong>核心利用率</strong></p>
+<p>CPU 核心是否被其他进程高度占用？应用程序是否在数据传输的同时执行其他 CPU 密集型任务？</p>
+</li>
+<li><p><strong>内存利用率</strong></p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">当前使用了多少可分页和页锁定内存？是否有足够的空闲内存进行分配
+不影响系统性能的情况下增加固定内存？请记住，没有免费的午餐，例如
+<code class="docutils literal "><span class="pre">pin_memory</span></code> 将消耗 RAM，可能会影响其他任务。</font></font></font></p>
+</li>
+<li><p><strong>CUDA 设备功能</strong></p>
+<p>GPU 是否支持多个 DMA 引擎以进行并发数据传输？所使用的 CUDA 设备的具体功能和限制是什么？</p>
+</li>
+<li><p><strong>要发送的张量数量</strong></p>
+<p>在典型操作中传输了多少个张量？</p>
+</li>
+<li><p><strong>要发送的张量大小</strong></p>
+<p>正在传输的张量大小是多少？几个大张量或许多小张量可能不会从相同的传输程序中受益。</p>
+</li>
+<li><p><strong>系统架构</strong></p>
+<p>系统的架构是如何影响数据传输速度的（例如，总线速度、网络延迟）？</p>
+</li>
+</ul>
+<p>此外，在固定内存中分配大量张量或大张量可能会占用大量 RAM。这会减少其他关键操作（如分页）可用的内存，从而可能对算法的整体性能产生负面影响。</p>
+</div>
+<div class="section" id="conclusion">
+<h2>结论 <a class="headerlink" href="#conclusion" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div></div></blockquote>
+<p id="pinned-memory-conclusion">在本教程中，我们探讨了影响从主机到设备发送张量时的传输速度和内存管理的几个关键因素。我们了解到，使用 <code class="docutils literal "><span class="pre">non_blocking=True</span></code> 通常可以加速数据传输，并且如果正确实现，<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.Tensor.pin_memory.html#torch.Tensor.pin_memory" title="(in PyTorch v2.6)"><code class="xref py py-meth docutils literal "><span class="pre">pin_memory()</span></code></a> 也可以提高性能。然而，这些技术需要仔细设计和校准才能有效。</p>
+<p>记住，对代码进行性能分析并关注内存消耗是优化资源使用和实现最佳性能的关键。</p>
+</div>
+<div class="section" id="additional-resources">
+<h2>其他资源 <a class="headerlink" href="#additional-resources" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div></div></blockquote>
+<p id="pinned-memory-resources">如果您在使用 CUDA 设备时遇到内存复制问题，或者想了解更多关于本教程中讨论的内容，请查看以下参考资料：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html">CUDA 工具包内存管理文档 </a>;</p></li>
+<li><p><a class="reference external" href="https://forums.developer.nvidia.com/t/pinned-memory/268474">CUDA 锁定内存笔记 </a>;</p></li>
+<li><p><a class="reference external" href="https://developer.nvidia.com/blog/how-optimize-data-transfers-cuda-cc/">如何在 CUDA C/C++ 中优化数据传输 </a>;</p></li>
+<li><p><a class="reference external" href="https://pytorch.org/tensordict/stable/index.html">tensordict 文档 </a> 和 <a class="reference external" href="https://github.com/pytorch/tensordict"> 仓库 </a>。</p></li>
+</ul>
+<p class="sphx-glr-timing"><strong>脚本总运行时间：</strong>（0 分钟 0.000 秒）</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-intermediate-pinmem-nonblock-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/562d6bd0e2a429f010fcf8007f6a7cac/pinmem_nonblock.py"><code class="xref download docutils literal "><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">pinmem_nonblock.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/6a760a243fcbf87fb3368be3d4d860ee/pinmem_nonblock.ipynb"><code class="xref download docutils literal "><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">pinmem_nonblock.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Sphinx-Gallery 生成的画廊</a></p>
+</div>
+</div>
+</article>
+</div>
+<footer>
+<div aria-label="footer navigation" class="rst-footer-buttons" role="navigation">
+<a accesskey="n" class="btn btn-neutral float-right" href="torchvision_tutorial.html" rel="next" title="TorchVision Object Detection Finetuning Tutorial">下一个 <img height="16" width="16" src="../_static/images/chevron-right-orange.svg" class="next-page"> </a><a accesskey="p" class="btn btn-neutral" href="tensorboard_tutorial.html" rel="prev" title="Visualizing Models, Data, and Training with TensorBoard"> <img height="16" width="16" src="../_static/images/chevron-right-orange.svg" class="previous-page"> 上一个</a>
+</div>
+<hr class="rating-hr hr-top">
+<div class="rating-container">
+<div class="rating-prompt">评分这个教程</div>
+<div class="stars-outer">
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="1" title="1 Star"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="2" title="2 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="3" title="3 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="4" title="4 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="5" title="5 Stars"></i>
+</div>
+</div>
+<hr class="rating-hr hr-bottom">
+<div role="contentinfo">
+<p>© 版权所有 2024，PyTorch。</p>
+</div>
+<div>使用 <a href="http://sphinx-doc.org/">Sphinx</a> 构建，并使用由 <a href="https://readthedocs.org">Read the Docs</a> 提供的 <a href="https://github.com/rtfd/sphinx_rtd_theme"> 主题 </a>。</div>
+</footer>
+</div>
+<script>
+if((window.location.href.indexOf("/prototype/")!= -1) && (window.location.href.indexOf("/prototype/prototype_index")< 1))
+  {
+    var div = '<div class="admonition note"><p class="admonition-title">Note</p><p><i class="fa fa-flask" aria-hidden="true">&nbsp</i> This tutorial describes a prototype feature. Prototype features are typically not available as part of binary distributions like PyPI or Conda, except sometimes behind run-time flags, and are at an early stage for feedback and testing.</p></div>'
+    document.getElementById("pytorch-article").insertAdjacentHTML('afterBegin', div)
+  }
+</script>
+</div>
+<div class="pytorch-content-right" id="pytorch-content-right">
+<div class="pytorch-right-menu" id="pytorch-right-menu">
+<div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+<ul>
+<li><a class="reference internal" href="#">PyTorch 中正确使用<code class="docutils literal "><span class="pre">非阻塞</span></code>和<code class="docutils literal "><span class="pre">固定内存</span></code>的指南</a><ul>
+<li><a class="reference internal" href="#introduction">简介</a><ul>
+<li><a class="reference internal" href="#what-you-will-learn">你将学习到什么</a></li>
+<li><a class="reference internal" href="#preamble">前言</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#background">背景</a><ul>
+<li><a class="reference internal" href="#memory-management-basics">内存管理基础</a></li>
+<li><a class="reference internal" href="#cuda-and-non-pageable-memory">CUDA 与（非）可分页内存</a></li>
+<li><a class="reference internal" href="#asynchronous-vs-synchronous-operations-with-non-blocking-true-cuda-cudamemcpyasync">使用 <code class="docutils literal "><span class="pre">non_blocking=True</span></code> 的异步与同步操作（CUDA <code class="docutils literal "><span class="pre">cudaMemcpyAsync</span></code>）</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#a-pytorch-perspective">PyTorch 视角</a><ul>
+<li><a class="reference internal" href="#pin-memory"><code class="docutils literal "><span class="pre">pin_memory()</span></code></a></li>
+<li><a class="reference internal" href="#non-blocking-true"><code class="docutils literal "><span class="pre">non_blocking=True</span></code></a></li>
+<li><a class="reference internal" href="#synergies">协同效应</a></li>
+<li><a class="reference internal" href="#other-copy-directions-gpu-cpu-cpu-mps">其他复制方向（GPU -&gt; CPU，CPU -&gt; MPS）</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#practical-recommendations">实用建议</a></li>
+<li><a class="reference internal" href="#additional-considerations">其他考虑因素</a></li>
+<li><a class="reference internal" href="#conclusion">结论</a></li>
+<li><a class="reference internal" href="#additional-resources">其他资源</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js" type="text/javascript"></script>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+<script src="../_static/katex.min.js"></script>
+<script src="../_static/auto-render.min.js"></script>
+<script src="../_static/katex_autorenderer.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script src="../_static/js/custom.js"></script>
+<script src="../_static/js/vendor/popper.min.js" type="text/javascript"></script>
+<script src="../_static/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+<script src="../_static/js/theme.js" type="text/javascript"></script>
+<script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+<script>
+
+// Helper function to make it easier to call dataLayer.push()
+function gtag(){window.dataLayer.push(arguments);}
+
+//add microsoft link
+
+if(window.location.href.indexOf("/beginner/basics/")!= -1)
+{
+  var url="https://docs.microsoft.com/learn/paths/pytorch-fundamentals/?wt.mc_id=aiml-7486-cxa";
+  switch(window.location.pathname.split("/").pop().replace('.html',''))
+  {
+    case"quickstart_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/9-quickstart?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"tensorqs_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/2-tensors?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"data_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/3-data?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"transforms_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/4-transforms?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"buildmodel_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/5-model?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"autogradqs_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/6-autograd?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"optimization_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/7-optimization?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"saveloadrun_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/8-inference?WT.mc_id=aiml-7486-cxa";
+    }
+
+    $(".pytorch-call-to-action-links").children().first().before("<a href="+url+' data-behavior="call-to-action-event" data-response="Run in Microsoft Learn" target="_blank"><div id="microsoft-learn-link" style="padding-bottom: 0.625rem;border-bottom: 1px solid #f3f4f7;padding-right: 2.5rem;display: -webkit-box;  display: -ms-flexbox; display: flex; -webkit-box-align: center;-ms-flex-align: center;align-items: center;"><img class="call-to-action-img" src="../../_static/images/microsoft-logo.svg"/><div class="call-to-action-desktop-view">Run in Microsoft Learn</div><div class="call-to-action-mobile-view">Learn</div></div></a>')
+  }
+
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '243028289693773');
+  fbq('track', 'PageView');
+
+  $("[data-behavior='call-to-action-event']").on('click', function(){
+    fbq('trackCustom', "Download", {
+      tutorialTitle: $('h1:first').text(),
+      downloadLink: this.href,
+      tutorialLink: window.location.href,
+      downloadTitle: $(this).attr("data-response")
+    });
+    gtag('event', 'click', {
+      'event_category': $(this).attr("data-response"),
+      'event_label': $("h1").first().text(),
+      'tutorial_link': window.location.href
+    });
+   });
+
+   $("[data-behavior='tutorial-rating']").on('click', function(){
+    fbq('trackCustom', "Tutorial Rating", {
+      tutorialLink: window.location.href,
+      tutorialTitle: $('h1:first').text(),
+      rating: $(this).attr("data-count")
+    });
+    gtag('event', 'click', {
+      'event_category': 'Tutorial Rating',
+      'event_label': $("h1").first().text(),
+      'value': $(this).attr("data-count"),
+      'customEvent:Rating': $(this).attr("data-count") // send to GA custom dimension customEvent:Rating.
+    });
+   });
+
+   if (location.pathname == "/") {
+     $(".rating-container").hide();
+     $(".hr-bottom").hide();
+   }
+
+
+</script>
+<noscript>
+<img height="1" src="https://www.facebook.com/tr?id=243028289693773&amp;ev=PageView
+  &amp;noscript=1" width="1">
+</noscript>
+<script type="text/javascript">
+  var collapsedSections = ['PyTorch Recipes', 'Learning PyTorch', 'Image and Video', 'Audio', 'Text', 'Backends', 'Reinforcement Learning', 'Deploying PyTorch Models in Production', 'Profiling PyTorch', 'Code Transforms with FX', 'Frontend APIs', 'Extending PyTorch', 'Model Optimization', 'Parallel and Distributed Training', 'Edge with ExecuTorch', 'Recommendation Systems', 'Multimodality'];
+</script>
+<font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  "> <img width="1" style="border-style:none;" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0" height="1" alt=""> 
+
+//临时添加调查链接</font></font></font><script>
+    var survey = '<div class="survey-banner"><p><i class="fas fa-poll" aria-hidden="true">&nbsp </i> Take the <a href="https://forms.gle/KZ4xGL65VRMYNbbG6">PyTorch Docs/Tutorials survey</a>.</p></div>'
+    if ($(".pytorch-call-to-action-links").length) {
+        $(".pytorch-call-to-action-links").before(survey);
+    } else {
+        $("#pytorch-article").prepend(survey);
+    }
+</script>
+<!-- Begin Footer -->
+<div class="container-fluid docs-tutorials-resources" id="docs-tutorials-resources">
+<div class="container">
+<div class="row">
+<div class="col-md-4 text-center">
+<h2>文档</h2>
+<p>获取 PyTorch 的全面开发者文档</p>
+<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
+</div>
+<div class="col-md-4 text-center">
+<h2>教程</h2>
+<p>获取初学者和高级开发者的深入教程</p>
+<a class="with-right-arrow" href="https://maskerprc.github.io/tutorials">查看教程</a>
+</div>
+<div class="col-md-4 text-center">
+<h2>资源</h2>
+<p>查找开发资源并解答您的问题</p>
+<a class="with-right-arrow" href="https://pytorch.org/resources">查看资源</a>
+</div>
+</div>
+</div>
+</div>
+<footer class="site-footer">
+<div class="container footer-container">
+<div class="footer-logo-wrapper">
+<a class="footer-logo" href="https://pytorch.org/"></a>
+</div>
+<div class="footer-links-wrapper">
+<div class="footer-links-col">
+<ul>
+<li class="list-title"><a href="https://pytorch.org/">PyTorch</a></li>
+<li><a href="https://pytorch.org/get-started">开始使用</a></li>
+<li><a href="https://pytorch.org/features">特征</a></li>
+<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://pytorch.org/blog/">博客</a></li>
+<li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title"><a href="https://pytorch.org/resources">资源</a></li>
+<li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
+<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
+<li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
+<li><a href="https://pytorch.org/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title">保持更新</li>
+<li><a href="https://www.facebook.com/pytorch" target="_blank">Facebook</a></li>
+<li><a href="https://twitter.com/pytorch" target="_blank">Twitter</a></li>
+<li><a href="https://www.youtube.com/pytorch" target="_blank">YouTube</a></li>
+<li><a href="https://www.linkedin.com/company/pytorch" target="_blank">领英</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title">PyTorch 播客</li>
+<li><a href="https://open.spotify.com/show/6UzHKeiy368jKfQMKKvJY5" target="_blank">Spotify</a></li>
+<li><a href="https://podcasts.apple.com/us/podcast/pytorch-developer-podcast/id1566080008" target="_blank">苹果</a></li>
+<li><a href="https://www.google.com/podcasts?feed=aHR0cHM6Ly9mZWVkcy5zaW1wbGVjYXN0LmNvbS9PQjVGa0lsOA%3D%3D" target="_blank">谷歌</a></li>
+<li><a href="https://music.amazon.com/podcasts/7a4e6f0e-26c2-49e9-a478-41bd244197d0/PyTorch-Developer-Podcast?" target="_blank">亚马逊</a></li>
+</ul>
+</div>
+</div>
+<div class="privacy-policy">
+<ul>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/terms/" target="_blank">条款</a></li>
+<li class="privacy-policy-links">|</li>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/privacy-policy/" target="_blank">隐私</a></li>
+</ul>
+</div>
+<div class="copyright">
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">© 版权所有 Linux 基金会。PyTorch 基金会是 Linux 基金会的一个项目。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列、LF Projects, LLC 的政策，请参阅
+对于网站使用条款、商标政策以及其他适用于 PyTorch 基金会的政策，请参阅
+<a href="https://www.linuxfoundation.org/policies/">www.linuxfoundation.org/policies/</a>。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列、LF Projects, LLC 的政策，请参阅 <a href="https://www.lfprojects.org/policies/">www.lfprojects.org/policies/</a>。</font></font></font></p>
+</div>
+</div>
+</footer>
+<div class="cookie-banner-wrapper">
+<div class="container">
+<p class="gdpr-notice">为了分析交通并优化您的体验，我们在本网站上提供 cookies。通过点击或导航，您同意允许我们使用 cookies。作为本站点的当前维护者，Facebook 的 Cookies 政策适用。了解更多信息，包括可用的控制选项：[cookies 政策](<a href="https://www.facebook.com/policies/cookies/">cookies 政策 </a>)。</p>
+<img class="close-button" src="../_static/images/pytorch-x.svg" width="16" height="16">
+</div>
+</div>
+<!-- End Footer -->
+<!-- Begin Mobile Menu -->
+<div class="mobile-main-menu">
+<div class="container-fluid">
+<div class="container">
+<div class="mobile-main-menu-header-container">
+<a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
+<a class="main-menu-close-button" data-behavior="close-mobile-menu" href="#"></a>
+</div>
+</div>
+</div>
+<div class="mobile-main-menu-links-container">
+<div class="main-menu">
+<ul>
+<li class="resources-mobile-menu-title">
+<a>学习</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/get-started">开始使用</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials">教程</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">学习基础知识</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">PyTorch 食谱</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/beginner/introyt.html">PyTorch 入门 - YouTube 系列</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>生态系统</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/ecosystem">工具</a>
+</li>
+<li>
+<a href="https://pytorch.org/#community-module">社区</a>
+</li>
+<li>
+<a href="https://discuss.pytorch.org/">论坛</a>
+</li>
+<li>
+<a href="https://pytorch.org/resources">开发者资源</a>
+</li>
+<li>
+<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>边缘</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/edge">关于 PyTorch Edge</a>
+</li>
+<li>
+<a href="https://pytorch.org/executorch-overview">ExecuTorch</a>
+</li>
+<li>
+<a href="https://pytorch.org/executorch/stable/index.html">ExecuTorch 文档</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>文档</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
+</li>
+<li>
+<a href="https://pytorch.org/pytorch-domains">PyTorch 领域</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>博客 &amp; 新闻</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/blog/">PyTorch 博客</a>
+</li>
+<li>
+<a href="https://pytorch.org/community-blog">社区博客</a>
+</li>
+<li>
+<a href="https://pytorch.org/videos">视频</a>
+</li>
+<li>
+<a href="https://pytorch.org/community-stories">社区故事</a>
+</li>
+<li>
+<a href="https://pytorch.org/events">活动</a>
+</li>
+<li>
+<a href="https://pytorch.org/newsletter">通讯</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>关于</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
+</li>
+<li>
+<a href="https://pytorch.org/governing-board">管理委员会</a>
+</li>
+<li>
+<a href="https://pytorch.org/credits">云信用计划</a>
+</li>
+<li>
+<a href="https://pytorch.org/tac">技术顾问委员会</a>
+</li>
+<li>
+<a href="https://pytorch.org/staff">员工</a>
+</li>
+<li>
+<a href="https://pytorch.org/contact-us">联系我们</a>
+</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<!-- End Mobile Menu -->
+<script src="../_static/js/vendor/anchor.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+      mainMenuDropdown.bind();
+      filterTags.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function(e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+
+</body></html>

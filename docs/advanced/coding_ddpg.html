@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>TorchRL objectives: Coding a DDPG loss — PyTorch Tutorials 2.3.0+cpu documentation</title>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<link href="../_static/copybutton.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/katex-math.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-binder.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-dataframe.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-rendered-html.css" rel="stylesheet" type="text/css">
+<link href="../_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom2.css" rel="stylesheet" type="text/css">
+<link href="../genindex.html" rel="index" title="Index">
+<link href="../search.html" rel="search" title="Search">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T8XT4PS');</script>
+<!-- End Google Tag Manager -->
+<script src="../_static/js/modernizr.min.js"></script>
+<!-- Preload the theme fonts -->
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-book.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" rel="preload" type="font/woff2">
+<!-- Preload the katex fonts -->
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" rel="preload" type="font/woff2">
+<link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" rel="stylesheet">
+</head><body class="pytorch-body"><div class="container-fluid header-holder tutorials-header" id="header-holder">
+<div class="container">
+<div class="header-container">
+<a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
+<div class="main-menu">
+<ul>
+<li class="main-menu-item">
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">学习</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/get-started">
+<span class="dropdown-title">开始使用</span>
+<p>在本地运行 PyTorch 或快速开始使用支持的云平台之一</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials">
+<span class="dropdown-title">教程</span>
+<p>PyTorch 教程中有什么新内容</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">
+<span class="dropdown-title">学习基础知识</span>
+<p>熟悉 PyTorch 的概念和模块</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">
+<span class="dropdown-title">PyTorch 食谱</span>
+<p>小巧便捷、即用型 PyTorch 代码示例</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/introyt.html">
+<span class="dropdown-title">PyTorch 入门 - YouTube 系列教程</span>
+<p>通过我们引人入胜的 YouTube 教程系列掌握 PyTorch 基础知识</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">生态系统</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
+<span class="dropdown-title">工具</span>
+<p>了解 PyTorch 生态系统中的工具和框架</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/#community-module">
+<span class="dropdown-title">社区</span>
+<p>加入 PyTorch 开发者社区，贡献、学习并解答你的问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://discuss.pytorch.org/" target="_blank">
+<span class="dropdown-title">论坛</span>
+<p>讨论 PyTorch 代码、问题、安装、研究的地方</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/resources">
+<span class="dropdown-title">开发者资源</span>
+<p>查找资源并解答问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
+<span class="dropdown-title">贡献者奖项 - 2024</span>
+<p>本届 PyTorch 大会揭晓获奖者</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">边缘</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/edge">
+<span class="dropdown-title">关于 PyTorch Edge</span>
+<p>为边缘设备构建创新且注重隐私的 AI 体验</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/executorch-overview">
+<span class="dropdown-title">ExecuTorch</span>
+<p>实现移动和边缘设备端到端推理能力的解决方案</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/executorch/stable/index.html">
+<span class="dropdown-title">ExecuTorch 文档</span>
+</a>
+</div>
+</div>
+</li>
+<li class="main-menu-item">
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">文档</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
+<span class="dropdown-title">PyTorch</span>
+<p>查阅文档以获取全面指导，了解如何使用 PyTorch</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/pytorch-domains">
+<span class="dropdown-title">PyTorch 领域</span>
+<p>阅读 PyTorch Domains 文档以了解更多关于特定领域库的信息</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">博客与新闻</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/blog/">
+<span class="dropdown-title">PyTorch 博客</span>
+<p>捕捉最新的技术新闻和事件</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
+<span class="dropdown-title">社区博客</span>
+<p>PyTorch 生态系统中的故事</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/videos">
+<span class="dropdown-title">视频</span>
+<p>了解最新的 PyTorch 教程、新内容等</p>
+</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+<span class="dropdown-title">社区故事</span>
+<p>学习如何我们的社区使用 PyTorch 解决真实、日常的机器学习问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/events">
+<span class="dropdown-title">活动</span>
+<p>查找活动、网络研讨会和播客</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
+<span class="dropdown-title">通讯</span>
+<p>保持最新更新</p>
+</a>
+</div>
+</div></li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">关于</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/foundation">
+<span class="dropdown-title">PyTorch 基金会</span>
+<p>了解更多关于 PyTorch 基金会</p>
+</a>
+管理委员会云信用计划技术顾问委员会员工联系我们
+</div>
+</div>
+</li>
+<li class="main-menu-item">
+<div class="no-dropdown">
+<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
+</div>
+</li>
+<li>
+<div class="main-menu-item">
+<a class="github-icon" href="https://github.com/pytorch/pytorch">
+</a>
+</div>
+</li>
+<!--- TODO: This block adds the search icon to the nav bar. We will enable it later. 
+          <li>
+            <div class="main-menu-item">
+             <a href="https://github.com/pytorch/pytorch" class="search-icon">
+             </a>
+            </div>
+          </li>
+          --->
+</ul>
+</div>
+<a class="main-menu-open-button" data-behavior="open-mobile-menu" href="#"></a>
+</div>
+</div>
+</div>
+
+<div class="table-of-contents-link-wrapper">
+<span>目录</span>
+<a class="toggle-table-of-contents" data-behavior="toggle-table-of-contents" href="#"></a>
+</div>
+<nav class="pytorch-left-menu" data-toggle="wy-nav-shift" id="pytorch-left-menu">
+<div class="pytorch-side-scroll">
+<div aria-label="main navigation" class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation">
+<div class="pytorch-left-menu-search">
+<div class="version">
+        2.3.0+cpu
+      </div>
+<!-- Search box -->
+<div id="searchBox">
+<div class="searchbox" id="googleSearchBox">
+<script async="" src="https://cse.google.com/cse.js?cx=e65585f8c3ea1440e"></script>
+<div class="gcse-search"></div>
+</div>
+<div id="sphinxSearchBox" style="display: none;">
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input name="q" placeholder="Search Docs" type="text">
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default">
+</form>
+</div>
+</div>
+</div>
+<form id="searchForm">
+<label style="margin-bottom: 1rem">
+<input checked="" name="searchType" type="radio" value="google">谷歌搜索</label>
+<label style="margin-bottom: 1rem">
+<input name="searchType" type="radio" value="sphinx">经典搜索</label>
+</form>
+<script>
+     document.addEventListener('DOMContentLoaded', function() {
+      const searchForm = document.getElementById('searchForm');
+      const googleSearchBox = document.getElementById('googleSearchBox');
+      const sphinxSearchBox = document.getElementById('sphinxSearchBox');
+      // Function to toggle search box visibility
+      function toggleSearchBox(searchType) {
+        googleSearchBox.style.display = searchType === 'google' ? 'block' : 'none';
+        sphinxSearchBox.style.display = searchType === 'sphinx' ? 'block' : 'none';
+      }
+      // Determine the default search type
+      let defaultSearchType = 'google';
+      if (window.location.href.startsWith('https://docs-preview.pytorch.org/')) {
+        defaultSearchType = 'sphinx';
+      } else {
+        defaultSearchType = localStorage.getItem('searchType') || 'google';
+      }
+      // Set the default search type
+      document.querySelector(`input[name="searchType"][value="${defaultSearchType}"]`).checked = true;
+      toggleSearchBox(defaultSearchType);
+      // Event listener for changes in search type
+      searchForm.addEventListener('change', function(event) {
+        const selectedSearchType = event.target.value;
+        localStorage.setItem('searchType', selectedSearchType);
+        toggleSearchBox(selectedSearchType);
+      });
+      // Set placeholder text for Google search box
+      window.onload = function() {
+        var placeholderText = "Search Docs";
+        var googleSearchboxText = document.querySelector("#gsc-i-id1");
+        if (googleSearchboxText) {
+          googleSearchboxText.placeholder = placeholderText;
+          googleSearchboxText.style.fontFamily = 'FreightSans';
+          googleSearchboxText.style.fontSize = "1.2rem";
+          googleSearchboxText.style.color = '#262626';
+        }
+      };
+    });
+  </script>
+</div>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 食谱</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/recipes_index.html">查看所有菜谱</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prototype/prototype_index.html">查看所有原型菜谱</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/basics/intro.html">学习基础知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/quickstart_tutorial.html">快速入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/tensorqs_tutorial.html">张量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/data_tutorial.html">数据集和数据加载器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/transforms_tutorial.html">转换</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/buildmodel_tutorial.html">构建神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/autogradqs_tutorial.html">自动微分与 <code class="docutils literal "><span class="pre">torch.autograd</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/optimization_tutorial.html">优化模型参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/saveloadrun_tutorial.html">保存和加载模型</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/introyt/introyt_index.html">PyTorch 入门 - YouTube 系列</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/introyt1_tutorial.html">PyTorch 入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensors_deeper_tutorial.html">PyTorch 张量入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/autogradyt_tutorial.html">Autograd 基础</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/modelsyt_tutorial.html">使用 PyTorch 构建模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensorboardyt_tutorial.html">PyTorch TensorBoard 支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/trainingyt.html">使用 PyTorch 进行训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/captumyt.html">使用 Captum 理解模型</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">学习 PyTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/deep_learning_60min_blitz.html">深度学习与 PyTorch：60 分钟速成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/pytorch_with_examples.html">通过示例学习 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/nn_tutorial.html"><cite>torch.nn</cite><em> 究竟</em>是什么？</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/nlp_from_scratch_index.html">从零开始学习自然语言处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/tensorboard_tutorial.html">使用 TensorBoard 可视化模型、数据和训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/pinmem_nonblock.html">PyTorch 中正确使用<code class="docutils literal "><span class="pre">非阻塞</span></code>和<code class="docutils literal "><span class="pre">固定内存</span></code>的指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">图像和视频</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchvision_tutorial.html">TorchVision 目标检测微调教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/transfer_learning_tutorial.html">计算机视觉迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/fgsm_tutorial.html">对抗样本生成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dcgan_faces_tutorial.html">DCGAN 教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/spatial_transformer_tutorial.html">空间变换网络教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">优化视觉 Transformer 模型以部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/tiatoolbox_tutorial.html">使用 PyTorch 和 TIAToolbox 进行全切片图像分类</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">音频</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_io_tutorial.html">音频输入/输出</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_resampling_tutorial.html">音频重采样</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_data_augmentation_tutorial.html">音频数据增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_extractions_tutorial.html">音频特征提取</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_augmentation_tutorial.html">音频特征增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_datasets_tutorial.html">音频数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/speech_recognition_pipeline_tutorial.html">使用 Wav2Vec2 的语音识别</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/text_to_speech_with_torchaudio.html">使用 Tacotron2 的文本到语音</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/forced_alignment_with_torchaudio_tutorial.html">使用 Wav2Vec2 的强制对齐</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">后端</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">强化学习</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/reinforcement_q_learning.html">强化学习（DQN）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/reinforcement_ppo.html">使用 TorchRL 的强化学习（PPO）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/mario_rl_tutorial.html">训练一个玩马里奥的强化学习智能体</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pendulum.html">摆锤：使用 TorchRL 编写你的环境和转换</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">部署 PyTorch 模型到生产环境</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/flask_rest_api_tutorial.html">使用 Flask 通过 REST API 部署 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/Intro_to_TorchScript_tutorial.html">TorchScript 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp_export.html">在 C++中加载 TorchScript 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="super_resolution_with_onnxruntime.html">(可选) 将 PyTorch 模型导出为 ONNX 并使用 ONNX Runtime 运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/realtime_rpi.html">Raspberry Pi 4 上的实时推理（30 fps！）</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 性能分析</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">PyTorch 模块性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_intro_tutorial.html">全景式跟踪分析简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_trace_diff_tutorial.html">使用全景式跟踪分析进行跟踪差异</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">使用 FX 进行代码转换</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/fx_conv_bn_fuser.html">(beta) 在 FX 中构建卷积/批量归一化融合器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/fx_profiling_tutorial.html">(beta) 使用 FX 构建简单的 CPU 性能分析器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">前端 API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/memory_format_tutorial.html">(beta) PyTorch 中的通道最后内存格式</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/forward_ad_usage.html">前向模式自动微分（Beta）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/jacobians_hessians.html">雅可比矩阵、海森矩阵、HVP、vHP 以及更多：函数变换的组成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/ensembling.html">模型集成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/per_sample_grads.html">每样本梯度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp_frontend.html">使用 PyTorch C++前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torch-script-parallelism.html">动态并行化在 TorchScript 中</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp_autograd.html">C++前端中的自动微分</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">扩展 PyTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="custom_ops_landing_page.html">PyTorch 自定义算子</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_custom_ops.html">自定义 Python 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp_custom_ops.html">自定义 C++和 CUDA 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/custom_function_double_backward_tutorial.html">使用自定义函数的双向回传</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/custom_function_conv_bn_tutorial.html">使用自定义函数融合卷积和批量归一化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp_extension.html">自定义 C++ 和 CUDA 扩展</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torch_script_custom_ops.html">使用自定义 C++ 操作符扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torch_script_custom_classes.html">使用自定义 C++ 类扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dispatcher.html">在 C++ 中注册分派操作符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extend_dispatcher.html">C++中扩展后端调度器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="privateuseone.html">通过 PrivateUse1 促进新后端集成</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">模型优化</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">PyTorch 模块性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/tensorboard_profiler_tutorial.html">PyTorch 分析器与 TensorBoard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hyperparameter_tuning_tutorial.html">使用 Ray Tune 进行超参数调整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">优化视觉 Transformer 模型以部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/parametrizations.html">参数化教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/pruning_tutorial.html">剪枝教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_quantization_tutorial.html">(beta) 在 LSTM 词语言模型上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/dynamic_quantization_bert_tutorial.html">(beta) 在 BERT 上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/quantized_transfer_learning_tutorial.html">(beta) 计算机视觉的量化迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="static_quantization_tutorial.html">(beta) PyTorch 中 Eager 模式下的静态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchserve_with_ipex.html">从原理出发掌握 PyTorch Intel CPU 性能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchserve_with_ipex_2.html">从原理出发掌握 PyTorch Intel CPU 性能（第二部分）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/nvfuser_intro_tutorial.html">入门指南 - 使用 nvFuser 加速您的脚本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/ax_multiobjective_nas_tutorial.html">基于 Ax 的多目标 NAS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torch_compile_tutorial.html"><code class="docutils literal "><span class="pre">torch.compile</span></code> 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/compiled_autograd_tutorial.html">编译 Autograd：捕获更大的 <code class="docutils literal "><span class="pre">torch.compile</span></code> 反向图</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/inductor_debug_cpu.html">电感 CPU 后端调试和性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/scaled_dot_product_attention_tutorial.html">(Beta) 使用缩放点积注意力（SDPA）实现高性能 Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/knowledge_distillation_tutorial.html">知识蒸馏教程</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">并行和分布式训练</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../distributed/home.html">分布式和并行训练教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dist_overview.html">PyTorch 分布式概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/ddp_series_intro.html">PyTorch 分布式数据并行 - 视频教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/model_parallel_tutorial.html">单机模型并行最佳实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/ddp_tutorial.html">PyTorch 分布式数据并行入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/dist_tuto.html">使用 PyTorch 编写分布式应用程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/FSDP_tutorial.html">开始使用完全分片数据并行（FSDP）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/FSDP_advanced_tutorial.html">高级模型训练与完全分片数据并行（FSDP）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/TCPStore_libuv_backend.html">Libuv TCPStore 后端简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/TP_tutorial.html">使用 Tensor Parallel（TP）进行大规模 Transformer 模型训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/pipelining_tutorial.html">分布式流水线并行简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/process_group_cpp_extension_tutorial.html">使用 C++扩展自定义进程组后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/rpc_tutorial.html">分布式 RPC 框架入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/rpc_param_server_tutorial.html">使用分布式 RPC 框架实现参数服务器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/rpc_async_execution.html">使用异步执行实现批处理 RPC 处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_ddp_tutorial.html">结合分布式数据并行与分布式 RPC 框架</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generic_join.html">使用 Join 上下文管理器进行不均匀输入的分布式训练</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Edge 与 ExecuTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html">导出至 ExecuTorch 教程</a></li>
+<li class="toctree-l1"><a class="reference external" href=" https://pytorch.org/executorch/stable/running-a-model-cpp-tutorial.html">在 C++中运行 ExecuTorch 模型教程</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/sdk-integration-tutorial.html">使用 ExecuTorch SDK 对模型进行性能分析</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-ios.html">构建 ExecuTorch iOS 演示应用</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-android.html">构建 ExecuTorch Android 演示应用</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/examples-end-to-end-to-lower-model-to-delegate.html">将模型作为代理降低</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">推荐系统</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchrec_intro_tutorial.html">火炬 Rec 入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sharding.html">探索 TorchRec 分片</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">多模态</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/flava_finetuning_tutorial.html">TorchMultimodal 教程：微调 FLAVA</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="pytorch-container">
+<div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+<div class="pytorch-breadcrumbs-wrapper">
+<div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="pytorch-breadcrumbs">
+<li>
+<font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">教程
+
+         &gt;</font></font></font></li>
+<li>TorchRL 目标：编写 DDPG 损失函数</li>
+<li class="pytorch-breadcrumbs-aside">
+<a href="../_sources/advanced/coding_ddpg.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg" width="16" height="16"></a>
+</li>
+</ul>
+</div>
+</div>
+<div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">快捷键</div>
+</div>
+<section class="pytorch-content-wrap" data-toggle="wy-nav-shift" id="pytorch-content-wrap">
+<div class="pytorch-content-left">
+<div class="pytorch-call-to-action-links">
+<div id="tutorial-type">高级/编码_ddpg</div>
+<div id="google-colab-link">
+<img class="call-to-action-img" src="../_static/images/pytorch-colab.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 Google Colab 中运行</div>
+<div class="call-to-action-mobile-view">Colab</div>
+</div>
+<div id="download-notebook-link">
+<img class="call-to-action-notebook-img" src="../_static/images/pytorch-download.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">下载笔记本</div>
+<div class="call-to-action-mobile-view">笔记本</div>
+</div>
+<div id="github-view-link">
+<img class="call-to-action-img" src="../_static/images/pytorch-github.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 GitHub 上查看</div>
+<div class="call-to-action-mobile-view">GitHub</div>
+</div>
+</div>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-T8XT4PS" style="display:none;visibility:hidden" width="0"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="rst-content">
+<div class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<article class="pytorch-article" id="pytorch-article" itemprop="articleBody">
+<div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">备注</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">点击 <a class="reference internal" href="#sphx-glr-download-advanced-coding-ddpg-py"><span class="std std-ref"> 这里</span></a>
+下载完整示例代码</font></font></font></p>
+</div>
+<div class="sphx-glr-example-title section" id="torchrl-objectives-coding-a-ddpg-loss">
+<span id="sphx-glr-advanced-coding-ddpg-py"></span><h1>TorchRL 目标：编写 DDPG 损失 <a class="headerlink" href="#torchrl-objectives-coding-a-ddpg-loss" title="Permalink to this heading">¶</a></font></font></font></h1><p class="date-info-last-verified" style="color: #6c6c6d; font-size: small;"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">创建时间：2025年4月1日 | 最后更新时间：2025年4月1日 | 最后验证：未验证</p>
+<p><strong>作者 </strong>: <a class="reference external" href="https://github.com/vmoens"> 文森特·莫恩斯</a></p>
+<div class="section" id="overview">
+<h2>概述 <a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
+<p>TorchRL 将强化学习算法的训练分解为多个部分，这些部分将在您的训练脚本中组装：环境、数据收集和存储、模型以及最终的损失函数。</p>
+<p>TorchRL 损失（或“目标”）是包含可训练参数（策略和价值模型）的状态对象。本教程将指导您从头开始使用 TorchRL 编写损失函数的步骤。</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">为此，我们将专注于 DDPG，这是一个相对简单的算法来编码。
+编码算法。
+<a class="reference external" href="https://arxiv.org/abs/1509.02971">深度确定性策略梯度 </a> (DDPG) 是一个简单的连续控制算法。它包括学习一个动作-观察对的参数化值函数，然后学习一个策略，该策略在给定一定观察的情况下输出最大化此值函数的动作。</font></font></font></p>
+<p>你将学到：</p>
+<ul class="simple">
+<li><p>如何编写损失模块并自定义其值估计器；</p></li>
+<li><p>如何在 TorchRL 中构建环境，包括转换（例如，数据归一化）和并行执行；</p></li>
+<li><p>如何设计策略和价值网络；</p></li>
+<li><p>如何高效地从您的环境中收集数据并将它们存储在重放缓冲区中；</p></li>
+<li><p>如何在回放缓冲区中存储轨迹（而非转换）；</p></li>
+<li><p>如何评估你的模型。</p></li>
+</ul>
+<div class="section" id="prerequisites">
+<h3>前提条件 <a class="headerlink" href="#prerequisites" title="Permalink to this heading">¶</a></h3>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">本教程假设你已经完成了
+<a class="reference external" href="reinforcement_ppo.html">PPO 教程</a>介绍了
+TorchRL 组件及其依赖项的概述，例如
+<code class="xref py py-class docutils literal "><span class="pre">tensordict.TensorDict</span></code> 和 <code class="xref py py-class docutils literal "><span class="pre">tensordict.nn.TensorDictModules</span></code> ，尽管在没有深入了解这些类的情况下，它应该足够清晰易懂。</font></font></font></p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>我们的目标不是提供一个 SOTA 算法的实现，而是提供一个关于 TorchRL 的损失实现和在此算法上下文中要使用的库功能的概述。</p>
+</div>
+</div>
+</div>
+<div class="section" id="imports-and-setup">
+<h2>导入和设置 <a class="headerlink" href="#imports-and-setup" title="Permalink to this heading">¶</a></h2>
+<blockquote>
+<div><div class="highlight-bash "><div class="highlight"><pre><span></span>%%bash
+pip3<span class="w"> </span>install<span class="w"> </span>torchrl<span class="w"> </span>mujoco<span class="w"> </span>glfw
+</pre></div>
+</div>
+</div></blockquote>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tqdm</span>
+</pre></div>
+</div>
+<p>如果可用，我们将执行 CUDA 上的策略</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">is_fork</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">get_start_method</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"fork"</span>
+<span class="n">device</span> <span class="o">=</span> <span class="p">(</span>
+    <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_fork</span>
+    <span class="k">else</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s2">"cpu"</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">collector_device</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s2">"cpu"</span><span class="p">)</span>  <span class="c1"># Change the device to ``cuda`` to use CUDA</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="torchrl-lossmodule">
+<h2>TorchRL <code class="xref py py-class docutils literal "><span class="pre"> 损失模块 </span></code><a class="headerlink" href="#torchrl-lossmodule" title="Permalink to this heading">¶</a></h2>
+<p>TorchRL 提供了一系列用于训练脚本的损失函数。目的是拥有易于重用/交换且具有简单签名的损失函数。</p>
+<p>TorchRL 损失函数的主要特征是：</p>
+<ul>
+<li><p>它们是状态对象：它们包含可训练参数的副本，因此 <code class="docutils literal "><span class="pre">loss_module.parameters()</span></code> 将提供训练算法所需的一切。</p></li>
+<li><p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">它们遵循 <code class="docutils literal "><span class="pre">TensorDict</span></code> 约定：<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.forward" title="(in PyTorch v2.6)"><code class="xref py py-meth docutils literal "><span class="pre">torch.nn.Module.forward()</span></code></a> 方法将接收一个 TensorDict 作为输入，其中包含所有必要的
+方法将接收一个 TensorDict 作为输入，其中包含所有必要的
+返回损失值的详细信息。</font></font></font></p>
+<div class="doctest highlight-default "><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">replay_buffer</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loss_dict</span> <span class="o">=</span> <span class="n">loss_module</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>它输出一个 <code class="xref py py-class docutils literal "><span class="pre">tensordict.TensorDict</span></code> 实例，损失值被写入 <code class="docutils literal "><span class="pre">"loss_&lt;smth&gt;"</span></code> 下，其中 <code class="docutils literal "><span class="pre">smth</span></code> 是描述损失的字符串。在 <code class="docutils literal "><span class="pre">TensorDict</span></code> 中的其他键可能是训练期间记录的有用指标。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>我们返回独立损失的原因是让用户可以为不同的参数集使用不同的优化器，例如。简单地对损失求和可以通过</p>
+<div class="doctest highlight-default "><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loss_val</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">loss</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">loss</span> <span class="ow">in</span> <span class="n">loss_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"loss_"</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</li>
+</ul>
+<div class="section" id="the-init-method">
+<h3>The <code class="docutils literal "><span class="pre">__init__</span></code> 方法 <a class="headerlink" href="#the-init-method" title="Permalink to this heading">¶</a></h3>
+<p>所有损失函数的父类是 <code class="xref py py-class docutils literal "><span class="pre">LossModule</span></code>。与库中的许多其他组件一样，它的 <code class="xref py py-meth docutils literal "><span class="pre">forward()</span></code> 方法期望输入一个从经验回放缓冲区采样或任何类似的数据结构的 <code class="xref py py-class docutils literal "><span class="pre">tensordict.TensorDict</span></code> 实例。使用这种格式可以使模块跨模态重用，或在模型需要读取多个条目等复杂设置中使用。换句话说，它允许我们编写一个对输入数据类型一无所知的损失模块，该模块只关注运行损失函数的基本步骤，仅此而已。</p>
+<p>为了使教程尽可能具有教育意义，我们将独立显示类的每个方法，并在稍后阶段填充该类。</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">让我们从 <code class="xref py py-meth docutils literal "><span class="pre">__init__()</span></code> 开始
+方法。DDPG 旨在通过简单的策略解决控制任务：
+训练策略以输出最大化预测价值的动作
+值网络。因此，我们的损失模块需要在构造函数中接收两个网络：
+一个演员网络和一个值网络。我们期望这两个网络都是
+兼容 TensorDict 对象，例如
+ <code class="xref py py-class docutils literal "><span class="pre">tensordict.nn.TensorDictModule</span></code> . 我们损失函数需要计算目标值并将值网络拟合到这个值，并生成动作并拟合策略，使其价值估计最大化。</font></font></font></p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  "><code class="xref py py-meth docutils literal "><span class="pre">LossModule.__init__()</span></code> 方法的关键步骤是调用
+<code class="xref py py-meth docutils literal "><span class="pre">convert_to_functional()</span></code>。此方法将从模块中提取参数并将其转换为功能模块。严格来说，这并非必要，一个人完全可以不使用它来编写所有损失。然而，我们鼓励使用它，原因如下。</font></font></font></p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">火炬 RL 这样做的原因是，强化学习算法通常使用不同的参数集执行相同的模型，这些参数集被称为“可训练”和“目标”参数。 “可训练”参数是优化器需要拟合的参数。 “目标”参数通常是前者的副本，并有一定的时间延迟（绝对或通过移动平均稀释）。 这些目标参数用于计算与下一个观察值相关的值。 使用一组与当前配置不完全匹配的目标参数来计算值模型的优势之一是，它们提供了计算值函数的悲观界限。 请注意下面的 <code class="docutils literal "><span class="pre">create_target_params</span></code> 关键字参数：此参数告诉 <code class="xref py py-meth docutils literal "><span class="pre">convert_to_functional()</span></code> 方法在损失模块中创建一组目标参数以供使用
+方法来创建一组用于损失模块的目标参数
+用于目标值计算。如果设置为 <code class="docutils literal "><span class="pre">False</span></code>（例如，请参阅演员网络）则 <code class="docutils literal "><span class="pre">target_actor_network_params</span></code> 属性仍然可访问，但这将仅返回演员参数的 <strong> 分离 </strong> 版本。</font></font></font></p>
+<p>之后，我们将看到如何在 TorchRL 中更新目标参数。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tensordict.nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">TensorDictModule</span><span class="p">,</span> <span class="n">TensorDictSequential</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_init</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">actor_network</span><span class="p">:</span> <span class="n">TensorDictModule</span><span class="p">,</span>
+    <span class="n">value_network</span><span class="p">:</span> <span class="n">TensorDictModule</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">super</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_functional</span><span class="p">(</span>
+        <span class="n">actor_network</span><span class="p">,</span>
+        <span class="s2">"actor_network"</span><span class="p">,</span>
+        <span class="n">create_target_params</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_functional</span><span class="p">(</span>
+        <span class="n">value_network</span><span class="p">,</span>
+        <span class="s2">"value_network"</span><span class="p">,</span>
+        <span class="n">create_target_params</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">compare_against</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">actor_network</span><span class="o">.</span><span class="n">parameters</span><span class="p">()),</span>
+    <span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">actor_in_keys</span> <span class="o">=</span> <span class="n">actor_network</span><span class="o">.</span><span class="n">in_keys</span>
+
+    <span class="c1"># Since the value we'll be using is based on the actor and value network,</span>
+    <span class="c1"># we put them together in a single actor-critic container.</span>
+    <span class="n">actor_critic</span> <span class="o">=</span> <span class="n">ActorCriticWrapper</span><span class="p">(</span><span class="n">actor_network</span><span class="p">,</span> <span class="n">value_network</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">actor_critic</span> <span class="o">=</span> <span class="n">actor_critic</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">loss_function</span> <span class="o">=</span> <span class="s2">"l2"</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-value-estimator-loss-method">
+<h3>价值估计器损失方法 <a class="headerlink" href="#the-value-estimator-loss-method" title="Permalink to this heading">¶</a></h3>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">在许多强化学习算法中，价值网络（或 Q 值网络）是基于经验价值估计进行训练的。这可以是自举（TD(0)，低方差，高偏差），这意味着目标值是通过下一个奖励获得的，没有其他任何东西，或者可以通过蒙特卡洛估计（TD(1)）获得，在这种情况下，将使用即将到来的整个奖励序列（高方差，低偏差）。还可以使用中间估计器（TD(<span class="math">\(\lambda\)</span>))来折中
+偏差与方差。
+TorchRL 使得通过枚举类 <code class="xref py py-class docutils literal "><span class="pre">ValueEstimators</span></code> 使用一个或另一个估计器变得简单，该枚举类包含了所有已实现的值估计器的指针。让我们在这里定义默认的价值函数。我们将采用最简单的版本（TD(0)），稍后我们将展示如何进行更改。
+我们还需要向 DDPG 提供一些指令，说明如何根据用户查询构建价值估计器。根据提供的估计器，我们将构建用于训练时使用的相应模块：</font></font></font></p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.objectives.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValueEstimators</span>
+
+<span class="n">default_value_estimator</span> <span class="o">=</span> <span class="n">ValueEstimators</span><span class="o">.</span><span class="n">TD0</span>
+</pre></div>
+</div>
+<p>我们还需要向 DDPG 提供一些指令，说明如何根据用户查询构建价值估计器。根据提供的估计器，我们将构建用于训练时使用的相应模块：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.objectives.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_value_kwargs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.objectives.value</span><span class="w"> </span><span class="kn">import</span> <span class="n">TD0Estimator</span><span class="p">,</span> <span class="n">TD1Estimator</span><span class="p">,</span> <span class="n">TDLambdaEstimator</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_value_estimator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value_type</span><span class="p">:</span> <span class="n">ValueEstimators</span><span class="p">,</span> <span class="o">**</span><span class="n">hyperparams</span><span class="p">):</span>
+    <span class="n">hp</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">default_value_kwargs</span><span class="p">(</span><span class="n">value_type</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"gamma"</span><span class="p">):</span>
+        <span class="n">hp</span><span class="p">[</span><span class="s2">"gamma"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span>
+    <span class="n">hp</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">hyperparams</span><span class="p">)</span>
+    <span class="n">value_key</span> <span class="o">=</span> <span class="s2">"state_action_value"</span>
+    <span class="k">if</span> <span class="n">value_type</span> <span class="o">==</span> <span class="n">ValueEstimators</span><span class="o">.</span><span class="n">TD1</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value_estimator</span> <span class="o">=</span> <span class="n">TD1Estimator</span><span class="p">(</span><span class="n">value_network</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">actor_critic</span><span class="p">,</span> <span class="o">**</span><span class="n">hp</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">value_type</span> <span class="o">==</span> <span class="n">ValueEstimators</span><span class="o">.</span><span class="n">TD0</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value_estimator</span> <span class="o">=</span> <span class="n">TD0Estimator</span><span class="p">(</span><span class="n">value_network</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">actor_critic</span><span class="p">,</span> <span class="o">**</span><span class="n">hp</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">value_type</span> <span class="o">==</span> <span class="n">ValueEstimators</span><span class="o">.</span><span class="n">GAE</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Value type </span><span class="si">{</span><span class="n">value_type</span><span class="si">}</span><span class="s2"> it not implemented for loss </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">value_type</span> <span class="o">==</span> <span class="n">ValueEstimators</span><span class="o">.</span><span class="n">TDLambda</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value_estimator</span> <span class="o">=</span> <span class="n">TDLambdaEstimator</span><span class="p">(</span><span class="n">value_network</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">actor_critic</span><span class="p">,</span> <span class="o">**</span><span class="n">hp</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown value type </span><span class="si">{</span><span class="n">value_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_value_estimator</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">value_key</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>《make_value_estimator》方法可以调用，但不是必须的：如果不调用，则《LossModule》将使用其默认估计器查询此方法。</p>
+</div>
+<div class="section" id="the-actor-loss-method">
+<h3>演员（actor）损失方法 <a class="headerlink" href="#the-actor-loss-method" title="Permalink to this heading">¶</a></h3>
+<p>强化学习（RL）算法的核心是演员的训练损失。在 DDPG 的情况下，这个函数相当简单：我们只需要计算使用策略计算的动作的价值，并优化演员权重以最大化这个价值。</p>
+<p>在计算这个价值时，我们必须确保将值参数从图中取出，否则演员和值损失将会混淆。为此，可以使用《hold_out_params()`》函数。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_loss_actor</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">tensordict</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></a><span class="p">:</span>
+    <span class="n">td_copy</span> <span class="o">=</span> <span class="n">tensordict</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">actor_in_keys</span><span class="p">)</span>
+    <span class="c1"># Get an action from the actor network: since we made it functional, we need to pass the params</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">actor_network_params</span><span class="o">.</span><span class="n">to_module</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actor_network</span><span class="p">):</span>
+        <span class="n">td_copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actor_network</span><span class="p">(</span><span class="n">td_copy</span><span class="p">)</span>
+    <span class="c1"># get the value associated with that action</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_network_params</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">to_module</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_network</span><span class="p">):</span>
+        <span class="n">td_copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_network</span><span class="p">(</span><span class="n">td_copy</span><span class="p">)</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">td_copy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state_action_value"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-value-loss-method">
+<h3>值损失方法 <a class="headerlink" href="#the-value-loss-method" title="Permalink to this heading">¶</a></h3>
+<p>我们现在需要优化我们的值网络参数。为此，我们将依赖我们类中的值估计器：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.objectives.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">distance_loss</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_loss_value</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">tensordict</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">td_copy</span> <span class="o">=</span> <span class="n">tensordict</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+
+    <span class="c1"># V(s, a)</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_network_params</span><span class="o">.</span><span class="n">to_module</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_network</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_network</span><span class="p">(</span><span class="n">td_copy</span><span class="p">)</span>
+    <span class="n">pred_val</span> <span class="o">=</span> <span class="n">td_copy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"state_action_value"</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># we manually reconstruct the parameters of the actor-critic, where the first</span>
+    <span class="c1"># set of parameters belongs to the actor and the second to the value function.</span>
+    <span class="n">target_params</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"module"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"0"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_actor_network_params</span><span class="p">,</span>
+                <span class="s2">"1"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_value_network_params</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_actor_network_params</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_actor_network_params</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">with</span> <span class="n">target_params</span><span class="o">.</span><span class="n">to_module</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actor_critic</span><span class="p">):</span>
+        <span class="n">target_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_estimator</span><span class="o">.</span><span class="n">value_estimate</span><span class="p">(</span><span class="n">tensordict</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Computes the value loss: L2, L1 or smooth L1 depending on `self.loss_function`</span>
+    <span class="n">loss_value</span> <span class="o">=</span> <span class="n">distance_loss</span><span class="p">(</span><span class="n">pred_val</span><span class="p">,</span> <span class="n">target_value</span><span class="p">,</span> <span class="n">loss_function</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_function</span><span class="p">)</span>
+    <span class="n">td_error</span> <span class="o">=</span> <span class="p">(</span><span class="n">pred_val</span> <span class="o">-</span> <span class="n">target_value</span><span class="p">)</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">loss_value</span><span class="p">,</span> <span class="n">td_error</span><span class="p">,</span> <span class="n">pred_val</span><span class="p">,</span> <span class="n">target_value</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="putting-things-together-in-a-forward-call">
+<h3>在正向调用中将事物组合起来 <a class="headerlink" href="#putting-things-together-in-a-forward-call" title="Permalink to this heading">¶</a></h3>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">唯一缺少的部分是正向方法，它将粘合值和演员损失，收集成本值并将它们写入一个 <code class="docutils literal "><span class="pre">TensorDict</span></code>
+已交付给用户。</font></font></font></p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tensordict</span><span class="w"> </span><span class="kn">import</span> <span class="n">TensorDict</span><span class="p">,</span> <span class="n">TensorDictBase</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensordict</span><span class="p">:</span> <span class="n">TensorDictBase</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorDict</span><span class="p">:</span>
+    <span class="n">loss_value</span><span class="p">,</span> <span class="n">td_error</span><span class="p">,</span> <span class="n">pred_val</span><span class="p">,</span> <span class="n">target_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_value</span><span class="p">(</span>
+        <span class="n">input_tensordict</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">td_error</span> <span class="o">=</span> <span class="n">td_error</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+    <span class="n">td_error</span> <span class="o">=</span> <span class="n">td_error</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">input_tensordict</span><span class="o">.</span><span class="n">ndimension</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">input_tensordict</span><span class="o">.</span><span class="n">device</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">td_error</span> <span class="o">=</span> <span class="n">td_error</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">input_tensordict</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">input_tensordict</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+        <span class="s2">"td_error"</span><span class="p">,</span>
+        <span class="n">td_error</span><span class="p">,</span>
+        <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">loss_actor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_actor</span><span class="p">(</span><span class="n">input_tensordict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">TensorDict</span><span class="p">(</span>
+        <span class="n">source</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">"loss_actor"</span><span class="p">:</span> <span class="n">loss_actor</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+            <span class="s2">"loss_value"</span><span class="p">:</span> <span class="n">loss_value</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+            <span class="s2">"pred_value"</span><span class="p">:</span> <span class="n">pred_val</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span>
+            <span class="s2">"target_value"</span><span class="p">:</span> <span class="n">target_value</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span>
+            <span class="s2">"pred_value_max"</span><span class="p">:</span> <span class="n">pred_val</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span>
+            <span class="s2">"target_value_max"</span><span class="p">:</span> <span class="n">target_value</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span>
+        <span class="p">},</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="p">[],</span>
+    <span class="p">)</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.objectives</span><span class="w"> </span><span class="kn">import</span> <span class="n">LossModule</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DDPGLoss</span><span class="p">(</span><span class="n">LossModule</span><span class="p">):</span>
+    <span class="n">default_value_estimator</span> <span class="o">=</span> <span class="n">default_value_estimator</span>
+    <span class="n">make_value_estimator</span> <span class="o">=</span> <span class="n">make_value_estimator</span>
+
+    <span class="fm">__init__</span> <span class="o">=</span> <span class="n">_init</span>
+    <span class="n">forward</span> <span class="o">=</span> <span class="n">_forward</span>
+    <span class="n">loss_value</span> <span class="o">=</span> <span class="n">_loss_value</span>
+    <span class="n">loss_actor</span> <span class="o">=</span> <span class="n">_loss_actor</span>
+</pre></div>
+</div>
+<p>现在我们有了损失，我们可以用它来训练一个策略来解决控制任务。</p>
+</div>
+</div>
+<div class="section" id="environment">
+<h2>环境 <a class="headerlink" href="#environment" title="Permalink to this heading">¶</a></h2>
+<p>在大多数算法中，首先需要关注的是环境的构建，因为它会影响训练脚本的其余部分。</p>
+<p>在本例中，我们将使用 <code class="docutils literal "><span class="pre">"猎豹"</span></code> 任务。目标是使半猎豹尽可能跑得快。</p>
+<p>在 TorchRL 中，可以通过依赖 <code class="docutils literal "><span class="pre">dm_control</span></code> 或 <code class="docutils literal "><span class="pre">gym</span></code> 来创建此类任务：</p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">GymEnv</span><span class="p">(</span><span class="s2">"HalfCheetah-v4"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>或者</p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">DMControlEnv</span><span class="p">(</span><span class="s2">"cheetah"</span><span class="p">,</span> <span class="s2">"run"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">默认情况下，这些环境禁用了渲染。从状态训练通常比从图像训练更容易。为了简化问题，我们只关注从状态学习。要将像素传递给由 <code class="docutils literal "><span class="pre">tensordicts</span></code> 收集的 <code class="xref py py-func docutils literal "><span class="pre">env.step()</span></code>，只需传递 <code class="docutils literal "><span class="pre">from_pixels=True</span></code>
+构造函数的参数：</font></font></font></p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">GymEnv</span><span class="p">(</span><span class="s2">"HalfCheetah-v4"</span><span class="p">,</span> <span class="n">from_pixels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pixels_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>我们编写了一个辅助函数 <code class="xref py py-func docutils literal "><span class="pre">make_env()</span></code>，该函数将创建一个环境，该环境具有上述两种后端之一（<code class="docutils literal "><span class="pre">dm-control</span></code> 或 <code class="docutils literal "><span class="pre">gym</span></code>）。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.envs.libs.dm_control</span><span class="w"> </span><span class="kn">import</span> <span class="n">DMControlEnv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.envs.libs.gym</span><span class="w"> </span><span class="kn">import</span> <span class="n">GymEnv</span>
+
+<span class="n">env_library</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">env_name</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_env</span><span class="p">(</span><span class="n">from_pixels</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Create a base ``env``."""</span>
+    <span class="k">global</span> <span class="n">env_library</span>
+    <span class="k">global</span> <span class="n">env_name</span>
+
+    <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">"dm_control"</span><span class="p">:</span>
+        <span class="n">env_name</span> <span class="o">=</span> <span class="s2">"cheetah"</span>
+        <span class="n">env_task</span> <span class="o">=</span> <span class="s2">"run"</span>
+        <span class="n">env_args</span> <span class="o">=</span> <span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="n">env_task</span><span class="p">)</span>
+        <span class="n">env_library</span> <span class="o">=</span> <span class="n">DMControlEnv</span>
+    <span class="k">elif</span> <span class="n">backend</span> <span class="o">==</span> <span class="s2">"gym"</span><span class="p">:</span>
+        <span class="n">env_name</span> <span class="o">=</span> <span class="s2">"HalfCheetah-v4"</span>
+        <span class="n">env_args</span> <span class="o">=</span> <span class="p">(</span><span class="n">env_name</span><span class="p">,)</span>
+        <span class="n">env_library</span> <span class="o">=</span> <span class="n">GymEnv</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="n">env_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"device"</span><span class="p">:</span> <span class="n">device</span><span class="p">,</span>
+        <span class="s2">"from_pixels"</span><span class="p">:</span> <span class="n">from_pixels</span><span class="p">,</span>
+        <span class="s2">"pixels_only"</span><span class="p">:</span> <span class="n">from_pixels</span><span class="p">,</span>
+        <span class="s2">"frame_skip"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">env_library</span><span class="p">(</span><span class="o">*</span><span class="n">env_args</span><span class="p">,</span> <span class="o">**</span><span class="n">env_kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">env</span>
+</pre></div>
+</div>
+<div class="section" id="transforms">
+<h3>转换 <a class="headerlink" href="#transforms" title="Permalink to this heading">¶</a></h3>
+<p>现在我们有了基本环境，我们可能想要修改其表示形式，使其更适合策略。在 TorchRL 中，转换被附加到基本环境的专业 <code class="xref py py-class docutils literal "><span class="pre">torchr.envs.TransformedEnv</span></code> 类中。</p>
+<ul class="simple">
+<li><p>在 DDPG 中，通常使用某种启发式值对奖励进行缩放。在这个例子中，我们将奖励乘以 5。</p></li>
+<li><p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">如果我们使用 <code class="xref py py-mod docutils literal "><span class="pre">dm_control</span></code>，构建一个在双精度数字的模拟器和我们的单精度数字脚本之间的接口也非常重要。这种转换是双向的：在调用 <code class="xref py py-func docutils literal "><span class="pre">env.step()</span></code> 时，我们的动作需要以双精度表示，输出也需要转换为单精度。<code class="xref py py-class docutils literal "><span class="pre">DoubleToFloat</span></code> 转换器正是这样做的：它
+<code class="docutils literal "><span class="pre">in_keys</span></code> 列表指的是需要从双精度转换为浮点数的键，而 <code class="docutils literal "><span class="pre">in_keys_inv</span></code> 则指的是在传递给环境之前需要转换为双精度的键。</font></font></font></p></li>
+<li><p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">我们使用 <code class="xref py py-class docutils literal "><span class="pre">CatTensors</span></code> 将状态键连接在一起。
+转换。</font></font></font></p></li>
+<li><p>最后，我们还留出了标准化状态的可能性：我们将在稍后处理计算标准化常数。</p></li>
+</ul>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.envs</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CatTensors</span><span class="p">,</span>
+    <span class="n">DoubleToFloat</span><span class="p">,</span>
+    <span class="n">EnvCreator</span><span class="p">,</span>
+    <span class="n">InitTracker</span><span class="p">,</span>
+    <span class="n">ObservationNorm</span><span class="p">,</span>
+    <span class="n">ParallelEnv</span><span class="p">,</span>
+    <span class="n">RewardScaling</span><span class="p">,</span>
+    <span class="n">StepCounter</span><span class="p">,</span>
+    <span class="n">TransformedEnv</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_transformed_env</span><span class="p">(</span>
+    <span class="n">env</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Apply transforms to the ``env`` (such as reward scaling and state normalization)."""</span>
+
+    <span class="n">env</span> <span class="o">=</span> <span class="n">TransformedEnv</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+
+    <span class="c1"># we append transforms one by one, although we might as well create the</span>
+    <span class="c1"># transformed environment using the `env = TransformedEnv(base_env, transforms)`</span>
+    <span class="c1"># syntax.</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">append_transform</span><span class="p">(</span><span class="n">RewardScaling</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">reward_scaling</span><span class="p">))</span>
+
+    <span class="c1"># We concatenate all states into a single "observation_vector"</span>
+    <span class="c1"># even if there is a single tensor, it'll be renamed in "observation_vector".</span>
+    <span class="c1"># This facilitates the downstream operations as we know the name of the</span>
+    <span class="c1"># output tensor.</span>
+    <span class="c1"># In some environments (not half-cheetah), there may be more than one</span>
+    <span class="c1"># observation vector: in this case this code snippet will concatenate them</span>
+    <span class="c1"># all.</span>
+    <span class="n">selected_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">observation_spec</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">out_key</span> <span class="o">=</span> <span class="s2">"observation_vector"</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">append_transform</span><span class="p">(</span><span class="n">CatTensors</span><span class="p">(</span><span class="n">in_keys</span><span class="o">=</span><span class="n">selected_keys</span><span class="p">,</span> <span class="n">out_key</span><span class="o">=</span><span class="n">out_key</span><span class="p">))</span>
+
+    <span class="c1"># we normalize the states, but for now let's just instantiate a stateless</span>
+    <span class="c1"># version of the transform</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">append_transform</span><span class="p">(</span><span class="n">ObservationNorm</span><span class="p">(</span><span class="n">in_keys</span><span class="o">=</span><span class="p">[</span><span class="n">out_key</span><span class="p">],</span> <span class="n">standard_normal</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+    <span class="n">env</span><span class="o">.</span><span class="n">append_transform</span><span class="p">(</span><span class="n">DoubleToFloat</span><span class="p">())</span>
+
+    <span class="n">env</span><span class="o">.</span><span class="n">append_transform</span><span class="p">(</span><span class="n">StepCounter</span><span class="p">(</span><span class="n">max_frames_per_traj</span><span class="p">))</span>
+
+    <span class="c1"># We need a marker for the start of trajectories for our Ornstein-Uhlenbeck (OU)</span>
+    <span class="c1"># exploration:</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">append_transform</span><span class="p">(</span><span class="n">InitTracker</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">env</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parallel-execution">
+<h3>并行执行 <a class="headerlink" href="#parallel-execution" title="Permalink to this heading">¶</a></h3>
+<p>以下辅助函数允许我们并行运行环境。并行运行环境可以显著提高收集吞吐量。当使用转换后的环境时，我们需要选择是希望为每个环境单独执行转换，还是集中数据批量转换。两种方法都易于编码：</p>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">ParallelEnv</span><span class="p">(</span>
+    <span class="k">lambda</span><span class="p">:</span> <span class="n">TransformedEnv</span><span class="p">(</span><span class="n">GymEnv</span><span class="p">(</span><span class="s2">"HalfCheetah-v4"</span><span class="p">),</span> <span class="n">transforms</span><span class="p">),</span>
+    <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span>
+<span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">TransformedEnv</span><span class="p">(</span>
+    <span class="n">ParallelEnv</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">GymEnv</span><span class="p">(</span><span class="s2">"HalfCheetah-v4"</span><span class="p">),</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+    <span class="n">transforms</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>利用 PyTorch 的向量化能力，我们采用第一种方法：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">parallel_env_constructor</span><span class="p">(</span>
+    <span class="n">env_per_collector</span><span class="p">,</span>
+    <span class="n">transform_state_dict</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">env_per_collector</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">make_t_env</span><span class="p">():</span>
+            <span class="n">env</span> <span class="o">=</span> <span class="n">make_transformed_env</span><span class="p">(</span><span class="n">make_env</span><span class="p">())</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">transform</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">init_stats</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">transform</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">transform_state_dict</span><span class="p">[</span><span class="s2">"loc"</span><span class="p">])</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">transform</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">transform_state_dict</span><span class="p">[</span><span class="s2">"scale"</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">env</span>
+
+        <span class="n">env_creator</span> <span class="o">=</span> <span class="n">EnvCreator</span><span class="p">(</span><span class="n">make_t_env</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">env_creator</span>
+
+    <span class="n">parallel_env</span> <span class="o">=</span> <span class="n">ParallelEnv</span><span class="p">(</span>
+        <span class="n">num_workers</span><span class="o">=</span><span class="n">env_per_collector</span><span class="p">,</span>
+        <span class="n">create_env_fn</span><span class="o">=</span><span class="n">EnvCreator</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">make_env</span><span class="p">()),</span>
+        <span class="n">create_env_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">pin_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">make_transformed_env</span><span class="p">(</span><span class="n">parallel_env</span><span class="p">)</span>
+    <span class="c1"># we call `init_stats` for a limited number of steps, just to instantiate</span>
+    <span class="c1"># the lazy buffers.</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">transform</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">init_stats</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">cat_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">reduce_dim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">transform</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">transform_state_dict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">env</span>
+
+
+<span class="c1"># The backend can be ``gym`` or ``dm_control``</span>
+<span class="n">backend</span> <span class="o">=</span> <span class="s2">"gym"</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><code class="docutils literal "><span class="pre">frame_skip</span></code> 将多个步骤合并为一个动作的批次，如果大于 1，其他帧计数（例如，frames_per_batch，total_frames）需要调整，以确保在实验中收集到的总帧数一致。这很重要，因为提高帧跳过但保持总帧数不变可能看起来像作弊：所有比较的东西，使用帧跳过为 2 和帧跳过为 1 收集的 10M 元素的数据集实际上具有 2:1 的环境交互率！简而言之，当处理帧跳过时，应该小心训练脚本的帧计数，因为这可能导致训练策略之间的比较存在偏差。</p>
+</div>
+<p>缩放奖励有助于我们控制信号幅度，从而实现更有效的学习。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">reward_scaling</span> <span class="o">=</span> <span class="mf">5.0</span>
+</pre></div>
+</div>
+<p>我们还定义了何时截断轨迹。对于猎豹任务来说，使用一千步（如果帧跳过为2，则为500步）是一个不错的选择：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">max_frames_per_traj</span> <span class="o">=</span> <span class="mi">500</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="normalization-of-the-observations">
+<h3>观测的归一化 <a class="headerlink" href="#normalization-of-the-observations" title="Permalink to this heading">¶</a></h3>
+<p>为了计算归一化统计量，我们在环境中运行任意数量的随机步数，并计算收集到的观测值的平均值和标准差。《<code class="xref py py-func docutils literal "><span class="pre">ObservationNorm.init_stats()</span></code> 方法可用于此目的。为了获取汇总统计量，我们创建一个虚拟环境，并运行给定数量的步数，收集给定数量的步数的数据，并计算其汇总统计量。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_env_stats</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Gets the stats of an environment."""</span>
+    <span class="n">proof_env</span> <span class="o">=</span> <span class="n">make_transformed_env</span><span class="p">(</span><span class="n">make_env</span><span class="p">())</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">proof_env</span><span class="o">.</span><span class="n">transform</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">init_stats</span><span class="p">(</span><span class="n">init_env_steps</span><span class="p">)</span>
+    <span class="n">transform_state_dict</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
+    <span class="n">proof_env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">transform_state_dict</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="normalization-stats">
+<h3>归一化统计量 <a class="headerlink" href="#normalization-stats" title="Permalink to this heading">¶</a></h3>
+<p>使用<code class="docutils literal "><span class="pre">观测归一化</span></code>作为统计计算中随机步数的数量</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">init_env_steps</span> <span class="o">=</span> <span class="mi">5000</span>
+
+<span class="n">transform_state_dict</span> <span class="o">=</span> <span class="n">get_env_stats</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>每个数据收集器中的环境数量</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">env_per_collector</span> <span class="o">=</span> <span class="mi">4</span>
+</pre></div>
+</div>
+<p>我们将之前计算的统计信息传递给环境以归一化输出：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">parallel_env</span> <span class="o">=</span> <span class="n">parallel_env_constructor</span><span class="p">(</span>
+    <span class="n">env_per_collector</span><span class="o">=</span><span class="n">env_per_collector</span><span class="p">,</span>
+    <span class="n">transform_state_dict</span><span class="o">=</span><span class="n">transform_state_dict</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompositeSpec</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="building-the-model">
+<h2>构建模型 <a class="headerlink" href="#building-the-model" title="Permalink to this heading">¶</a></h2>
+<p>我们现在转向模型的设置。正如我们所见，DDPG 需要一个价值网络，该网络被训练来估计状态-动作对的价值，以及一个参数化演员，该演员学习如何选择最大化这一价值的动作。</p>
+<p>回想一下，构建一个 TorchRL 模块需要两个步骤：</p>
+<ul class="simple">
+<li><p>编写将用作网络的 <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.6)"><code class="xref py py-class docutils literal "><span class="pre">torch.nn.Module</span></code></a>，</p></li>
+<li><p>将网络包装在 <code class="xref py py-class docutils literal "><span class="pre">tensordict.nn.TensorDictModule</span></code> 中，其中数据流通过指定输入和输出键来处理。</p></li>
+</ul>
+<p>在更复杂的场景中， <code class="xref py py-class docutils literal "><span class="pre">tensordict.nn.TensorDictSequential</span></code> 也可以使用。</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">Q-Value 网络被封装在一个 <code class="xref py py-class docutils literal "><span class="pre">ValueOperator</span></code> 中。
+该网络会自动将 <code class="docutils literal "><span class="pre">out_keys</span></code> 设置为 q-value 网络的 <code class="docutils literal "><span class="pre">"state_action_value"</span></code> 以及其他值网络的 <code class="docutils literal "><span class="pre">state_value</span></code>。</font></font></font></p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">TorchRL 提供了原始论文中提出的 DDPG 网络的内置版本。这些可以在 <code class="xref py py-class docutils literal "><span class="pre">DdpgMlpActor</span></code> 下找到。
+and <code class="xref py py-class docutils literal "><span class="pre"> 深度强化学习网络 </span></code>.</font></font></font></p>
+<p>由于我们使用懒加载模块，因此在能够将策略从设备移动到设备并执行其他操作之前，有必要将懒加载模块实例化。因此，运行带有少量数据的模块是一种良好的实践。为此，我们从环境规范中生成假数据。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.modules</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ActorCriticWrapper</span><span class="p">,</span>
+    <span class="n">DdpgMlpActor</span><span class="p">,</span>
+    <span class="n">DdpgMlpQNet</span><span class="p">,</span>
+    <span class="n">OrnsteinUhlenbeckProcessModule</span><span class="p">,</span>
+    <span class="n">ProbabilisticActor</span><span class="p">,</span>
+    <span class="n">TanhDelta</span><span class="p">,</span>
+    <span class="n">ValueOperator</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_ddpg_actor</span><span class="p">(</span>
+    <span class="n">transform_state_dict</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="s2">"cpu"</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">proof_environment</span> <span class="o">=</span> <span class="n">make_transformed_env</span><span class="p">(</span><span class="n">make_env</span><span class="p">())</span>
+    <span class="n">proof_environment</span><span class="o">.</span><span class="n">transform</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">init_stats</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">proof_environment</span><span class="o">.</span><span class="n">transform</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">transform_state_dict</span><span class="p">)</span>
+
+    <span class="n">out_features</span> <span class="o">=</span> <span class="n">proof_environment</span><span class="o">.</span><span class="n">action_spec</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">actor_net</span> <span class="o">=</span> <span class="n">DdpgMlpActor</span><span class="p">(</span>
+        <span class="n">action_dim</span><span class="o">=</span><span class="n">out_features</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">in_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"observation_vector"</span><span class="p">]</span>
+    <span class="n">out_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"param"</span><span class="p">]</span>
+
+    <span class="n">actor</span> <span class="o">=</span> <span class="n">TensorDictModule</span><span class="p">(</span>
+        <span class="n">actor_net</span><span class="p">,</span>
+        <span class="n">in_keys</span><span class="o">=</span><span class="n">in_keys</span><span class="p">,</span>
+        <span class="n">out_keys</span><span class="o">=</span><span class="n">out_keys</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">actor</span> <span class="o">=</span> <span class="n">ProbabilisticActor</span><span class="p">(</span>
+        <span class="n">actor</span><span class="p">,</span>
+        <span class="n">distribution_class</span><span class="o">=</span><span class="n">TanhDelta</span><span class="p">,</span>
+        <span class="n">in_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">"param"</span><span class="p">],</span>
+        <span class="n">spec</span><span class="o">=</span><span class="n">CompositeSpec</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="n">proof_environment</span><span class="o">.</span><span class="n">action_spec</span><span class="p">),</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="n">q_net</span> <span class="o">=</span> <span class="n">DdpgMlpQNet</span><span class="p">()</span>
+
+    <span class="n">in_keys</span> <span class="o">=</span> <span class="n">in_keys</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"action"</span><span class="p">]</span>
+    <span class="n">qnet</span> <span class="o">=</span> <span class="n">ValueOperator</span><span class="p">(</span>
+        <span class="n">in_keys</span><span class="o">=</span><span class="n">in_keys</span><span class="p">,</span>
+        <span class="n">module</span><span class="o">=</span><span class="n">q_net</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="c1"># initialize lazy modules</span>
+    <span class="n">qnet</span><span class="p">(</span><span class="n">actor</span><span class="p">(</span><span class="n">proof_environment</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">actor</span><span class="p">,</span> <span class="n">qnet</span>
+
+
+<span class="n">actor</span><span class="p">,</span> <span class="n">qnet</span> <span class="o">=</span> <span class="n">make_ddpg_actor</span><span class="p">(</span>
+    <span class="n">transform_state_dict</span><span class="o">=</span><span class="n">transform_state_dict</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="exploration">
+<h3>探索 <a class="headerlink" href="#exploration" title="Permalink to this heading">。</a></h3>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">策略被传递到 <code class="xref py py-class docutils literal "><span class="pre">OrnsteinUhlenbeckProcessModule</span></code> 
+探索模块，如原文中所述。
+让我们定义在 OU 噪声达到最小值之前的帧数。</font></font></font></p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">annealing_frames</span> <span class="o">=</span> <span class="mi">1_000_000</span>
+
+<span class="n">actor_model_explore</span> <span class="o">=</span> <span class="n">TensorDictSequential</span><span class="p">(</span>
+    <span class="n">actor</span><span class="p">,</span>
+    <span class="n">OrnsteinUhlenbeckProcessModule</span><span class="p">(</span>
+        <span class="n">spec</span><span class="o">=</span><span class="n">actor</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">clone</span><span class="p">(),</span>
+        <span class="n">annealing_num_steps</span><span class="o">=</span><span class="n">annealing_frames</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="k">if</span> <span class="n">device</span> <span class="o">==</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s2">"cpu"</span><span class="p">):</span>
+    <span class="n">actor_model_explore</span><span class="o">.</span><span class="n">share_memory</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="data-collector">
+<h2>数据收集器 <a class="headerlink" href="#data-collector" title="Permalink to this heading">¶</a></h2>
+<p>TorchRL 提供了专门的类来帮助您通过在环境中执行策略来收集数据。这些“数据收集器”迭代地计算在给定时间要执行的动作，然后在环境中执行一步并按要求重置。数据收集器旨在帮助开发者紧密控制每批数据的帧数、此收集的(a)sync 特性以及分配给数据收集的资源（例如 GPU、工作线程数量等）。</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">这里我们将使用
+<code class="xref py py-class docutils literal "><span class="pre">同步数据收集器 </span></code>，一个简单、单进程
+数据收集器。TorchRL 提供其他收集器，例如
+<code class="xref py py-class docutils literal "><span class="pre">多同步数据收集器 </span></code>，以异步方式执行部署（例如，在策略优化期间收集数据，从而解耦训练和数据收集）。</font></font></font></p>
+<p>需要指定的参数是：</p>
+<ul>
+<li><p>一个环境工厂或一个环境，</p></li>
+<li><p>策略，</p></li>
+<li><p>在收集器被认为是空之前的总帧数，</p></li>
+<li><p>轨迹每帧的最大数量（对于非终止环境，如 <code class="docutils literal "><span class="pre">dm_control</span></code> 环境很有用）。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>将 <code class="docutils literal "><span class="pre">max_frames_per_traj</span></code> 传递给收集器将会有在用于推理的环境上注册一个新的 <code class="xref py py-class docutils literal "><span class="pre">StepCounter</span></code> 转换的效果。我们可以像在这个脚本中做的那样手动实现相同的结果。</p>
+</div>
+</li>
+</ul>
+<p>还应该传递：</p>
+<ul class="simple">
+<li><p>每个批次收集的帧数</p></li>
+<li><p>执行独立于策略的随机步骤的数量</p></li>
+<li><p>用于策略执行的设备</p></li>
+<li><p>存储数据传递到主处理程序之前所使用的设备。</p></li>
+</ul>
+<p>训练过程中我们将使用的总帧数应约为100万。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">total_frames</span> <span class="o">=</span> <span class="mi">10_000</span>  <span class="c1"># 1_000_000</span>
+</pre></div>
+</div>
+<p>在外循环的每次迭代中，收集器返回的帧数等于每个子轨迹的长度乘以每个收集器中并行运行的环境的数量。</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">换句话说，我们期望收集器返回的批次具有以下形状
+<code class="docutils literal "><span class="pre">每个收集器的环境数,</span> <span class="pre"> 轨迹长度 </span></code> 其中
+ <code class="docutils literal "><span class="pre">traj_len=frames_per_batch/env_per_collector</span></code> :</font></font></font></p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">traj_len</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">frames_per_batch</span> <span class="o">=</span> <span class="n">env_per_collector</span> <span class="o">*</span> <span class="n">traj_len</span>
+<span class="n">init_random_frames</span> <span class="o">=</span> <span class="mi">5000</span>
+<span class="n">num_collectors</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.collectors</span><span class="w"> </span><span class="kn">import</span> <span class="n">SyncDataCollector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.envs</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExplorationType</span>
+
+<span class="n">collector</span> <span class="o">=</span> <span class="n">SyncDataCollector</span><span class="p">(</span>
+    <span class="n">parallel_env</span><span class="p">,</span>
+    <span class="n">policy</span><span class="o">=</span><span class="n">actor_model_explore</span><span class="p">,</span>
+    <span class="n">total_frames</span><span class="o">=</span><span class="n">total_frames</span><span class="p">,</span>
+    <span class="n">frames_per_batch</span><span class="o">=</span><span class="n">frames_per_batch</span><span class="p">,</span>
+    <span class="n">init_random_frames</span><span class="o">=</span><span class="n">init_random_frames</span><span class="p">,</span>
+    <span class="n">reset_at_each_iter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">split_trajs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">device</span><span class="o">=</span><span class="n">collector_device</span><span class="p">,</span>
+    <span class="n">exploration_type</span><span class="o">=</span><span class="n">ExplorationType</span><span class="o">.</span><span class="n">RANDOM</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="evaluator-building-your-recorder-object">
+<h2>评估器：构建您的记录器对象 <a class="headerlink" href="#evaluator-building-your-recorder-object" title="Permalink to this heading">¶</a></h2>
+<p>由于训练数据是通过某些探索策略获得的，因此我们的算法的真实性能需要在确定性模式下进行评估。我们使用一个专门的类，<code class="docutils literal "><span class="pre"> 记录器 </span></code>，在环境中以给定的频率执行策略，并返回从这些模拟中获得的一些统计数据。</p>
+<p>下面的辅助函数构建此对象：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.trainers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Recorder</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_recorder</span><span class="p">(</span><span class="n">actor_model_explore</span><span class="p">,</span> <span class="n">transform_state_dict</span><span class="p">,</span> <span class="n">record_interval</span><span class="p">):</span>
+    <span class="n">base_env</span> <span class="o">=</span> <span class="n">make_env</span><span class="p">()</span>
+    <span class="n">environment</span> <span class="o">=</span> <span class="n">make_transformed_env</span><span class="p">(</span><span class="n">base_env</span><span class="p">)</span>
+    <span class="n">environment</span><span class="o">.</span><span class="n">transform</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">init_stats</span><span class="p">(</span>
+        <span class="mi">3</span>
+    <span class="p">)</span>  <span class="c1"># must be instantiated to load the state dict</span>
+    <span class="n">environment</span><span class="o">.</span><span class="n">transform</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">transform_state_dict</span><span class="p">)</span>
+
+    <span class="n">recorder_obj</span> <span class="o">=</span> <span class="n">Recorder</span><span class="p">(</span>
+        <span class="n">record_frames</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">policy_exploration</span><span class="o">=</span><span class="n">actor_model_explore</span><span class="p">,</span>
+        <span class="n">environment</span><span class="o">=</span><span class="n">environment</span><span class="p">,</span>
+        <span class="n">exploration_type</span><span class="o">=</span><span class="n">ExplorationType</span><span class="o">.</span><span class="n">DETERMINISTIC</span><span class="p">,</span>
+        <span class="n">record_interval</span><span class="o">=</span><span class="n">record_interval</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">recorder_obj</span>
+</pre></div>
+</div>
+<p>我们将每收集10个批次就记录一次性能</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">record_interval</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">recorder</span> <span class="o">=</span> <span class="n">make_recorder</span><span class="p">(</span>
+    <span class="n">actor_model_explore</span><span class="p">,</span> <span class="n">transform_state_dict</span><span class="p">,</span> <span class="n">record_interval</span><span class="o">=</span><span class="n">record_interval</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.data.replay_buffers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">LazyMemmapStorage</span><span class="p">,</span>
+    <span class="n">PrioritizedSampler</span><span class="p">,</span>
+    <span class="n">RandomSampler</span><span class="p">,</span>
+    <span class="n">TensorDictReplayBuffer</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="replay-buffer">
+<h2>回放缓冲区 <a class="headerlink" href="#replay-buffer" title="Permalink to this heading">¶</a></h2>
+<p>回放缓冲区有两种类型：优先级（使用某些错误信号来提高某些项目被采样的可能性）和常规的循环经验回放。</p>
+<p>TorchRL 回放缓冲区是可组合的：可以选择存储、采样和写入策略。还可以使用内存映射数组在物理内存中存储张量。以下函数负责创建具有所需超参数的回放缓冲区：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.envs</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomCropTensorDict</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_replay_buffer</span><span class="p">(</span><span class="n">buffer_size</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">random_crop_len</span><span class="p">,</span> <span class="n">prefetch</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">prb</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">prb</span><span class="p">:</span>
+        <span class="n">sampler</span> <span class="o">=</span> <span class="n">PrioritizedSampler</span><span class="p">(</span>
+            <span class="n">max_capacity</span><span class="o">=</span><span class="n">buffer_size</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+            <span class="n">beta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sampler</span> <span class="o">=</span> <span class="n">RandomSampler</span><span class="p">()</span>
+    <span class="n">replay_buffer</span> <span class="o">=</span> <span class="n">TensorDictReplayBuffer</span><span class="p">(</span>
+        <span class="n">storage</span><span class="o">=</span><span class="n">LazyMemmapStorage</span><span class="p">(</span>
+            <span class="n">buffer_size</span><span class="p">,</span>
+            <span class="n">scratch_dir</span><span class="o">=</span><span class="n">buffer_scratch_dir</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">sampler</span><span class="o">=</span><span class="n">sampler</span><span class="p">,</span>
+        <span class="n">pin_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">prefetch</span><span class="o">=</span><span class="n">prefetch</span><span class="p">,</span>
+        <span class="n">transform</span><span class="o">=</span><span class="n">RandomCropTensorDict</span><span class="p">(</span><span class="n">random_crop_len</span><span class="p">,</span> <span class="n">sample_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">replay_buffer</span>
+</pre></div>
+</div>
+<p>我们将在磁盘上的临时目录中存储重放缓冲区</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+
+<span class="n">tmpdir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span>
+<span class="n">buffer_scratch_dir</span> <span class="o">=</span> <span class="n">tmpdir</span><span class="o">.</span><span class="n">name</span>
+</pre></div>
+</div>
+<div class="section" id="replay-buffer-storage-and-batch-size">
+<h3>重放缓冲区存储和批量大小 <a class="headerlink" href="#replay-buffer-storage-and-batch-size" title="Permalink to this heading">¶</a></h3>
+<p>TorchRL 重放缓冲区沿第一个维度计算元素数量。由于我们将向缓冲区馈送轨迹，我们需要通过除以数据收集器产生的子轨迹长度来调整缓冲区大小。关于批量大小，我们的采样策略将包括在选择子轨迹之前采样长度为 <code class="docutils literal "><span class="pre">traj_len=200</span></code> 的轨迹，或者在长度为 <code class="docutils literal "><span class="pre">random_crop_len=25</span></code> 的轨迹上进行损失计算。这种策略平衡了存储一定长度的完整轨迹的选择与向损失提供具有足够异质性的样本的需求。以下图显示了从收集器获取每个批次 8 帧，以 2 个环境并行运行，将它们馈送到包含 1000 个轨迹的重放缓冲区，并采样每个 2 个时间步长的子轨迹的数据流。</p>
+<div class="figure align-default">
+<img alt="Storing trajectories in the replay buffer" src="../_images/replaybuffer_traj.png" width="302.3625183105469" height="23.200000762939453">
+</div>
+<p>让我们从缓冲区中存储的帧数开始</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ceil_div</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">x</span> <span class="o">//</span> <span class="p">(</span><span class="o">-</span><span class="n">y</span><span class="p">)</span>
+
+
+<span class="n">buffer_size</span> <span class="o">=</span> <span class="mi">1_000_000</span>
+<span class="n">buffer_size</span> <span class="o">=</span> <span class="n">ceil_div</span><span class="p">(</span><span class="n">buffer_size</span><span class="p">,</span> <span class="n">traj_len</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>优先回放缓冲区默认禁用</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">prb</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+<p>我们还需要定义每批收集的数据中我们将进行多少次更新。这被称为更新到数据的比率或 <code class="docutils literal "><span class="pre">UTD</span></code> 比率：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">update_to_data</span> <span class="o">=</span> <span class="mi">64</span>
+</pre></div>
+</div>
+<p>我们将以长度为25的轨迹来提供损失：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">random_crop_len</span> <span class="o">=</span> <span class="mi">25</span>
+</pre></div>
+</div>
+<p>在原始论文中，作者为每个收集到的帧执行一次包含64个元素的批次的更新。在这里，我们重现了相同的比率，但同时在每个批次收集时实现多次更新。我们调整批大小以实现相同的每帧更新比率：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">ceil_div</span><span class="p">(</span><span class="mi">64</span> <span class="o">*</span> <span class="n">frames_per_batch</span><span class="p">,</span> <span class="n">update_to_data</span> <span class="o">*</span> <span class="n">random_crop_len</span><span class="p">)</span>
+
+<span class="n">replay_buffer</span> <span class="o">=</span> <span class="n">make_replay_buffer</span><span class="p">(</span>
+    <span class="n">buffer_size</span><span class="o">=</span><span class="n">buffer_size</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+    <span class="n">random_crop_len</span><span class="o">=</span><span class="n">random_crop_len</span><span class="p">,</span>
+    <span class="n">prefetch</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">prb</span><span class="o">=</span><span class="n">prb</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="loss-module-construction">
+<h2>损失模块构建 <a class="headerlink" href="#loss-module-construction" title="Permalink to this heading">¶</a></h2>
+<p>我们使用 actor 和刚刚创建的 <code class="docutils literal "><span class="pre">qnet</span></code> 构建我们的损失模块。因为我们有要更新的目标参数，所以我们_必须_创建一个目标网络更新器。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.99</span>
+<span class="n">lmbda</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="n">tau</span> <span class="o">=</span> <span class="mf">0.001</span>  <span class="c1"># Decay factor for the target network</span>
+
+<span class="n">loss_module</span> <span class="o">=</span> <span class="n">DDPGLoss</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">qnet</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>让我们使用 TD(lambda)估计器！</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">loss_module</span><span class="o">.</span><span class="n">make_value_estimator</span><span class="p">(</span><span class="n">ValueEstimators</span><span class="o">.</span><span class="n">TDLambda</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="n">lmbda</span><span class="o">=</span><span class="n">lmbda</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>离策通常规定使用 TD(0)估计器。这里，我们使用 TD(<span class="math">\(\lambda\)</span>)估计器，这将会引入一些偏差，因为跟随某个状态的轨迹是在过时的策略下收集的。这个技巧，作为数据收集期间可以使用的多步技巧，是我们通常在实践中找到的“技巧”的替代版本，尽管它们在回报估计中引入了一些偏差。</p>
+</div>
+<div class="section" id="target-network-updater">
+<h3>目标网络更新器 <a class="headerlink" href="#target-network-updater" title="Permalink to this heading">¶</a></h3>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">目标网络是离线策略强化学习算法的关键部分。
+由于<code class="xref py py-class docutils literal "><span class="pre">硬更新</span></code>和<code class="xref py py-class docutils literal "><span class="pre">软更新 </span></code>，更新目标网络参数变得简单。
+<code class="xref py py-class docutils literal "><span class="pre">硬更新</span></code>和<code class="xref py py-class docutils literal "><span class="pre">软更新</span></code>
+类别。它们使用损失模块作为参数，更新是通过在训练循环的适当位置调用 <cite>updater.step()</cite> 来实现的。
+最后，我们将使用 Adam 优化器来训练策略网络和价值网络：</font></font></font></p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torchrl.objectives.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">SoftUpdate</span>
+
+<span class="n">target_net_updater</span> <span class="o">=</span> <span class="n">SoftUpdate</span><span class="p">(</span><span class="n">loss_module</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tau</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="optimizer">
+<h3>优化器 <a class="headerlink" href="#optimizer" title="Permalink to this heading">¶</a></h3>
+<p>最后，我们将使用 Adam 优化器来训练策略网络和价值网络：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">optim</span>
+
+<span class="n">optimizer_actor</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-optim sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.optim.Adam.html#torch.optim.Adam" title="torch.optim.Adam"><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span></a><span class="p">(</span>
+    <span class="n">loss_module</span><span class="o">.</span><span class="n">actor_network_params</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="mf">0.0</span>
+<span class="p">)</span>
+<span class="n">optimizer_value</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-optim sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.optim.Adam.html#torch.optim.Adam" title="torch.optim.Adam"><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span></a><span class="p">(</span>
+    <span class="n">loss_module</span><span class="o">.</span><span class="n">value_network_params</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="mf">1e-2</span>
+<span class="p">)</span>
+<span class="n">total_collection_steps</span> <span class="o">=</span> <span class="n">total_frames</span> <span class="o">//</span> <span class="n">frames_per_batch</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="time-to-train-the-policy">
+<h2>训练策略的时候到了 <a class="headerlink" href="#time-to-train-the-policy" title="Permalink to this heading">¶</a></h2>
+<p>现在我们已经构建了所有需要的模块，训练循环变得相当简单。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">rewards</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">rewards_eval</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Main loop</span>
+
+<span class="n">collected_frames</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">total_frames</span><span class="p">)</span>
+<span class="n">r0</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tensordict</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">collector</span><span class="p">):</span>
+
+    <span class="c1"># update weights of the inference policy</span>
+    <span class="n">collector</span><span class="o">.</span><span class="n">update_policy_weights_</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">r0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">r0</span> <span class="o">=</span> <span class="n">tensordict</span><span class="p">[</span><span class="s2">"next"</span><span class="p">,</span> <span class="s2">"reward"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tensordict</span><span class="o">.</span><span class="n">numel</span><span class="p">())</span>
+
+    <span class="c1"># extend the replay buffer with the new data</span>
+    <span class="n">current_frames</span> <span class="o">=</span> <span class="n">tensordict</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
+    <span class="n">collected_frames</span> <span class="o">+=</span> <span class="n">current_frames</span>
+    <span class="n">replay_buffer</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tensordict</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span>
+
+    <span class="c1"># optimization steps</span>
+    <span class="k">if</span> <span class="n">collected_frames</span> <span class="o">&gt;=</span> <span class="n">init_random_frames</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">update_to_data</span><span class="p">):</span>
+            <span class="c1"># sample from replay buffer</span>
+            <span class="n">sampled_tensordict</span> <span class="o">=</span> <span class="n">replay_buffer</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+            <span class="c1"># Compute loss</span>
+            <span class="n">loss_dict</span> <span class="o">=</span> <span class="n">loss_module</span><span class="p">(</span><span class="n">sampled_tensordict</span><span class="p">)</span>
+
+            <span class="c1"># optimize</span>
+            <span class="n">loss_dict</span><span class="p">[</span><span class="s2">"loss_actor"</span><span class="p">]</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+            <span class="n">gn1</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn-utils sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.utils.clip_grad_norm_.html#torch.nn.utils.clip_grad_norm_" title="torch.nn.utils.clip_grad_norm_"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">clip_grad_norm_</span></a><span class="p">(</span>
+                <span class="n">loss_module</span><span class="o">.</span><span class="n">actor_network_params</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="mf">10.0</span>
+            <span class="p">)</span>
+            <span class="n">optimizer_actor</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+            <span class="n">optimizer_actor</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+            <span class="n">loss_dict</span><span class="p">[</span><span class="s2">"loss_value"</span><span class="p">]</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+            <span class="n">gn2</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn-utils sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.utils.clip_grad_norm_.html#torch.nn.utils.clip_grad_norm_" title="torch.nn.utils.clip_grad_norm_"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">clip_grad_norm_</span></a><span class="p">(</span>
+                <span class="n">loss_module</span><span class="o">.</span><span class="n">value_network_params</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="mf">10.0</span>
+            <span class="p">)</span>
+            <span class="n">optimizer_value</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+            <span class="n">optimizer_value</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+            <span class="n">gn</span> <span class="o">=</span> <span class="p">(</span><span class="n">gn1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">gn2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+
+            <span class="c1"># update priority</span>
+            <span class="k">if</span> <span class="n">prb</span><span class="p">:</span>
+                <span class="n">replay_buffer</span><span class="o">.</span><span class="n">update_tensordict_priority</span><span class="p">(</span><span class="n">sampled_tensordict</span><span class="p">)</span>
+            <span class="c1"># update target network</span>
+            <span class="n">target_net_updater</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+    <span class="n">rewards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">i</span><span class="p">,</span>
+            <span class="n">tensordict</span><span class="p">[</span><span class="s2">"next"</span><span class="p">,</span> <span class="s2">"reward"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">td_record</span> <span class="o">=</span> <span class="n">recorder</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">td_record</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rewards_eval</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">td_record</span><span class="p">[</span><span class="s2">"r_evaluation"</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rewards_eval</span><span class="p">)</span> <span class="ow">and</span> <span class="n">collected_frames</span> <span class="o">&gt;=</span> <span class="n">init_random_frames</span><span class="p">:</span>
+        <span class="n">target_value</span> <span class="o">=</span> <span class="n">loss_dict</span><span class="p">[</span><span class="s2">"target_value"</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">loss_value</span> <span class="o">=</span> <span class="n">loss_dict</span><span class="p">[</span><span class="s2">"loss_value"</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">loss_actor</span> <span class="o">=</span> <span class="n">loss_dict</span><span class="p">[</span><span class="s2">"loss_actor"</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">rn</span> <span class="o">=</span> <span class="n">sampled_tensordict</span><span class="p">[</span><span class="s2">"next"</span><span class="p">,</span> <span class="s2">"reward"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">rs</span> <span class="o">=</span> <span class="n">sampled_tensordict</span><span class="p">[</span><span class="s2">"next"</span><span class="p">,</span> <span class="s2">"reward"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">pbar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"reward: </span><span class="si">{</span><span class="n">rewards</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2"> 4.2f</span><span class="si">}</span><span class="s2"> (r0 = </span><span class="si">{</span><span class="n">r0</span><span class="si">:</span><span class="s2"> 4.2f</span><span class="si">}</span><span class="s2">), "</span>
+            <span class="sa">f</span><span class="s2">"reward eval: reward: </span><span class="si">{</span><span class="n">rewards_eval</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2"> 4.2f</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"reward normalized=</span><span class="si">{</span><span class="n">rn</span><span class="w"> </span><span class="si">:</span><span class="s2">4.2f</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">rs</span><span class="w"> </span><span class="si">:</span><span class="s2">4.2f</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"grad norm=</span><span class="si">{</span><span class="n">gn</span><span class="si">:</span><span class="s2"> 4.2f</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"loss_value=</span><span class="si">{</span><span class="n">loss_value</span><span class="si">:</span><span class="s2"> 4.2f</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"loss_actor=</span><span class="si">{</span><span class="n">loss_actor</span><span class="si">:</span><span class="s2"> 4.2f</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"target value: </span><span class="si">{</span><span class="n">target_value</span><span class="si">:</span><span class="s2"> 4.2f</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+
+    <span class="c1"># update the exploration strategy</span>
+    <span class="n">actor_model_explore</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">current_frames</span><span class="p">)</span>
+
+<span class="n">collector</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+<span class="k">del</span> <span class="n">collector</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="experiment-results">
+<h2>实验结果 <a class="headerlink" href="#experiment-results" title="Permalink to this heading">¶</a></h2>
+<p>我们绘制了训练过程中平均奖励的简单图表。我们可以观察到，我们的策略已经很好地学会了如何解决这个任务。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>如前所述，为了获得更合理的性能，请使用更大的值设置 <code class="docutils literal "><span class="pre"> 总帧数 </span></code>，例如，1M。</p>
+</div>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">rewards</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">"training"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">rewards_eval</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">"eval"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"iter"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"reward"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="conclusion">
+<h2>结论 <a class="headerlink" href="#conclusion" title="Permalink to this heading">¶</a></h2>
+<p>在本教程中，我们学习了如何在 TorchRL 中根据 DDPG 的具体示例编写损失模块。</p>
+<p>关键要点如下：</p>
+<ul class="simple">
+<li><p>如何使用 <code class="xref py py-class docutils literal "><span class="pre"> 损失模块 </span></code> 类来编写新的损失组件；</p></li>
+<li><p>如何使用（或不使用）目标网络，以及如何更新其参数；</p></li>
+<li><p>如何创建与损失模块关联的优化器。</p></li>
+</ul>
+</div>
+<div class="section" id="next-steps">
+<h2>下一步</h2>
+<p>要进一步迭代这个损失模块，我们可能考虑：</p>
+<ul class="simple">
+<li><p>使用 <cite>@dispatch</cite>（见 <a class="reference external" href="https://github.com/pytorch/rl/pull/1230">[功能] Distpatch IQL 损失模块 </a>。）</p></li>
+<li><p>允许灵活的 TensorDict 键。</p></li>
+</ul>
+<p class="sphx-glr-timing"><strong>脚本总运行时间：</strong>（0 分钟 0.000 秒）</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-advanced-coding-ddpg-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/592c87306513ba042d759e142b59fea4/coding_ddpg.py"><code class="xref download docutils literal "><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">coding_ddpg.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/e9ea08c1c8bbc809d69c69a6043d56ee/coding_ddpg.ipynb"><code class="xref download docutils literal "><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">coding_ddpg.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Sphinx-Gallery 生成的画廊</a></p>
+</div>
+</div>
+</article>
+</div>
+<footer>
+<hr class="rating-hr hr-top">
+<div class="rating-container">
+<div class="rating-prompt">评分这个教程</div>
+<div class="stars-outer">
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="1" title="1 Star"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="2" title="2 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="3" title="3 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="4" title="4 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="5" title="5 Stars"></i>
+</div>
+</div>
+<hr class="rating-hr hr-bottom">
+<div role="contentinfo">
+<p>© 版权所有 2024，PyTorch。</p>
+</div>
+<div>使用 <a href="http://sphinx-doc.org/">Sphinx</a> 构建，并使用由 <a href="https://readthedocs.org">Read the Docs</a> 提供的 <a href="https://github.com/rtfd/sphinx_rtd_theme"> 主题 </a>。</div>
+</footer>
+</div>
+<script>
+if((window.location.href.indexOf("/prototype/")!= -1) && (window.location.href.indexOf("/prototype/prototype_index")< 1))
+  {
+    var div = '<div class="admonition note"><p class="admonition-title">Note</p><p><i class="fa fa-flask" aria-hidden="true">&nbsp</i> This tutorial describes a prototype feature. Prototype features are typically not available as part of binary distributions like PyPI or Conda, except sometimes behind run-time flags, and are at an early stage for feedback and testing.</p></div>'
+    document.getElementById("pytorch-article").insertAdjacentHTML('afterBegin', div)
+  }
+</script>
+</div>
+<div class="pytorch-content-right" id="pytorch-content-right">
+<div class="pytorch-right-menu" id="pytorch-right-menu">
+<div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+<ul>
+<li><a class="reference internal" href="#">TorchRL 目标：编写 DDPG 损失函数</a><ul>
+<li><a class="reference internal" href="#overview">概述</a><ul>
+<li><a class="reference internal" href="#prerequisites">前提条件</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#imports-and-setup">导入和设置</a></li>
+<li><a class="reference internal" href="#torchrl-lossmodule">TorchRL <code class="xref py py-class docutils literal "><span class="pre"> 损失模块</span></code></a><ul>
+<li><a class="reference internal" href="#the-init-method"><code class="docutils literal "><span class="pre">__init__</span></code> 方法</a></li>
+<li><a class="reference internal" href="#the-value-estimator-loss-method">价值估计器损失方法</a></li>
+<li><a class="reference internal" href="#the-actor-loss-method">演员损失方法</a></li>
+<li><a class="reference internal" href="#the-value-loss-method">价值损失方法</a></li>
+<li><a class="reference internal" href="#putting-things-together-in-a-forward-call">前向调用中组合事物</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#environment">环境</a><ul>
+<li><a class="reference internal" href="#transforms">转换</a></li>
+<li><a class="reference internal" href="#parallel-execution">并行执行</a></li>
+<li><a class="reference internal" href="#normalization-of-the-observations">观测值的归一化</a></li>
+<li><a class="reference internal" href="#normalization-stats">归一化统计</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#building-the-model">构建模型</a><ul>
+<li><a class="reference internal" href="#exploration">探索</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#data-collector">数据收集器</a></li>
+<li><a class="reference internal" href="#evaluator-building-your-recorder-object">评估者：构建你的记录对象</a></li>
+<li><a class="reference internal" href="#replay-buffer">重放缓冲区</a><ul>
+<li><a class="reference internal" href="#replay-buffer-storage-and-batch-size">重放缓冲区存储和批量大小</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#loss-module-construction">损失模块构建</a><ul>
+<li><a class="reference internal" href="#target-network-updater">目标网络更新器</a></li>
+<li><a class="reference internal" href="#optimizer">优化器</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#time-to-train-the-policy">训练策略的时间</a></li>
+<li><a class="reference internal" href="#experiment-results">实验结果</a></li>
+<li><a class="reference internal" href="#conclusion">结论</a></li>
+<li><a class="reference internal" href="#next-steps">下一步</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js" type="text/javascript"></script>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+<script src="../_static/katex.min.js"></script>
+<script src="../_static/auto-render.min.js"></script>
+<script src="../_static/katex_autorenderer.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script src="../_static/js/custom.js"></script>
+<script src="../_static/js/vendor/popper.min.js" type="text/javascript"></script>
+<script src="../_static/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+<script src="../_static/js/theme.js" type="text/javascript"></script>
+<script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+<script>
+
+// Helper function to make it easier to call dataLayer.push()
+function gtag(){window.dataLayer.push(arguments);}
+
+//add microsoft link
+
+if(window.location.href.indexOf("/beginner/basics/")!= -1)
+{
+  var url="https://docs.microsoft.com/learn/paths/pytorch-fundamentals/?wt.mc_id=aiml-7486-cxa";
+  switch(window.location.pathname.split("/").pop().replace('.html',''))
+  {
+    case"quickstart_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/9-quickstart?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"tensorqs_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/2-tensors?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"data_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/3-data?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"transforms_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/4-transforms?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"buildmodel_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/5-model?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"autogradqs_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/6-autograd?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"optimization_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/7-optimization?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"saveloadrun_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/8-inference?WT.mc_id=aiml-7486-cxa";
+    }
+
+    $(".pytorch-call-to-action-links").children().first().before("<a href="+url+' data-behavior="call-to-action-event" data-response="Run in Microsoft Learn" target="_blank"><div id="microsoft-learn-link" style="padding-bottom: 0.625rem;border-bottom: 1px solid #f3f4f7;padding-right: 2.5rem;display: -webkit-box;  display: -ms-flexbox; display: flex; -webkit-box-align: center;-ms-flex-align: center;align-items: center;"><img class="call-to-action-img" src="../../_static/images/microsoft-logo.svg"/><div class="call-to-action-desktop-view">Run in Microsoft Learn</div><div class="call-to-action-mobile-view">Learn</div></div></a>')
+  }
+
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '243028289693773');
+  fbq('track', 'PageView');
+
+  $("[data-behavior='call-to-action-event']").on('click', function(){
+    fbq('trackCustom', "Download", {
+      tutorialTitle: $('h1:first').text(),
+      downloadLink: this.href,
+      tutorialLink: window.location.href,
+      downloadTitle: $(this).attr("data-response")
+    });
+    gtag('event', 'click', {
+      'event_category': $(this).attr("data-response"),
+      'event_label': $("h1").first().text(),
+      'tutorial_link': window.location.href
+    });
+   });
+
+   $("[data-behavior='tutorial-rating']").on('click', function(){
+    fbq('trackCustom', "Tutorial Rating", {
+      tutorialLink: window.location.href,
+      tutorialTitle: $('h1:first').text(),
+      rating: $(this).attr("data-count")
+    });
+    gtag('event', 'click', {
+      'event_category': 'Tutorial Rating',
+      'event_label': $("h1").first().text(),
+      'value': $(this).attr("data-count"),
+      'customEvent:Rating': $(this).attr("data-count") // send to GA custom dimension customEvent:Rating.
+    });
+   });
+
+   if (location.pathname == "/") {
+     $(".rating-container").hide();
+     $(".hr-bottom").hide();
+   }
+
+
+</script>
+<noscript>
+<img height="1" src="https://www.facebook.com/tr?id=243028289693773&amp;ev=PageView
+  &amp;noscript=1" width="1">
+</noscript>
+<script type="text/javascript">
+  var collapsedSections = ['PyTorch Recipes', 'Learning PyTorch', 'Image and Video', 'Audio', 'Text', 'Backends', 'Reinforcement Learning', 'Deploying PyTorch Models in Production', 'Profiling PyTorch', 'Code Transforms with FX', 'Frontend APIs', 'Extending PyTorch', 'Model Optimization', 'Parallel and Distributed Training', 'Edge with ExecuTorch', 'Recommendation Systems', 'Multimodality'];
+</script>
+<font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  "> <img width="1" style="border-style:none;" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0" height="1" alt=""> 
+
+//临时添加调查链接</font></font></font><script>
+    var survey = '<div class="survey-banner"><p><i class="fas fa-poll" aria-hidden="true">&nbsp </i> Take the <a href="https://forms.gle/KZ4xGL65VRMYNbbG6">PyTorch Docs/Tutorials survey</a>.</p></div>'
+    if ($(".pytorch-call-to-action-links").length) {
+        $(".pytorch-call-to-action-links").before(survey);
+    } else {
+        $("#pytorch-article").prepend(survey);
+    }
+</script>
+<!-- Begin Footer -->
+<div class="container-fluid docs-tutorials-resources" id="docs-tutorials-resources">
+<div class="container">
+<div class="row">
+<div class="col-md-4 text-center">
+<h2>文档</h2>
+<p>获取 PyTorch 的全面开发者文档</p>
+<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
+</div>
+<div class="col-md-4 text-center">
+<h2>教程</h2>
+<p>获取初学者和高级开发者的深入教程</p>
+<a class="with-right-arrow" href="https://maskerprc.github.io/tutorials">查看教程</a>
+</div>
+<div class="col-md-4 text-center">
+<h2>资源</h2>
+<p>查找开发资源并解答您的问题</p>
+<a class="with-right-arrow" href="https://pytorch.org/resources">查看资源</a>
+</div>
+</div>
+</div>
+</div>
+<footer class="site-footer">
+<div class="container footer-container">
+<div class="footer-logo-wrapper">
+<a class="footer-logo" href="https://pytorch.org/"></a>
+</div>
+<div class="footer-links-wrapper">
+<div class="footer-links-col">
+<ul>
+<li class="list-title"><a href="https://pytorch.org/">PyTorch</a></li>
+<li><a href="https://pytorch.org/get-started">开始使用</a></li>
+<li><a href="https://pytorch.org/features">特征</a></li>
+<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://pytorch.org/blog/">博客</a></li>
+<li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title"><a href="https://pytorch.org/resources">资源</a></li>
+<li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
+<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
+<li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
+<li><a href="https://pytorch.org/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title">保持更新</li>
+<li><a href="https://www.facebook.com/pytorch" target="_blank">Facebook</a></li>
+<li><a href="https://twitter.com/pytorch" target="_blank">Twitter</a></li>
+<li><a href="https://www.youtube.com/pytorch" target="_blank">YouTube</a></li>
+<li><a href="https://www.linkedin.com/company/pytorch" target="_blank">领英</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title">PyTorch 播客</li>
+<li><a href="https://open.spotify.com/show/6UzHKeiy368jKfQMKKvJY5" target="_blank">Spotify</a></li>
+<li><a href="https://podcasts.apple.com/us/podcast/pytorch-developer-podcast/id1566080008" target="_blank">苹果</a></li>
+<li><a href="https://www.google.com/podcasts?feed=aHR0cHM6Ly9mZWVkcy5zaW1wbGVjYXN0LmNvbS9PQjVGa0lsOA%3D%3D" target="_blank">谷歌</a></li>
+<li><a href="https://music.amazon.com/podcasts/7a4e6f0e-26c2-49e9-a478-41bd244197d0/PyTorch-Developer-Podcast?" target="_blank">亚马逊</a></li>
+</ul>
+</div>
+</div>
+<div class="privacy-policy">
+<ul>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/terms/" target="_blank">条款</a></li>
+<li class="privacy-policy-links">|</li>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/privacy-policy/" target="_blank">隐私</a></li>
+</ul>
+</div>
+<div class="copyright">
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">© 版权所有 Linux 基金会。PyTorch 基金会是 Linux 基金会的一个项目。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列、LF Projects, LLC 的政策，请参阅
+对于网站使用条款、商标政策以及其他适用于 PyTorch 基金会的政策，请参阅
+<a href="https://www.linuxfoundation.org/policies/">www.linuxfoundation.org/policies/</a>。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列、LF Projects, LLC 的政策，请参阅 <a href="https://www.lfprojects.org/policies/">www.lfprojects.org/policies/</a>。</font></font></font></p>
+</div>
+</div>
+</footer>
+<div class="cookie-banner-wrapper">
+<div class="container">
+<p class="gdpr-notice">为了分析交通并优化您的体验，我们在本网站上提供 cookies。通过点击或导航，您同意允许我们使用 cookies。作为本站点的当前维护者，Facebook 的 Cookies 政策适用。了解更多信息，包括可用的控制选项：[cookies 政策](<a href="https://www.facebook.com/policies/cookies/">cookies 政策 </a>)。</p>
+<img class="close-button" src="../_static/images/pytorch-x.svg" width="16" height="16">
+</div>
+</div>
+<!-- End Footer -->
+<!-- Begin Mobile Menu -->
+<div class="mobile-main-menu">
+<div class="container-fluid">
+<div class="container">
+<div class="mobile-main-menu-header-container">
+<a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
+<a class="main-menu-close-button" data-behavior="close-mobile-menu" href="#"></a>
+</div>
+</div>
+</div>
+<div class="mobile-main-menu-links-container">
+<div class="main-menu">
+<ul>
+<li class="resources-mobile-menu-title">
+<a>学习</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/get-started">开始使用</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials">教程</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">学习基础知识</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">PyTorch 食谱</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/beginner/introyt.html">PyTorch 入门 - YouTube 系列</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>生态系统</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/ecosystem">工具</a>
+</li>
+<li>
+<a href="https://pytorch.org/#community-module">社区</a>
+</li>
+<li>
+<a href="https://discuss.pytorch.org/">论坛</a>
+</li>
+<li>
+<a href="https://pytorch.org/resources">开发者资源</a>
+</li>
+<li>
+<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>边缘</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/edge">关于 PyTorch Edge</a>
+</li>
+<li>
+<a href="https://pytorch.org/executorch-overview">ExecuTorch</a>
+</li>
+<li>
+<a href="https://pytorch.org/executorch/stable/index.html">ExecuTorch 文档</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>文档</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
+</li>
+<li>
+<a href="https://pytorch.org/pytorch-domains">PyTorch 领域</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>博客 &amp; 新闻</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/blog/">PyTorch 博客</a>
+</li>
+<li>
+<a href="https://pytorch.org/community-blog">社区博客</a>
+</li>
+<li>
+<a href="https://pytorch.org/videos">视频</a>
+</li>
+<li>
+<a href="https://pytorch.org/community-stories">社区故事</a>
+</li>
+<li>
+<a href="https://pytorch.org/events">活动</a>
+</li>
+<li>
+<a href="https://pytorch.org/newsletter">通讯</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>关于</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
+</li>
+<li>
+<a href="https://pytorch.org/governing-board">管理委员会</a>
+</li>
+<li>
+<a href="https://pytorch.org/credits">云信用计划</a>
+</li>
+<li>
+<a href="https://pytorch.org/tac">技术顾问委员会</a>
+</li>
+<li>
+<a href="https://pytorch.org/staff">员工</a>
+</li>
+<li>
+<a href="https://pytorch.org/contact-us">联系我们</a>
+</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<!-- End Mobile Menu -->
+<script src="../_static/js/vendor/anchor.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+      mainMenuDropdown.bind();
+      filterTags.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function(e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+
+</body></html>

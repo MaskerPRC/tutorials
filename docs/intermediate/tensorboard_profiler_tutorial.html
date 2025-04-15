@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>PyTorch Profiler With TensorBoard — PyTorch Tutorials 2.3.0+cpu documentation</title>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<link href="../_static/copybutton.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/katex-math.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-binder.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-dataframe.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-rendered-html.css" rel="stylesheet" type="text/css">
+<link href="../_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom2.css" rel="stylesheet" type="text/css">
+<link href="../genindex.html" rel="index" title="Index">
+<link href="../search.html" rel="search" title="Search">
+<link href="../beginner/hyperparameter_tuning_tutorial.html" rel="next" title="Hyperparameter tuning with Ray Tune">
+<link href="../advanced/privateuseone.html" rel="prev" title="Facilitating New Backend Integration by PrivateUse1">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T8XT4PS');</script>
+<!-- End Google Tag Manager -->
+<script src="../_static/js/modernizr.min.js"></script>
+<!-- Preload the theme fonts -->
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-book.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" rel="preload" type="font/woff2">
+<!-- Preload the katex fonts -->
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" rel="preload" type="font/woff2">
+<link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" rel="stylesheet">
+</head><body class="pytorch-body"><div class="container-fluid header-holder tutorials-header" id="header-holder">
+<div class="container">
+<div class="header-container">
+<a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
+<div class="main-menu">
+<ul>
+<li class="main-menu-item">
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">学习</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/get-started">
+<span class="dropdown-title">开始使用</span>
+<p>在本地运行 PyTorch 或快速开始使用支持的云平台之一</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials">
+<span class="dropdown-title">教程</span>
+<p>PyTorch 教程中有什么新内容</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">
+<span class="dropdown-title">学习基础知识</span>
+<p>熟悉 PyTorch 的概念和模块</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">
+<span class="dropdown-title">PyTorch 食谱</span>
+<p>小巧便捷、即用型 PyTorch 代码示例</p>
+</a>
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/introyt.html">
+<span class="dropdown-title">PyTorch 入门 - YouTube 系列教程</span>
+<p>通过我们引人入胜的 YouTube 教程系列掌握 PyTorch 基础知识</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">生态系统</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
+<span class="dropdown-title">工具</span>
+<p>了解 PyTorch 生态系统中的工具和框架</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/#community-module">
+<span class="dropdown-title">社区</span>
+<p>加入 PyTorch 开发者社区，贡献、学习并解答你的问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://discuss.pytorch.org/" target="_blank">
+<span class="dropdown-title">论坛</span>
+<p>讨论 PyTorch 代码、问题、安装、研究的地方</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/resources">
+<span class="dropdown-title">开发者资源</span>
+<p>查找资源并解答问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
+<span class="dropdown-title">贡献者奖项 - 2024</span>
+<p>本届 PyTorch 大会揭晓获奖者</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">边缘</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/edge">
+<span class="dropdown-title">关于 PyTorch Edge</span>
+<p>为边缘设备构建创新且注重隐私的 AI 体验</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/executorch-overview">
+<span class="dropdown-title">ExecuTorch</span>
+<p>实现移动和边缘设备端到端推理能力的解决方案</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/executorch/stable/index.html">
+<span class="dropdown-title">ExecuTorch 文档</span>
+</a>
+</div>
+</div>
+</li>
+<li class="main-menu-item">
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">文档</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
+<span class="dropdown-title">PyTorch</span>
+<p>查阅文档以获取全面指导，了解如何使用 PyTorch</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/pytorch-domains">
+<span class="dropdown-title">PyTorch 领域</span>
+<p>阅读 PyTorch Domains 文档以了解更多关于特定领域库的信息</p>
+</a>
+</div>
+</div>
+</li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">博客与新闻</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/blog/">
+<span class="dropdown-title">PyTorch 博客</span>
+<p>捕捉最新的技术新闻和事件</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
+<span class="dropdown-title">社区博客</span>
+<p>PyTorch 生态系统中的故事</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/videos">
+<span class="dropdown-title">视频</span>
+<p>了解最新的 PyTorch 教程、新内容等</p>
+</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+<span class="dropdown-title">社区故事</span>
+<p>学习如何我们的社区使用 PyTorch 解决真实、日常的机器学习问题</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/events">
+<span class="dropdown-title">活动</span>
+<p>查找活动、网络研讨会和播客</p>
+</a>
+<a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
+<span class="dropdown-title">通讯</span>
+<p>保持最新更新</p>
+</a>
+</div>
+</div></li>
+<li>
+<div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
+<a class="with-down-arrow">关于</a>
+<div class="resources-dropdown-menu">
+<a class="nav-dropdown-item" href="https://pytorch.org/foundation">
+<span class="dropdown-title">PyTorch 基金会</span>
+<p>了解更多关于 PyTorch 基金会</p>
+</a>
+管理委员会云信用计划技术顾问委员会员工联系我们
+</div>
+</div>
+</li>
+<li class="main-menu-item">
+<div class="no-dropdown">
+<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
+</div>
+</li>
+<li>
+<div class="main-menu-item">
+<a class="github-icon" href="https://github.com/pytorch/pytorch">
+</a>
+</div>
+</li>
+<!--- TODO: This block adds the search icon to the nav bar. We will enable it later. 
+          <li>
+            <div class="main-menu-item">
+             <a href="https://github.com/pytorch/pytorch" class="search-icon">
+             </a>
+            </div>
+          </li>
+          --->
+</ul>
+</div>
+<a class="main-menu-open-button" data-behavior="open-mobile-menu" href="#"></a>
+</div>
+</div>
+</div>
+
+<div class="table-of-contents-link-wrapper">
+<span>目录</span>
+<a class="toggle-table-of-contents" data-behavior="toggle-table-of-contents" href="#"></a>
+</div>
+<nav class="pytorch-left-menu" data-toggle="wy-nav-shift" id="pytorch-left-menu">
+<div class="pytorch-side-scroll">
+<div aria-label="main navigation" class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation">
+<div class="pytorch-left-menu-search">
+<div class="version">
+        2.3.0+cpu
+      </div>
+<!-- Search box -->
+<div id="searchBox">
+<div class="searchbox" id="googleSearchBox">
+<script async="" src="https://cse.google.com/cse.js?cx=e65585f8c3ea1440e"></script>
+<div class="gcse-search"></div>
+</div>
+<div id="sphinxSearchBox" style="display: none;">
+<div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input name="q" placeholder="Search Docs" type="text">
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default">
+</form>
+</div>
+</div>
+</div>
+<form id="searchForm">
+<label style="margin-bottom: 1rem">
+<input checked="" name="searchType" type="radio" value="google">谷歌搜索</label>
+<label style="margin-bottom: 1rem">
+<input name="searchType" type="radio" value="sphinx">经典搜索</label>
+</form>
+<script>
+     document.addEventListener('DOMContentLoaded', function() {
+      const searchForm = document.getElementById('searchForm');
+      const googleSearchBox = document.getElementById('googleSearchBox');
+      const sphinxSearchBox = document.getElementById('sphinxSearchBox');
+      // Function to toggle search box visibility
+      function toggleSearchBox(searchType) {
+        googleSearchBox.style.display = searchType === 'google' ? 'block' : 'none';
+        sphinxSearchBox.style.display = searchType === 'sphinx' ? 'block' : 'none';
+      }
+      // Determine the default search type
+      let defaultSearchType = 'google';
+      if (window.location.href.startsWith('https://docs-preview.pytorch.org/')) {
+        defaultSearchType = 'sphinx';
+      } else {
+        defaultSearchType = localStorage.getItem('searchType') || 'google';
+      }
+      // Set the default search type
+      document.querySelector(`input[name="searchType"][value="${defaultSearchType}"]`).checked = true;
+      toggleSearchBox(defaultSearchType);
+      // Event listener for changes in search type
+      searchForm.addEventListener('change', function(event) {
+        const selectedSearchType = event.target.value;
+        localStorage.setItem('searchType', selectedSearchType);
+        toggleSearchBox(selectedSearchType);
+      });
+      // Set placeholder text for Google search box
+      window.onload = function() {
+        var placeholderText = "Search Docs";
+        var googleSearchboxText = document.querySelector("#gsc-i-id1");
+        if (googleSearchboxText) {
+          googleSearchboxText.placeholder = placeholderText;
+          googleSearchboxText.style.fontFamily = 'FreightSans';
+          googleSearchboxText.style.fontSize = "1.2rem";
+          googleSearchboxText.style.color = '#262626';
+        }
+      };
+    });
+  </script>
+</div>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 食谱</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/recipes_index.html">查看所有菜谱</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prototype/prototype_index.html">查看所有原型菜谱</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 入门</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/basics/intro.html">学习基础知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/quickstart_tutorial.html">快速入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/tensorqs_tutorial.html">张量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/data_tutorial.html">数据集和数据加载器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/transforms_tutorial.html">转换</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/buildmodel_tutorial.html">构建神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/autogradqs_tutorial.html">自动微分与 <code class="docutils literal "><span class="pre">torch.autograd</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/optimization_tutorial.html">优化模型参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/saveloadrun_tutorial.html">保存和加载模型</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/introyt/introyt_index.html">PyTorch 入门 - YouTube 系列</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/introyt1_tutorial.html">PyTorch 入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensors_deeper_tutorial.html">PyTorch 张量入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/autogradyt_tutorial.html">Autograd 基础</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/modelsyt_tutorial.html">使用 PyTorch 构建模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensorboardyt_tutorial.html">PyTorch TensorBoard 支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/trainingyt.html">使用 PyTorch 进行训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/captumyt.html">使用 Captum 理解模型</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">学习 PyTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/deep_learning_60min_blitz.html">深度学习与 PyTorch：60 分钟速成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/pytorch_with_examples.html">通过示例学习 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/nn_tutorial.html"><cite>torch.nn</cite><em> 究竟</em>是什么？</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlp_from_scratch_index.html">从零开始学习自然语言处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tensorboard_tutorial.html">使用 TensorBoard 可视化模型、数据和训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pinmem_nonblock.html">PyTorch 中正确使用<code class="docutils literal "><span class="pre">非阻塞</span></code>和<code class="docutils literal "><span class="pre">固定内存</span></code>的指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">图像和视频</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="torchvision_tutorial.html">TorchVision 目标检测微调教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/transfer_learning_tutorial.html">计算机视觉迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/fgsm_tutorial.html">对抗样本生成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dcgan_faces_tutorial.html">DCGAN 教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial_transformer_tutorial.html">空间变换网络教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">优化视觉 Transformer 模型以部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiatoolbox_tutorial.html">使用 PyTorch 和 TIAToolbox 进行全切片图像分类</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">音频</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_io_tutorial.html">音频输入/输出</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_resampling_tutorial.html">音频重采样</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_data_augmentation_tutorial.html">音频数据增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_extractions_tutorial.html">音频特征提取</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_augmentation_tutorial.html">音频特征增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_datasets_tutorial.html">音频数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="speech_recognition_pipeline_tutorial.html">使用 Wav2Vec2 的语音识别</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text_to_speech_with_torchaudio.html">使用 Tacotron2 的文本到语音</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forced_alignment_with_torchaudio_tutorial.html">使用 Wav2Vec2 的强制对齐</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">后端</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">强化学习</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_q_learning.html">强化学习（DQN）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_ppo.html">使用 TorchRL 的强化学习（PPO）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mario_rl_tutorial.html">训练一个玩马里奥的强化学习智能体</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/pendulum.html">摆锤：使用 TorchRL 编写你的环境和转换</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">部署 PyTorch 模型到生产环境</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flask_rest_api_tutorial.html">使用 Flask 通过 REST API 部署 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/Intro_to_TorchScript_tutorial.html">TorchScript 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_export.html">在 C++中加载 TorchScript 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/super_resolution_with_onnxruntime.html">(可选) 将 PyTorch 模型导出为 ONNX 并使用 ONNX Runtime 运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="realtime_rpi.html">Raspberry Pi 4 上的实时推理（30 fps！）</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 性能分析</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">PyTorch 模块性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_intro_tutorial.html">全景式跟踪分析简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_trace_diff_tutorial.html">使用全景式跟踪分析进行跟踪差异</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">使用 FX 进行代码转换</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fx_conv_bn_fuser.html">(beta) 在 FX 中构建卷积/批量归一化融合器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fx_profiling_tutorial.html">(beta) 使用 FX 构建简单的 CPU 性能分析器</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">前端 API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="memory_format_tutorial.html">(beta) PyTorch 中的通道最后内存格式</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forward_ad_usage.html">前向模式自动微分（Beta）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jacobians_hessians.html">雅可比矩阵、海森矩阵、HVP、vHP 以及更多：函数变换的组成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ensembling.html">模型集成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="per_sample_grads.html">每样本梯度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_frontend.html">使用 PyTorch C++前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch-script-parallelism.html">动态并行化在 TorchScript 中</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_autograd.html">C++前端中的自动微分</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">扩展 PyTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/custom_ops_landing_page.html">PyTorch 自定义算子</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/python_custom_ops.html">自定义 Python 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_custom_ops.html">自定义 C++和 CUDA 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_function_double_backward_tutorial.html">使用自定义函数的双向回传</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_function_conv_bn_tutorial.html">使用自定义函数融合卷积和批量归一化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_extension.html">自定义 C++ 和 CUDA 扩展</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_ops.html">使用自定义 C++ 操作符扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_classes.html">使用自定义 C++ 类扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dispatcher.html">在 C++ 中注册分派操作符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/extend_dispatcher.html">C++中扩展后端调度器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/privateuseone.html">通过 PrivateUse1 促进新后端集成</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">模型优化</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">PyTorch 模块性能分析</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">PyTorch 分析器与 TensorBoard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hyperparameter_tuning_tutorial.html">使用 Ray Tune 进行超参数调整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">优化视觉 Transformer 模型以部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametrizations.html">参数化教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruning_tutorial.html">剪枝教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dynamic_quantization_tutorial.html">(beta) 在 LSTM 词语言模型上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_quantization_bert_tutorial.html">(beta) 在 BERT 上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantized_transfer_learning_tutorial.html">(beta) 计算机视觉的量化迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/static_quantization_tutorial.html">(beta) PyTorch 中 Eager 模式下的静态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex.html">从原理出发掌握 PyTorch Intel CPU 性能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex_2.html">从原理出发掌握 PyTorch Intel CPU 性能（第二部分）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nvfuser_intro_tutorial.html">入门指南 - 使用 nvFuser 加速您的脚本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ax_multiobjective_nas_tutorial.html">基于 Ax 的多目标 NAS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torch_compile_tutorial.html"><code class="docutils literal "><span class="pre">torch.compile</span></code> 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compiled_autograd_tutorial.html">编译 Autograd：捕获更大的 <code class="docutils literal "><span class="pre">torch.compile</span></code> 反向图</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inductor_debug_cpu.html">电感 CPU 后端调试和性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scaled_dot_product_attention_tutorial.html">(Beta) 使用缩放点积注意力（SDPA）实现高性能 Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/knowledge_distillation_tutorial.html">知识蒸馏教程</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">并行和分布式训练</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../distributed/home.html">分布式和并行训练教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dist_overview.html">PyTorch 分布式概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/ddp_series_intro.html">PyTorch 分布式数据并行 - 视频教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_parallel_tutorial.html">单机模型并行最佳实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ddp_tutorial.html">PyTorch 分布式数据并行入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dist_tuto.html">使用 PyTorch 编写分布式应用程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FSDP_tutorial.html">开始使用完全分片数据并行（FSDP）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FSDP_advanced_tutorial.html">高级模型训练与完全分片数据并行（FSDP）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TCPStore_libuv_backend.html">Libuv TCPStore 后端简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TP_tutorial.html">使用 Tensor Parallel（TP）进行大规模 Transformer 模型训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelining_tutorial.html">分布式流水线并行简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process_group_cpp_extension_tutorial.html">使用 C++扩展自定义进程组后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_tutorial.html">分布式 RPC 框架入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_param_server_tutorial.html">使用分布式 RPC 框架实现参数服务器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_async_execution.html">使用异步执行实现批处理 RPC 处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/rpc_ddp_tutorial.html">结合分布式数据并行与分布式 RPC 框架</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/generic_join.html">使用 Join 上下文管理器进行不均匀输入的分布式训练</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Edge 与 ExecuTorch</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html">导出至 ExecuTorch 教程</a></li>
+<li class="toctree-l1"><a class="reference external" href=" https://pytorch.org/executorch/stable/running-a-model-cpp-tutorial.html">在 C++中运行 ExecuTorch 模型教程</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/sdk-integration-tutorial.html">使用 ExecuTorch SDK 对模型进行性能分析</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-ios.html">构建 ExecuTorch iOS 演示应用</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-android.html">构建 ExecuTorch Android 演示应用</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/examples-end-to-end-to-lower-model-to-delegate.html">将模型作为代理降低</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">推荐系统</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="torchrec_intro_tutorial.html">火炬 Rec 入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/sharding.html">探索 TorchRec 分片</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">多模态</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/flava_finetuning_tutorial.html">TorchMultimodal 教程：微调 FLAVA</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="pytorch-container">
+<div class="pytorch-page-level-bar" id="pytorch-page-level-bar">
+<div class="pytorch-breadcrumbs-wrapper">
+<div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="pytorch-breadcrumbs">
+<li>
+<font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">教程
+
+         &gt;</font></font></font></li>
+<li>PyTorch 分析器与 TensorBoard</li>
+<li class="pytorch-breadcrumbs-aside">
+<a href="../_sources/intermediate/tensorboard_profiler_tutorial.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg" width="16" height="16"></a>
+</li>
+</ul>
+</div>
+</div>
+<div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">快捷键</div>
+</div>
+<section class="pytorch-content-wrap" data-toggle="wy-nav-shift" id="pytorch-content-wrap">
+<div class="pytorch-content-left">
+<div class="pytorch-call-to-action-links">
+<div id="tutorial-type">intermediate/tensorboard_profiler_tutorial</div>
+<div id="google-colab-link">
+<img class="call-to-action-img" src="../_static/images/pytorch-colab.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 Google Colab 中运行</div>
+<div class="call-to-action-mobile-view">Colab</div>
+</div>
+<div id="download-notebook-link">
+<img class="call-to-action-notebook-img" src="../_static/images/pytorch-download.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">下载笔记本</div>
+<div class="call-to-action-mobile-view">笔记本</div>
+</div>
+<div id="github-view-link">
+<img class="call-to-action-img" src="../_static/images/pytorch-github.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 GitHub 上查看</div>
+<div class="call-to-action-mobile-view">GitHub</div>
+</div>
+</div>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-T8XT4PS" style="display:none;visibility:hidden" width="0"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="rst-content">
+<div class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<article class="pytorch-article" id="pytorch-article" itemprop="articleBody">
+<div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">备注</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">点击 <a class="reference internal" href="#sphx-glr-download-intermediate-tensorboard-profiler-tutorial-py"><span class="std std-ref"> 这里</span></a>
+下载完整示例代码</font></font></font></p>
+</div>
+<div class="sphx-glr-example-title section" id="pytorch-profiler-with-tensorboard">
+<span id="sphx-glr-intermediate-tensorboard-profiler-tutorial-py"></span><h1>PyTorch Profiler 与 TensorBoard 集成 <a class="headerlink" href="#pytorch-profiler-with-tensorboard" title="Permalink to this heading">¶</a></font></font></font></h1><p class="date-info-last-verified" style="color: #6c6c6d; font-size: small;"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">创建时间：2025年4月1日 | 最后更新时间：2025年4月1日 | 最后验证时间：2024年11月5日</p>
+<p>本教程演示了如何使用 PyTorch Profiler 的 TensorBoard 插件来检测模型的性能瓶颈。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">PyTorch Profiler 与 TensorBoard 的集成现已弃用。请使用 Perfetto 或 Chrome 跟踪来查看 <code class="docutils literal "><span class="pre">trace.json</span></code> 文件。之后
+<a class="reference external" href="https://maskerprc.github.io/tutorials/recipes/recipes/profiler_recipe.html#using-tracing-functionality">生成跟踪 </a>，只需将 <code class="docutils literal "><span class="pre">trace.json</span></code> 拖入 <a class="reference external" href="https://ui.perfetto.dev/">Perfetto UI</a>
+或者 <code class="docutils literal "><span class="pre">chrome://tracing</span></code> 来可视化您的配置文件。</font></font></font></p>
+</div>
+<div class="section" id="introduction">
+<h2>简介 <a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
+<p>PyTorch 1.8 包含了一个更新的分析器 API，能够记录 CPU 端操作以及 GPU 端的 CUDA 内核启动。分析器可以在 TensorBoard 插件中可视化这些信息，并提供性能瓶颈的分析。</p>
+<p>在本教程中，我们将使用一个简单的 Resnet 模型来演示如何使用 TensorBoard 插件来分析模型性能。</p>
+</div>
+<div class="section" id="setup">
+<h2>设置 <a class="headerlink" href="#setup" title="Permalink to this heading">¶</a></h2>
+<p>使用以下命令安装 <code class="docutils literal "><span class="pre">torch</span></code> 和 <code class="docutils literal "><span class="pre">torchvision</span></code>：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">torch</span> <span class="n">torchvision</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="steps">
+<h2>步骤 <a class="headerlink" href="#steps" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>准备数据和模型</p></li>
+<li><p>使用分析器记录执行事件</p></li>
+<li><p>运行分析器</p></li>
+<li><p>使用 TensorBoard 查看结果和分析模型性能</p></li>
+<li><p>在分析器的帮助下提高性能</p></li>
+<li><p>使用其他高级功能分析性能</p></li>
+<li><p>扩展实践：在 AMD GPU 上分析 PyTorch</p></li>
+</ol>
+<div class="section" id="prepare-the-data-and-model">
+<h3>1. 准备数据和模型 <a class="headerlink" href="#prepare-the-data-and-model" title="Permalink to this heading">¶</a></h3>
+<p>首先，导入所有必要的库：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.optim</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.profiler</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.utils.data</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torchvision.datasets</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torchvision.models</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torchvision.transforms</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">T</span>
+</pre></div>
+</div>
+<p>然后，准备输入数据。本教程中，我们使用 CIFAR10 数据集。将其转换为所需格式，并使用 <code class="docutils literal "><span class="pre">DataLoader</span></code> 加载每个批次。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">transform</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torchvision-transforms sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/vision/stable/generated/torchvision.transforms.Compose.html#torchvision.transforms.Compose" title="torchvision.transforms.Compose"><span class="n">T</span><span class="o">.</span><span class="n">Compose</span></a><span class="p">(</span>
+    <span class="p">[</span><a class="sphx-glr-backref-module-torchvision-transforms sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/vision/stable/generated/torchvision.transforms.Resize.html#torchvision.transforms.Resize" title="torchvision.transforms.Resize"><span class="n">T</span><span class="o">.</span><span class="n">Resize</span></a><span class="p">(</span><span class="mi">224</span><span class="p">),</span>
+     <a class="sphx-glr-backref-module-torchvision-transforms sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/vision/stable/generated/torchvision.transforms.ToTensor.html#torchvision.transforms.ToTensor" title="torchvision.transforms.ToTensor"><span class="n">T</span><span class="o">.</span><span class="n">ToTensor</span></a><span class="p">(),</span>
+     <a class="sphx-glr-backref-module-torchvision-transforms sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/vision/stable/generated/torchvision.transforms.Normalize.html#torchvision.transforms.Normalize" title="torchvision.transforms.Normalize"><span class="n">T</span><span class="o">.</span><span class="n">Normalize</span></a><span class="p">((</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))])</span>
+<span class="n">train_set</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torchvision-datasets sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/vision/stable/generated/torchvision.datasets.CIFAR10.html#torchvision.datasets.CIFAR10" title="torchvision.datasets.CIFAR10"><span class="n">torchvision</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">CIFAR10</span></a><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="s1">'./data'</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
+<span class="n">train_loader</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader"><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span></a><span class="p">(</span><span class="n">train_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>接下来，创建 Resnet 模型、损失函数和优化器对象。要在 GPU 上运行，将模型和损失移动到 GPU 设备。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">device</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s2">"cuda:0"</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torchvision-models sphx-glr-backref-type-py-function" href="https://pytorch.org/vision/stable/models/generated/torchvision.models.resnet18.html#torchvision.models.resnet18" title="torchvision.models.resnet18"><span class="n">torchvision</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">resnet18</span></a><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s1">'IMAGENET1K_V1'</span><span class="p">)</span><span class="o">.</span><span class="n">cuda</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">criterion</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html#torch.nn.CrossEntropyLoss" title="torch.nn.CrossEntropyLoss"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span></a><span class="p">()</span><span class="o">.</span><span class="n">cuda</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-optim sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.optim.SGD.html#torch.optim.SGD" title="torch.optim.SGD"><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span></a><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>定义每个输入数据批次的训练步骤。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">),</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="use-profiler-to-record-execution-events">
+<h3>2. 使用分析器记录执行事件 <a class="headerlink" href="#use-profiler-to-record-execution-events" title="Permalink to this heading">¶</a></h3>
+<p>分析器通过上下文管理器启用，并接受多个参数，其中一些最有用的是：</p>
+<ul>
+<li><p><code class="docutils literal "><span class="pre">schedule</span></code> - 接受步骤（int）作为单个参数的可调用对象，并在每个步骤执行分析器操作。</p>
+<p>在此示例中， <code class="docutils literal "><span class="pre">wait=1,</span> <span class="pre">warmup=1,</span> <span class="pre">active=3,</span> <span class="pre">repeat=1</span></code> ，分析器将跳过第一个步骤/迭代，从第二个步骤开始预热，记录接下来的三个迭代，之后跟踪将可用，并且当设置 on_trace_ready 时将被调用。整个周期重复一次。TensorBoard 插件中的每个周期被称为“span”。</p>
+<p>在 <code class="docutils literal "><span class="pre"> 等待 </span></code> 步骤中，分析器被禁用。在 <code class="docutils literal "><span class="pre"> 预热 </span></code> 步骤中，分析器开始跟踪但结果被丢弃。这是为了减少分析器的开销。分析器开始时的开销很高，很容易导致分析结果偏差。在 <code class="docutils literal "><span class="pre"> 活动 </span></code> 步骤中，分析器工作并记录事件。</p>
+</li>
+<li><p><code class="docutils literal "><span class="pre">on_trace_ready</span></code> - 在每个周期结束时被调用的可调用函数；在此示例中，我们使用 <code class="docutils literal "><span class="pre">torch.profiler.tensorboard_trace_handler</span></code> 生成 TensorBoard 的结果文件。分析完成后，结果文件将保存在 <code class="docutils literal "><span class="pre">./log/resnet18</span></code> 目录中。将此目录指定为 <code class="docutils literal "><span class="pre">logdir</span></code> 参数以在 TensorBoard 中分析配置文件。</p></li>
+<li><p><code class="docutils literal "><span class="pre">record_shapes</span></code> - 是否记录算子输入的形状。</p></li>
+<li><p><code class="docutils literal "><span class="pre">profile_memory</span></code> - 跟踪张量内存的分配/释放。注意，对于版本在 1.10 之前的旧版 PyTorch，如果您遇到长时间的分析时间，请禁用它或升级到新版本。</p></li>
+<li><p><code class="docutils literal "><span class="pre">with_stack</span></code> - 为操作记录源信息（文件和行号）。如果 TensorBoard 在 VS Code 中启动（<a class="reference external" href="https://code.visualstudio.com/docs/datascience/pytorch-support#_tensorboard-integration"> 参考 </a>），点击堆栈帧将导航到特定的代码行。</p></li>
+</ul>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">torch</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">profile</span></a><span class="p">(</span>
+        <span class="n">schedule</span><span class="o">=</span><a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.schedule" title="torch.profiler.schedule"><span class="n">torch</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">schedule</span></a><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">warmup</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">on_trace_ready</span><span class="o">=</span><a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.tensorboard_trace_handler" title="torch.profiler.tensorboard_trace_handler"><span class="n">torch</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">tensorboard_trace_handler</span></a><span class="p">(</span><span class="s1">'./log/resnet18'</span><span class="p">),</span>
+        <span class="n">record_shapes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">profile_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">with_stack</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">batch_data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_loader</span><span class="p">):</span>
+        <span class="n">prof</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>  <span class="c1"># Need to call this at each step to notify profiler of steps' boundary.</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">train</span><span class="p">(</span><span class="n">batch_data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>另外，还支持以下非上下文管理器启动/停止方式。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">prof</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">torch</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">profile</span></a><span class="p">(</span>
+        <span class="n">schedule</span><span class="o">=</span><a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.schedule" title="torch.profiler.schedule"><span class="n">torch</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">schedule</span></a><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">warmup</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">on_trace_ready</span><span class="o">=</span><a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.tensorboard_trace_handler" title="torch.profiler.tensorboard_trace_handler"><span class="n">torch</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">tensorboard_trace_handler</span></a><span class="p">(</span><span class="s1">'./log/resnet18'</span><span class="p">),</span>
+        <span class="n">record_shapes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">with_stack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">prof</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">batch_data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_loader</span><span class="p">):</span>
+    <span class="n">prof</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">step</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="n">train</span><span class="p">(</span><span class="n">batch_data</span><span class="p">)</span>
+<span class="n">prof</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-the-profiler">
+<h3>3. 运行分析器 <a class="headerlink" href="#run-the-profiler" title="Permalink to this heading">¶</a></h3>
+<p>运行上述代码。分析结果将保存在 <code class="docutils literal "><span class="pre">./log/resnet18</span></code> 目录下。</p>
+</div>
+<div class="section" id="use-tensorboard-to-view-results-and-analyze-model-performance">
+<h3>4. 使用 TensorBoard 查看结果并分析模型性能 <a class="headerlink" href="#use-tensorboard-to-view-results-and-analyze-model-performance" title="Permalink to this heading">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>TensorBoard 插件支持已被弃用，因此这些功能可能无法像之前那样工作。请查看替代方案，<a class="reference external" href="https://github.com/pytorch/kineto/tree/main#holistic-trace-analysis">HTA</a>。</p>
+</div>
+<p>安装 PyTorch Profiler TensorBoard 插件。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">torch_tb_profiler</span>
+</pre></div>
+</div>
+<p>启动 TensorBoard。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">tensorboard</span> <span class="o">--</span><span class="n">logdir</span><span class="o">=./</span><span class="n">log</span>
+</pre></div>
+</div>
+<p>在 Google Chrome 浏览器或 Microsoft Edge 浏览器中打开 TensorBoard 配置 URL（<strong> 不支持 Safari</strong>）。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">6006</span><span class="o">/</span><span class="c1">#pytorch_profiler</span>
+</pre></div>
+</div>
+<p>您可以看到如下所示的 Profiler 插件页面。</p>
+<ul class="simple">
+<li><p>概述</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_static/img/profiler_overview1.png"><img alt="../_static/img/profiler_overview1.png" src="../_static/img/profiler_overview1.png" width="295.6125183105469" height="23.200000762939453"></a>
+<p>概述显示了模型性能的高级总结。</p>
+<p>“GPU 概述”面板显示了 GPU 配置、GPU 使用情况和 Tensor Core 使用情况。在此示例中，GPU 利用率较低。这些指标的详细信息请<a class="reference external" href="https://github.com/pytorch/kineto/blob/main/tb_plugin/docs/gpu_utilization.md">点击此处 </a>。</p>
+<p>“步骤时间细分”显示了在执行的不同类别中每个步骤花费的时间分布。在此示例中，您可以看到<code class="docutils literal "><span class="pre">数据加载器</span></code>的开销相当大。</p>
+<p>底部的“性能建议”使用分析数据自动突出显示可能的瓶颈，并提供可操作的优化建议。</p>
+<p>您可以在左侧“视图”下拉列表中更改视图页面。</p>
+<img alt="" src="../_static/img/profiler_views_list.png">
+<ul class="simple">
+<li><p>操作员视图</p></li>
+</ul>
+<p>操作员视图显示在主机或设备上执行的所有 PyTorch 操作的性能。</p>
+<a class="reference internal image-reference" href="../_static/img/profiler_operator_view.png"><img alt="../_static/img/profiler_operator_view.png" src="../_static/img/profiler_operator_view.png" width="326.25" height="23.200000762939453"></a>
+<p>“自身”持续时间不包括其子操作的时间。“总”持续时间包括其子操作的时间。</p>
+<ul class="simple">
+<li><p>查看调用栈</p></li>
+</ul>
+<p>点击操作符的 <code class="docutils literal "><span class="pre"> 查看 </span> <span class="pre"> 调用栈 </span></code>，将显示具有相同名称但不同调用栈的操作符。然后在此子表中点击一个 <code class="docutils literal "><span class="pre"> 查看 </span> <span class="pre"> 调用栈 </span></code>，将显示调用栈帧。</p>
+<a class="reference internal image-reference" href="../_static/img/profiler_callstack.png"><img alt="../_static/img/profiler_callstack.png" src="../_static/img/profiler_callstack.png" width="283.875" height="23.200000762939453"></a>
+<p>如果在 VS Code 内启动 TensorBoard（<a class="reference external" href="https://devblogs.microsoft.com/python/python-in-visual-studio-code-february-2021-release/#tensorboard-integration"> 启动指南 </a>），点击调用栈帧将导航到特定的代码行。</p>
+<a class="reference internal image-reference" href="../_static/img/profiler_vscode.png"><img alt="../_static/img/profiler_vscode.png" src="../_static/img/profiler_vscode.png" width="271" height="23.200000762939453"></a>
+<ul class="simple">
+<li><p>内核视图</p></li>
+</ul>
+<p>GPU 内核视图显示了所有内核在 GPU 上花费的时间。</p>
+<a class="reference internal image-reference" href="../_static/img/profiler_kernel_view.png"><img alt="../_static/img/profiler_kernel_view.png" src="../_static/img/profiler_kernel_view.png" width="308.375" height="23.200000762939453"></a>
+<p>使用了 Tensor 核心：该内核是否使用了 Tensor 核心。</p>
+<p>每 SM 平均块数：每 SM 块数 = 该内核的块数 / 该 GPU 的 SM 数量。如果这个数字小于 1，则表示 GPU 多处理器没有得到充分利用。“每 SM 平均块数”是所有该内核名称运行的加权平均值，使用每次运行的持续时间作为权重。</p>
+<p>平均估计占用率：估计占用率在此列的工具提示中定义。对于大多数情况，如内存带宽受限的内核，越高越好。“平均估计占用率”是所有该内核名称运行的加权平均值，使用每次运行的持续时间作为权重。</p>
+<ul class="simple">
+<li><p>追踪视图</p></li>
+</ul>
+<p>追踪视图显示了已分析操作符和 GPU 内核的时间线。您可以选择它以查看以下详细信息。</p>
+<a class="reference internal image-reference" href="../_static/img/profiler_trace_view1.png"><img alt="../_static/img/profiler_trace_view1.png" src="../_static/img/profiler_trace_view1.png" width="308.6499938964844" height="23.200000762939453"></a>
+<p>您可以使用右侧工具栏移动图表并缩放。您还可以使用键盘来缩放和移动时间线。'w'和's'键在鼠标中心缩放，'a'和'd'键将时间线左右移动。您可以多次按这些键，直到看到可读的表示。</p>
+<p>如果反向操作符的“流入”字段值为“正向对应反向”，则可以单击文本以获取其启动的正向操作符。</p>
+<a class="reference internal image-reference" href="../_static/img/profiler_trace_view_fwd_bwd.png"><img alt="../_static/img/profiler_trace_view_fwd_bwd.png" src="../_static/img/profiler_trace_view_fwd_bwd.png" width="377.9125061035156" height="23.200000762939453"></a>
+<p>在这个例子中，我们可以看到以 <code class="docutils literal "><span class="pre">enumerate(DataLoader)</span></code> 前缀的事件花费了很多时间。在这段时间的大部分时间里，GPU 处于空闲状态。因为这个函数在主机端加载数据和转换数据，期间浪费了 GPU 资源。</p>
+</div>
+<div class="section" id="improve-performance-with-the-help-of-profiler">
+<h3>5. 在分析器的帮助下提高性能 <a class="headerlink" href="#improve-performance-with-the-help-of-profiler" title="Permalink to this heading">¶</a></h3>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">在“概览”页面的底部，“性能建议”中的提示表明瓶颈是 <code class="docutils literal "><span class="pre">DataLoader</span></code>。PyTorch 的 <code class="docutils literal "><span class="pre">DataLoader</span></code> 默认使用单进程。用户可以通过设置参数 <code class="docutils literal "><span class="pre">num_workers</span></code> 来启用多进程数据加载。
+<a class="reference external" href="https://pytorch.org/docs/stable/data.html#single-and-multi-process-data-loading">这里</a>有更多详细信息。</font></font></font></p>
+<p>在本例中，我们遵循“性能推荐”并设置 <code class="docutils literal "><span class="pre">num_workers</span></code> 如下，传递不同的名称，例如 <code class="docutils literal "><span class="pre">./log/resnet18_4workers</span></code> 给 <code class="docutils literal "><span class="pre">tensorboard_trace_handler</span></code>，然后再次运行。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">train_loader</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-utils-data sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader" title="torch.utils.data.DataLoader"><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span></a><span class="p">(</span><span class="n">train_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>然后让我们选择左侧“运行”下拉列表中的最近分析运行的选项。</p>
+<a class="reference internal image-reference" href="../_static/img/profiler_overview2.png"><img alt="../_static/img/profiler_overview2.png" src="../_static/img/profiler_overview2.png" width="295.6125183105469" height="23.200000762939453"></a>
+<p>从上述视图可以看出，与之前的 132ms 相比，步骤时间已减少到约 76ms，而时间减少主要归因于 <code class="docutils literal "><span class="pre">DataLoader</span></code>。</p>
+<a class="reference internal image-reference" href="../_static/img/profiler_trace_view2.png"><img alt="../_static/img/profiler_trace_view2.png" src="../_static/img/profiler_trace_view2.png" width="308.6499938964844" height="23.200000762939453"></a>
+<p>从上述视图可以看出，<code class="docutils literal "><span class="pre">enumerate(DataLoader)</span></code> 的运行时间已减少，GPU 利用率有所提高。</p>
+</div>
+<div class="section" id="analyze-performance-with-other-advanced-features">
+<h3>6. 使用其他高级功能分析性能 <a class="headerlink" href="#analyze-performance-with-other-advanced-features" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>内存视图</p></li>
+</ul>
+<p>要分析内存，必须在 <code class="docutils literal "><span class="pre">profile_memory</span></code> 的参数中将 <code class="docutils literal "><span class="pre">True</span></code> 设置为 <code class="docutils literal "><span class="pre">torch.profiler.profile</span></code>。</p>
+<p>您可以通过使用 Azure 上的现有示例来尝试</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">azure</span><span class="o">-</span><span class="n">storage</span><span class="o">-</span><span class="n">blob</span>
+<span class="n">tensorboard</span> <span class="o">--</span><span class="n">logdir</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">torchtbprofiler</span><span class="o">.</span><span class="n">blob</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">windows</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">torchtbprofiler</span><span class="o">/</span><span class="n">demo</span><span class="o">/</span><span class="n">memory_demo_1_10</span>
+</pre></div>
+</div>
+<p>分析器记录了所有内存分配/释放事件以及分析期间分配器的内部状态。内存视图由以下三个组件组成。</p>
+<a class="reference internal image-reference" href="../_static/img/profiler_memory_view.png"><img alt="../_static/img/profiler_memory_view.png" src="../_static/img/profiler_memory_view.png" width="324.8125" height="23.200000762939453"></a>
+<p>这些组件分别是内存曲线图、内存事件表和内存统计表，从上到下依次排列。</p>
+<p>可以在“设备”选择框中选择内存类型。例如，“GPU0”表示以下表格仅显示每个操作符在 GPU 0 上的内存使用情况，不包括 CPU 或其他 GPU。</p>
+<p>内存曲线显示了内存消耗的趋势。“已分配”曲线显示了实际使用的总内存，例如张量。在 PyTorch 中，CUDA 分配器和一些其他分配器采用了缓存机制。“已保留”曲线显示了分配器保留的总内存。您可以通过在图上左键单击并拖动来选择所需范围内的事件：</p>
+<a class="reference internal image-reference" href="../_static/img/profiler_memory_curve_selecting.png"><img alt="../_static/img/profiler_memory_curve_selecting.png" src="../_static/img/profiler_memory_curve_selecting.png" width="408.4875183105469" height="23.200000762939453"></a>
+<p>选择后，三个组件将在限制时间范围内更新，以便您可以获取更多相关信息。通过重复此过程，您可以放大到非常精细的细节。右键单击图表将重置图表到初始状态。</p>
+<a class="reference internal image-reference" href="../_static/img/profiler_memory_curve_single.png"><img alt="../_static/img/profiler_memory_curve_single.png" src="../_static/img/profiler_memory_curve_single.png" width="385.6625061035156" height="23.200000762939453"></a>
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">在内存事件表中，分配和释放事件配对成一个条目。“操作员”列显示
+导致分配的即时 ATen 操作符。请注意，在 PyTorch 中，ATen 操作符通常使用
+<code class="docutils literal "><span class="pre">aten::empty</span></code> 来分配内存。例如，<code class="docutils literal "><span class="pre">aten::ones</span></code> 实现为 <code class="docutils literal "><span class="pre">aten::empty</span></code> 然后是一个
+<code class="docutils literal "><span class="pre">aten::fill_</span></code> 仅显示操作符名称作为 <code class="docutils literal "><span class="pre">aten::empty</span></code> 几乎没有帮助。它将显示为
+<code class="docutils literal "><span class="pre">aten::ones</span> <span class="pre">(aten::empty)</span></code> 在这种特殊情况下。如果事件发生在时间范围之外，“分配时间”、“释放时间”和“持续时间”列的数据可能缺失。</font></font></font></p>
+<p>在内存统计表中，“大小增加”列汇总所有分配大小并减去所有内存释放大小，即此操作符之后的内存使用净增加。与“大小增加”类似，“自我大小增加”列不计算子操作符的分配。关于 ATen 操作符的实现细节，一些操作符可能会调用其他操作符，因此内存分配可以在调用堆栈的任何级别发生。也就是说，“自我大小增加”仅计算当前调用堆栈级别的内存使用增加。最后，“分配大小”列汇总所有分配，不考虑内存释放。</p>
+<ul class="simple">
+<li><p>分布式视图</p></li>
+</ul>
+<p>插件现在支持使用 NCCL/GLOO 作为后端在 DDP 上的分布式视图。</p>
+<p>您可以通过使用 Azure 上的现有示例来尝试它：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">azure</span><span class="o">-</span><span class="n">storage</span><span class="o">-</span><span class="n">blob</span>
+<span class="n">tensorboard</span> <span class="o">--</span><span class="n">logdir</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">torchtbprofiler</span><span class="o">.</span><span class="n">blob</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">windows</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">torchtbprofiler</span><span class="o">/</span><span class="n">demo</span><span class="o">/</span><span class="n">distributed_bert</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_static/img/profiler_distributed_view.png"><img alt="../_static/img/profiler_distributed_view.png" src="../_static/img/profiler_distributed_view.png" width="343.8374938964844" height="23.200000762939453"></a>
+<p>“计算/通信概览”显示了计算/通信比率和它们的重叠程度。从这一视角，用户可以找出工作者之间的负载均衡问题。例如，如果一个工作者的计算+重叠时间远大于其他工作者，可能存在负载均衡问题或该工作者可能是落后者。</p>
+<p>“同步/通信概览”显示了通信的效率。“数据传输时间”是实际数据交换的时间。“同步时间”是等待与其他工作者同步的时间。</p>
+<p>如果某个工作者的“同步时间”远短于其他工作者，那么这个工作者可能是一个落后者，其计算工作量可能比其他工作者更多。</p>
+<p>“通信操作统计”总结了每个工作者中所有通信操作的具体统计数据。</p>
+</div>
+<div class="section" id="additional-practices-profiling-pytorch-on-amd-gpus">
+<h3>7. 补充实践：在 AMD GPU 上对 PyTorch 进行性能分析 <a class="headerlink" href="#additional-practices-profiling-pytorch-on-amd-gpus" title="Permalink to this heading">¶</a></h3>
+<p>AMD ROCm 平台是一个为 GPU 计算设计的开源软件堆栈，包括驱动程序、开发工具和 API。我们可以在 AMD GPU 上运行上述步骤。在本节中，我们将使用 Docker 安装 ROCm 基础开发镜像，然后再安装 PyTorch。</p>
+<p>为了示例，让我们创建一个名为 <code class="docutils literal "><span class="pre">profiler_tutorial</span></code> 的目录，并将代码保存在此目录中的 <strong> 步骤 1</strong> 下的 <code class="docutils literal "><span class="pre">test_cifar10.py</span></code> 文件中。</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">~/</span><span class="n">profiler_tutorial</span>
+<span class="n">cd</span> <span class="n">profiler_tutorial</span>
+<span class="n">vi</span> <span class="n">test_cifar10</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>在撰写本文时，ROCm 平台上 PyTorch 的稳定版（<code class="docutils literal "><span class="pre">2.1.1</span></code>）Linux 版本为 <a class="reference external" href="https://pytorch.org/get-started/locally/">ROCm 5.6</a>。</p>
+<ul class="simple">
+<li><p>从 <a class="reference external" href="https://hub.docker.com/repository/docker/rocm/dev-ubuntu-20.04">Docker Hub</a> 获取安装了正确用户空间 ROCm 版本的基 Docker 镜像。</p></li>
+</ul>
+<p>它是 <code class="docutils literal "><span class="pre">rocm/dev-ubuntu-20.04:5.6</span></code>。</p>
+<ul class="simple">
+<li><p>启动 ROCm 基础 Docker 容器：</p></li>
+</ul>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">network</span><span class="o">=</span><span class="n">host</span> <span class="o">--</span><span class="n">device</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">kfd</span> <span class="o">--</span><span class="n">device</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">dri</span> <span class="o">--</span><span class="n">group</span><span class="o">-</span><span class="n">add</span><span class="o">=</span><span class="n">video</span> <span class="o">--</span><span class="n">ipc</span><span class="o">=</span><span class="n">host</span> <span class="o">--</span><span class="n">cap</span><span class="o">-</span><span class="n">add</span><span class="o">=</span><span class="n">SYS_PTRACE</span> <span class="o">--</span><span class="n">security</span><span class="o">-</span><span class="n">opt</span> <span class="n">seccomp</span><span class="o">=</span><span class="n">unconfined</span> <span class="o">--</span><span class="n">shm</span><span class="o">-</span><span class="n">size</span> <span class="mi">8</span><span class="n">G</span> <span class="o">-</span><span class="n">v</span> <span class="o">~/</span><span class="n">profiler_tutorial</span><span class="p">:</span><span class="o">/</span><span class="n">profiler_tutorial</span> <span class="n">rocm</span><span class="o">/</span><span class="n">dev</span><span class="o">-</span><span class="n">ubuntu</span><span class="o">-</span><span class="mf">20.04</span><span class="p">:</span><span class="mf">5.6</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>在容器内安装安装 wheels 包所需的任何依赖。</p></li>
+</ul>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">update</span>
+<span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">libjpeg</span><span class="o">-</span><span class="n">dev</span> <span class="n">python3</span><span class="o">-</span><span class="n">dev</span> <span class="o">-</span><span class="n">y</span>
+<span class="n">pip3</span> <span class="n">install</span> <span class="n">wheel</span> <span class="n">setuptools</span>
+<span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="ow">is</span><span class="o">-</span><span class="n">python3</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>安装 wheels：</p></li>
+</ul>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">pip3</span> <span class="n">install</span> <span class="n">torch</span> <span class="n">torchvision</span> <span class="n">torchaudio</span> <span class="o">--</span><span class="n">index</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">download</span><span class="o">.</span><span class="n">pytorch</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">whl</span><span class="o">/</span><span class="n">rocm5</span><span class="mf">.6</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>安装 <code class="docutils literal "><span class="pre">torch_tb_profiler</span></code>，然后运行 Python 文件 <code class="docutils literal "><span class="pre">test_cifar10.py</span></code>：</p></li>
+</ul>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">torch_tb_profiler</span>
+<span class="n">cd</span> <span class="o">/</span><span class="n">profiler_tutorial</span>
+<span class="n">python</span> <span class="n">test_cifar10</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>现在，我们已经拥有了在 TensorBoard 中查看所需的所有数据：</p>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">tensorboard</span> <span class="o">--</span><span class="n">logdir</span><span class="o">=./</span><span class="n">log</span>
+</pre></div>
+</div>
+<p>按照描述选择不同的视图，如 <strong> 第 4 步 </strong> 中所述。例如，下面是 <strong> 操作符 </strong> 视图：</p>
+<a class="reference internal image-reference" href="../_static/img/profiler_rocm_tensorboard_operartor_view.png"><img alt="../_static/img/profiler_rocm_tensorboard_operartor_view.png" src="../_static/img/profiler_rocm_tensorboard_operartor_view.png" width="481.2375183105469" height="23.200000762939453"></a>
+<p>在撰写本节时，<strong> 跟踪 </strong> 视图无法正常工作，它显示为空。您可以通过在 Chrome 浏览器中输入 <code class="docutils literal "><span class="pre">chrome://tracing</span></code> 来解决这个问题。</p>
+<ul class="simple">
+<li><p>将 <code class="docutils literal "><span class="pre">~/profiler_tutorial/log/resnet18</span></code> 目录下的 <code class="docutils literal "><span class="pre">trace.json</span></code> 文件复制到 Windows。</p></li>
+</ul>
+<p>如果文件位于远程位置，您可能需要使用 <code class="docutils literal "><span class="pre">scp</span></code> 来复制该文件。</p>
+<ul class="simple">
+<li><p>点击 <strong> 加载 </strong> 按钮，从浏览器的 <code class="docutils literal "><span class="pre">chrome://tracing</span></code> 页面加载跟踪 JSON 文件。</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_static/img/profiler_rocm_chrome_trace_view.png"><img alt="../_static/img/profiler_rocm_chrome_trace_view.png" src="../_static/img/profiler_rocm_chrome_trace_view.png" width="412.8125" height="23.200000762939453"></a>
+<p>如前所述，您可以移动图表并放大缩小。您还可以使用键盘在时间轴内缩放和移动。按 <code class="docutils literal "><span class="pre">w</span></code> 和 <code class="docutils literal "><span class="pre">s</span></code> 键在鼠标位置周围缩放，按 <code class="docutils literal "><span class="pre">a</span></code> 和 <code class="docutils literal "><span class="pre">d</span></code> 键将时间轴左右移动。您可以多次按这些键，直到看到可读的表示。</p>
+</div>
+</div>
+<div class="section" id="learn-more">
+<h2>了解更多 <a class="headerlink" href="#learn-more" title="Permalink to this heading">¶</a></h2>
+<p>查看以下文档以继续学习，并请随时在此 <a class="reference external" href="https://github.com/pytorch/kineto/issues"> 处 </a> 提交问题。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/pytorch/kineto/tree/master/tb_plugin">PyTorch TensorBoard Profiler Github</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/docs/master/profiler.html">torch.profiler API</a></p></li>
+<li><p><a class="reference external" href="https://github.com/pytorch/kineto/tree/main#holistic-trace-analysis">HTA</a></p></li>
+</ul>
+<p class="sphx-glr-timing"><strong>脚本总运行时间：</strong>（0 分钟 0.000 秒）</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-intermediate-tensorboard-profiler-tutorial-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/67e47b6d6793c700666471b688068f72/tensorboard_profiler_tutorial.py"><code class="xref download docutils literal "><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">tensorboard_profiler_tutorial.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/0aec568a42e89122e5ca293c86289287/tensorboard_profiler_tutorial.ipynb"><code class="xref download docutils literal "><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tensorboard_profiler_tutorial.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Sphinx-Gallery 生成的画廊</a></p>
+</div>
+</div>
+</article>
+</div>
+<footer>
+<div aria-label="footer navigation" class="rst-footer-buttons" role="navigation">
+<a accesskey="n" class="btn btn-neutral float-right" href="../beginner/hyperparameter_tuning_tutorial.html" rel="next" title="Hyperparameter tuning with Ray Tune">下一个 <img height="16" width="16" src="../_static/images/chevron-right-orange.svg" class="next-page"> </a><a accesskey="p" class="btn btn-neutral" href="../advanced/privateuseone.html" rel="prev" title="Facilitating New Backend Integration by PrivateUse1"> <img height="16" width="16" src="../_static/images/chevron-right-orange.svg" class="previous-page"> 上一个</a>
+</div>
+<hr class="rating-hr hr-top">
+<div class="rating-container">
+<div class="rating-prompt">评分这个教程</div>
+<div class="stars-outer">
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="1" title="1 Star"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="2" title="2 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="3" title="3 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="4" title="4 Stars"></i>
+<i class="far fa-star" data-behavior="tutorial-rating" data-count="5" title="5 Stars"></i>
+</div>
+</div>
+<hr class="rating-hr hr-bottom">
+<div role="contentinfo">
+<p>© 版权所有 2024，PyTorch。</p>
+</div>
+<div>使用 <a href="http://sphinx-doc.org/">Sphinx</a> 构建，并使用由 <a href="https://readthedocs.org">Read the Docs</a> 提供的 <a href="https://github.com/rtfd/sphinx_rtd_theme"> 主题 </a>。</div>
+</footer>
+</div>
+<script>
+if((window.location.href.indexOf("/prototype/")!= -1) && (window.location.href.indexOf("/prototype/prototype_index")< 1))
+  {
+    var div = '<div class="admonition note"><p class="admonition-title">Note</p><p><i class="fa fa-flask" aria-hidden="true">&nbsp</i> This tutorial describes a prototype feature. Prototype features are typically not available as part of binary distributions like PyPI or Conda, except sometimes behind run-time flags, and are at an early stage for feedback and testing.</p></div>'
+    document.getElementById("pytorch-article").insertAdjacentHTML('afterBegin', div)
+  }
+</script>
+</div>
+<div class="pytorch-content-right" id="pytorch-content-right">
+<div class="pytorch-right-menu" id="pytorch-right-menu">
+<div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
+<ul>
+<li><a class="reference internal" href="#">PyTorch 分析器与 TensorBoard</a><ul>
+<li><a class="reference internal" href="#introduction">简介</a></li>
+<li><a class="reference internal" href="#setup">设置</a></li>
+<li><a class="reference internal" href="#steps">步骤</a><ul>
+<li><a class="reference internal" href="#prepare-the-data-and-model">1. 准备数据和模型</a></li>
+<li><a class="reference internal" href="#use-profiler-to-record-execution-events">使用性能分析器记录执行事件</a></li>
+<li><a class="reference internal" href="#run-the-profiler">运行性能分析器</a></li>
+<li><a class="reference internal" href="#use-tensorboard-to-view-results-and-analyze-model-performance">使用 TensorBoard 查看结果和分析模型性能</a></li>
+<li><a class="reference internal" href="#improve-performance-with-the-help-of-profiler">在性能分析器的帮助下提高性能</a></li>
+<li><a class="reference internal" href="#analyze-performance-with-other-advanced-features">6. 使用其他高级功能分析性能</a></li>
+<li><a class="reference internal" href="#additional-practices-profiling-pytorch-on-amd-gpus">7. 补充实践：在 AMD GPU 上对 PyTorch 进行性能分析</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#learn-more">了解更多</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js" type="text/javascript"></script>
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+<script src="../_static/katex.min.js"></script>
+<script src="../_static/auto-render.min.js"></script>
+<script src="../_static/katex_autorenderer.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script src="../_static/js/custom.js"></script>
+<script src="../_static/js/vendor/popper.min.js" type="text/javascript"></script>
+<script src="../_static/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+<script src="../_static/js/theme.js" type="text/javascript"></script>
+<script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+<script>
+
+// Helper function to make it easier to call dataLayer.push()
+function gtag(){window.dataLayer.push(arguments);}
+
+//add microsoft link
+
+if(window.location.href.indexOf("/beginner/basics/")!= -1)
+{
+  var url="https://docs.microsoft.com/learn/paths/pytorch-fundamentals/?wt.mc_id=aiml-7486-cxa";
+  switch(window.location.pathname.split("/").pop().replace('.html',''))
+  {
+    case"quickstart_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/9-quickstart?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"tensorqs_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/2-tensors?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"data_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/3-data?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"transforms_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/4-transforms?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"buildmodel_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/5-model?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"autogradqs_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/6-autograd?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"optimization_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/7-optimization?WT.mc_id=aiml-7486-cxa";
+      break;
+    case"saveloadrun_tutorial":
+      url="https://docs.microsoft.com/learn/modules/intro-machine-learning-pytorch/8-inference?WT.mc_id=aiml-7486-cxa";
+    }
+
+    $(".pytorch-call-to-action-links").children().first().before("<a href="+url+' data-behavior="call-to-action-event" data-response="Run in Microsoft Learn" target="_blank"><div id="microsoft-learn-link" style="padding-bottom: 0.625rem;border-bottom: 1px solid #f3f4f7;padding-right: 2.5rem;display: -webkit-box;  display: -ms-flexbox; display: flex; -webkit-box-align: center;-ms-flex-align: center;align-items: center;"><img class="call-to-action-img" src="../../_static/images/microsoft-logo.svg"/><div class="call-to-action-desktop-view">Run in Microsoft Learn</div><div class="call-to-action-mobile-view">Learn</div></div></a>')
+  }
+
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '243028289693773');
+  fbq('track', 'PageView');
+
+  $("[data-behavior='call-to-action-event']").on('click', function(){
+    fbq('trackCustom', "Download", {
+      tutorialTitle: $('h1:first').text(),
+      downloadLink: this.href,
+      tutorialLink: window.location.href,
+      downloadTitle: $(this).attr("data-response")
+    });
+    gtag('event', 'click', {
+      'event_category': $(this).attr("data-response"),
+      'event_label': $("h1").first().text(),
+      'tutorial_link': window.location.href
+    });
+   });
+
+   $("[data-behavior='tutorial-rating']").on('click', function(){
+    fbq('trackCustom', "Tutorial Rating", {
+      tutorialLink: window.location.href,
+      tutorialTitle: $('h1:first').text(),
+      rating: $(this).attr("data-count")
+    });
+    gtag('event', 'click', {
+      'event_category': 'Tutorial Rating',
+      'event_label': $("h1").first().text(),
+      'value': $(this).attr("data-count"),
+      'customEvent:Rating': $(this).attr("data-count") // send to GA custom dimension customEvent:Rating.
+    });
+   });
+
+   if (location.pathname == "/") {
+     $(".rating-container").hide();
+     $(".hr-bottom").hide();
+   }
+
+
+</script>
+<noscript>
+<img height="1" src="https://www.facebook.com/tr?id=243028289693773&amp;ev=PageView
+  &amp;noscript=1" width="1">
+</noscript>
+<script type="text/javascript">
+  var collapsedSections = ['PyTorch Recipes', 'Learning PyTorch', 'Image and Video', 'Audio', 'Text', 'Backends', 'Reinforcement Learning', 'Deploying PyTorch Models in Production', 'Profiling PyTorch', 'Code Transforms with FX', 'Frontend APIs', 'Extending PyTorch', 'Model Optimization', 'Parallel and Distributed Training', 'Edge with ExecuTorch', 'Recommendation Systems', 'Multimodality'];
+</script>
+<font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  "> <img width="1" style="border-style:none;" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0" height="1" alt=""> 
+
+//临时添加调查链接</font></font></font><script>
+    var survey = '<div class="survey-banner"><p><i class="fas fa-poll" aria-hidden="true">&nbsp </i> Take the <a href="https://forms.gle/KZ4xGL65VRMYNbbG6">PyTorch Docs/Tutorials survey</a>.</p></div>'
+    if ($(".pytorch-call-to-action-links").length) {
+        $(".pytorch-call-to-action-links").before(survey);
+    } else {
+        $("#pytorch-article").prepend(survey);
+    }
+</script>
+<!-- Begin Footer -->
+<div class="container-fluid docs-tutorials-resources" id="docs-tutorials-resources">
+<div class="container">
+<div class="row">
+<div class="col-md-4 text-center">
+<h2>文档</h2>
+<p>获取 PyTorch 的全面开发者文档</p>
+<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
+</div>
+<div class="col-md-4 text-center">
+<h2>教程</h2>
+<p>获取初学者和高级开发者的深入教程</p>
+<a class="with-right-arrow" href="https://maskerprc.github.io/tutorials">查看教程</a>
+</div>
+<div class="col-md-4 text-center">
+<h2>资源</h2>
+<p>查找开发资源并解答您的问题</p>
+<a class="with-right-arrow" href="https://pytorch.org/resources">查看资源</a>
+</div>
+</div>
+</div>
+</div>
+<footer class="site-footer">
+<div class="container footer-container">
+<div class="footer-logo-wrapper">
+<a class="footer-logo" href="https://pytorch.org/"></a>
+</div>
+<div class="footer-links-wrapper">
+<div class="footer-links-col">
+<ul>
+<li class="list-title"><a href="https://pytorch.org/">PyTorch</a></li>
+<li><a href="https://pytorch.org/get-started">开始使用</a></li>
+<li><a href="https://pytorch.org/features">特征</a></li>
+<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://pytorch.org/blog/">博客</a></li>
+<li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title"><a href="https://pytorch.org/resources">资源</a></li>
+<li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
+<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
+<li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
+<li><a href="https://pytorch.org/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title">保持更新</li>
+<li><a href="https://www.facebook.com/pytorch" target="_blank">Facebook</a></li>
+<li><a href="https://twitter.com/pytorch" target="_blank">Twitter</a></li>
+<li><a href="https://www.youtube.com/pytorch" target="_blank">YouTube</a></li>
+<li><a href="https://www.linkedin.com/company/pytorch" target="_blank">领英</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<ul>
+<li class="list-title">PyTorch 播客</li>
+<li><a href="https://open.spotify.com/show/6UzHKeiy368jKfQMKKvJY5" target="_blank">Spotify</a></li>
+<li><a href="https://podcasts.apple.com/us/podcast/pytorch-developer-podcast/id1566080008" target="_blank">苹果</a></li>
+<li><a href="https://www.google.com/podcasts?feed=aHR0cHM6Ly9mZWVkcy5zaW1wbGVjYXN0LmNvbS9PQjVGa0lsOA%3D%3D" target="_blank">谷歌</a></li>
+<li><a href="https://music.amazon.com/podcasts/7a4e6f0e-26c2-49e9-a478-41bd244197d0/PyTorch-Developer-Podcast?" target="_blank">亚马逊</a></li>
+</ul>
+</div>
+</div>
+<div class="privacy-policy">
+<ul>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/terms/" target="_blank">条款</a></li>
+<li class="privacy-policy-links">|</li>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/privacy-policy/" target="_blank">隐私</a></li>
+</ul>
+</div>
+<div class="copyright">
+<p><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">© 版权所有 Linux 基金会。PyTorch 基金会是 Linux 基金会的一个项目。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列、LF Projects, LLC 的政策，请参阅
+对于网站使用条款、商标政策以及其他适用于 PyTorch 基金会的政策，请参阅
+<a href="https://www.linuxfoundation.org/policies/">www.linuxfoundation.org/policies/</a>。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列、LF Projects, LLC 的政策，请参阅 <a href="https://www.lfprojects.org/policies/">www.lfprojects.org/policies/</a>。</font></font></font></p>
+</div>
+</div>
+</footer>
+<div class="cookie-banner-wrapper">
+<div class="container">
+<p class="gdpr-notice">为了分析交通并优化您的体验，我们在本网站上提供 cookies。通过点击或导航，您同意允许我们使用 cookies。作为本站点的当前维护者，Facebook 的 Cookies 政策适用。了解更多信息，包括可用的控制选项：[cookies 政策](<a href="https://www.facebook.com/policies/cookies/">cookies 政策 </a>)。</p>
+<img class="close-button" src="../_static/images/pytorch-x.svg" width="16" height="16">
+</div>
+</div>
+<!-- End Footer -->
+<!-- Begin Mobile Menu -->
+<div class="mobile-main-menu">
+<div class="container-fluid">
+<div class="container">
+<div class="mobile-main-menu-header-container">
+<a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
+<a class="main-menu-close-button" data-behavior="close-mobile-menu" href="#"></a>
+</div>
+</div>
+</div>
+<div class="mobile-main-menu-links-container">
+<div class="main-menu">
+<ul>
+<li class="resources-mobile-menu-title">
+<a>学习</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/get-started">开始使用</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials">教程</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">学习基础知识</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">PyTorch 食谱</a>
+</li>
+<li>
+<a href="https://maskerprc.github.io/tutorials/beginner/introyt.html">PyTorch 入门 - YouTube 系列</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>生态系统</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/ecosystem">工具</a>
+</li>
+<li>
+<a href="https://pytorch.org/#community-module">社区</a>
+</li>
+<li>
+<a href="https://discuss.pytorch.org/">论坛</a>
+</li>
+<li>
+<a href="https://pytorch.org/resources">开发者资源</a>
+</li>
+<li>
+<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>边缘</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/edge">关于 PyTorch Edge</a>
+</li>
+<li>
+<a href="https://pytorch.org/executorch-overview">ExecuTorch</a>
+</li>
+<li>
+<a href="https://pytorch.org/executorch/stable/index.html">ExecuTorch 文档</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>文档</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
+</li>
+<li>
+<a href="https://pytorch.org/pytorch-domains">PyTorch 领域</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>博客 &amp; 新闻</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/blog/">PyTorch 博客</a>
+</li>
+<li>
+<a href="https://pytorch.org/community-blog">社区博客</a>
+</li>
+<li>
+<a href="https://pytorch.org/videos">视频</a>
+</li>
+<li>
+<a href="https://pytorch.org/community-stories">社区故事</a>
+</li>
+<li>
+<a href="https://pytorch.org/events">活动</a>
+</li>
+<li>
+<a href="https://pytorch.org/newsletter">通讯</a>
+</li>
+</ul>
+<li class="resources-mobile-menu-title">
+<a>关于</a>
+</li>
+<ul class="resources-mobile-menu-items">
+<li>
+<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
+</li>
+<li>
+<a href="https://pytorch.org/governing-board">管理委员会</a>
+</li>
+<li>
+<a href="https://pytorch.org/credits">云信用计划</a>
+</li>
+<li>
+<a href="https://pytorch.org/tac">技术顾问委员会</a>
+</li>
+<li>
+<a href="https://pytorch.org/staff">员工</a>
+</li>
+<li>
+<a href="https://pytorch.org/contact-us">联系我们</a>
+</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<!-- End Mobile Menu -->
+<script src="../_static/js/vendor/anchor.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+      mobileMenu.bind();
+      mobileTOC.bind();
+      pytorchAnchors.bind();
+      sideMenus.bind();
+      scrollToAnchor.bind();
+      highlightNavigation.bind();
+      mainMenuDropdown.bind();
+      filterTags.bind();
+
+      // Add class to links that have code blocks, since we cannot create links in code blocks
+      $("article.pytorch-article a span.pre").each(function(e) {
+        $(this).closest("a").addClass("has-code");
+      });
+    })
+  </script>
+
+</body></html>
