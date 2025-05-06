@@ -1,31 +1,28 @@
-
 <!DOCTYPE html>
-
-<!--[if IE 8]><!DOCTYPE html>
 <html lang="zh_CN">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>Reinforcement Learning (PPO) with TorchRL Tutorial — PyTorch Tutorials 2.3.0+cpu documentation</title>
-<link href="../_static/css/theme.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
 <!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
-<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/css/theme.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/copybutton.css" rel="stylesheet" type="text/css"/>
-<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/katex-math.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/sg_gallery.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/sg_gallery-binder.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/sg_gallery-dataframe.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/sg_gallery-rendered-html.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" rel="stylesheet" type="text/css"/>
-<link href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/css/custom.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/css/custom2.css" rel="stylesheet" type="text/css"/>
-<link href="../genindex.html" rel="index" title="Index"/>
-<link href="../search.html" rel="search" title="Search"/>
-<link href="mario_rl_tutorial.html" rel="next" title="Train a Mario-playing RL Agent"/>
-<link href="reinforcement_q_learning.html" rel="prev" title="Reinforcement Learning (DQN) Tutorial"/>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<link href="../_static/copybutton.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/katex-math.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-binder.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-dataframe.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-rendered-html.css" rel="stylesheet" type="text/css">
+<link href="../_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom2.css" rel="stylesheet" type="text/css">
+<link href="../genindex.html" rel="index" title="Index">
+<link href="../search.html" rel="search" title="Search">
+<link href="mario_rl_tutorial.html" rel="next" title="Train a Mario-playing RL Agent">
+<link href="reinforcement_q_learning.html" rel="prev" title="Reinforcement Learning (DQN) Tutorial">
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -35,24 +32,23 @@
 <!-- End Google Tag Manager -->
 <script src="../_static/js/modernizr.min.js"></script>
 <!-- Preload the theme fonts -->
-<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-book.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-book.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" rel="preload" type="font/woff2">
 <!-- Preload the katex fonts -->
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" rel="preload" type="font/woff2"/>
-<link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" rel="stylesheet"/>
-</head>
-<div class="container-fluid header-holder tutorials-header" id="header-holder">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" rel="preload" type="font/woff2">
+<link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" rel="stylesheet">
+</head><body class="pytorch-body"><div class="container-fluid header-holder tutorials-header" id="header-holder">
 <div class="container">
 <div class="header-container">
 <a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
@@ -60,163 +56,149 @@
 <ul>
 <li class="main-menu-item">
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
-<a class="with-down-arrow">
-                Learn
-              </a>
+<a class="with-down-arrow">学习</a>
 <div class="resources-dropdown-menu">
 <a class="nav-dropdown-item" href="https://pytorch.org/get-started">
-<span class="dropdown-title">Get Started</span>
-<p>Run PyTorch locally or get started quickly with one of the supported cloud platforms</p>
+<span class="dropdown-title">开始使用</span><p></p>
+<p>在本地运行 PyTorch 或快速开始使用支持的云平台之一</p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials">
-<span class="dropdown-title">Tutorials</span>
-<p>Whats new in PyTorch tutorials</p>
+<span class="dropdown-title">教程</span><p></p>
+<p>PyTorch 教程中的新内容是什么</p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">
-<span class="dropdown-title">Learn the Basics</span>
-<p>Familiarize yourself with PyTorch concepts and modules</p>
+<span class="dropdown-title">学习基础知识</span><p></p>
+<p>熟悉 PyTorch 的概念和模块</p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">
-<span class="dropdown-title">PyTorch Recipes</span>
-<p>Bite-size, ready-to-deploy PyTorch code examples</p>
+<span class="dropdown-title">PyTorch 食谱</span><p></p>
+<p>精简版、可直接部署的 PyTorch 代码示例</p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/introyt.html">
-<span class="dropdown-title">Intro to PyTorch - YouTube Series</span>
-<p>Master PyTorch basics with our engaging YouTube tutorial series</p>
+<span class="dropdown-title">PyTorch 简介 - YouTube 系列</span><p></p>
+<p>通过我们引人入胜的 YouTube 教程系列掌握 PyTorch 基础知识</p>
 </a>
 </div>
 </div>
 </li>
 <li>
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
-<a class="with-down-arrow">
-                Ecosystem
-              </a>
+<a class="with-down-arrow">生态系统</a>
 <div class="resources-dropdown-menu">
 <a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
-<span class="dropdown-title">Tools</span>
-<p>Learn about the tools and frameworks in the PyTorch Ecosystem</p>
+<span class="dropdown-title">工具</span><p></p>
+<p>了解 PyTorch 生态系统中的工具和框架</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/#community-module">
-<span class="dropdown-title">Community</span>
-<p>Join the PyTorch developer community to contribute, learn, and get your questions answered</p>
+<span class="dropdown-title">社区</span><p></p>
+<p>加入 PyTorch 开发者社区，贡献、学习并获得问题解答</p>
 </a>
 <a class="nav-dropdown-item" href="https://discuss.pytorch.org/" target="_blank">
-<span class="dropdown-title">Forums</span>
-<p>A place to discuss PyTorch code, issues, install, research</p>
+<span class="dropdown-title">论坛</span><p></p>
+<p>讨论 PyTorch 代码、问题、安装、研究的地方</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/resources">
-<span class="dropdown-title">Developer Resources</span>
-<p>Find resources and get questions answered</p>
+<span class="dropdown-title">开发者资源</span><p></p>
+<p>查找资源并解答问题</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
-<span class="dropdown-title">Contributor Awards - 2024</span>
-<p>Award winners announced at this year's PyTorch Conference</p>
+<span class="dropdown-title">2024 年度贡献者奖项</span><p></p>
+<p>本年度 PyTorch 大会获奖者揭晓</p>
 </a>
 </div>
 </div>
 </li>
 <li>
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
-<a class="with-down-arrow">
-                Edge
-              </a>
+<a class="with-down-arrow">边缘</a>
 <div class="resources-dropdown-menu">
 <a class="nav-dropdown-item" href="https://pytorch.org/edge">
-<span class="dropdown-title">About PyTorch Edge</span>
-<p>Build innovative and privacy-aware AI experiences for edge devices</p>
+<span class="dropdown-title">关于 PyTorch Edge</span><p></p>
+<p>为边缘设备构建创新和隐私感知的 AI 体验</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/executorch-overview">
-<span class="dropdown-title">ExecuTorch</span>
-<p>End-to-end solution for enabling on-device inference capabilities across mobile and edge devices</p>
+<span class="dropdown-title">ExecuTorch</span><p></p>
+<p>实现移动和边缘设备端到端推理能力的解决方案</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/executorch/stable/index.html">
-<span class="dropdown-title">ExecuTorch Docs</span>
+<span class="dropdown-title">ExecuTorch 文档</span><p></p>
 </a>
 </div>
 </div>
 </li>
 <li class="main-menu-item">
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
-<a class="with-down-arrow">
-                Docs
-              </a>
+<a class="with-down-arrow">文档</a>
 <div class="resources-dropdown-menu">
 <a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
-<span class="dropdown-title">PyTorch</span>
-<p>Explore the documentation for comprehensive guidance on how to use PyTorch</p>
+<span class="dropdown-title">PyTorch</span><p></p>
+<p>探索文档以获取全面指导，了解如何使用 PyTorch</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/pytorch-domains">
-<span class="dropdown-title">PyTorch Domains</span>
-<p>Read the PyTorch Domains documentation to learn more about domain-specific libraries</p>
+<span class="dropdown-title">PyTorch 领域</span><p></p>
+<p>阅读 PyTorch Domains 文档，了解更多关于特定领域库的信息</p>
 </a>
 </div>
 </div>
 </li>
 <li>
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
-<a class="with-down-arrow">
-                Blogs &amp; News 
-              </a>
+<a class="with-down-arrow">博客与新闻</a>
 <div class="resources-dropdown-menu">
 <a class="nav-dropdown-item" href="https://pytorch.org/blog/">
-<span class="dropdown-title">PyTorch Blog</span>
+<span class="dropdown-title">PyTorch Blog</span><p></p>
 <p>Catch up on the latest technical news and happenings</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
-<span class="dropdown-title">Community Blog</span>
-<p>Stories from the PyTorch ecosystem</p>
+<span class="dropdown-title">社区博客</span><p></p>
+<p>PyTorch 生态系统故事</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/videos">
-<span class="dropdown-title">Videos</span>
-<p>Learn about the latest PyTorch tutorials, new, and more </p>
-<a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
-<span class="dropdown-title">Community Stories</span>
-<p>Learn how our community solves real, everyday machine learning problems with PyTorch</p>
+<span class="dropdown-title">视频</span><p></p>
+<p>了解最新的 PyTorch 教程、新内容等</p>
+</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+<span class="dropdown-title">社区故事</span><p></p>
+<p>了解我们的社区如何使用 PyTorch 解决真实、日常的机器学习问题</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/events">
-<span class="dropdown-title">Events</span>
-<p>Find events, webinars, and podcasts</p>
+<span class="dropdown-title">活动</span><p></p>
+<p>查找活动、网络研讨会和播客</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
-<span class="dropdown-title">Newsletter</span>
-<p>Stay up-to-date with the latest updates</p>
+<span class="dropdown-title">通讯</span><p></p>
+<p>跟踪最新更新</p>
 </a>
-</a></div>
+</div>
 </div></li>
 <li>
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
-<a class="with-down-arrow">
-                About
-              </a>
+<a class="with-down-arrow">关于</a>
 <div class="resources-dropdown-menu">
 <a class="nav-dropdown-item" href="https://pytorch.org/foundation">
-<span class="dropdown-title">PyTorch Foundation</span>
-<p>Learn more about the PyTorch Foundation</p>
+<span class="dropdown-title">PyTorch 基金会</span><p></p>
+<p>了解更多关于 PyTorch 基金会</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/governing-board">
-<span class="dropdown-title">Governing Board</span>
+<span class="dropdown-title">管理委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/credits">
-<span class="dropdown-title">Cloud Credit Program</span>
+<span class="dropdown-title">云信用计划</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/tac">
-<span class="dropdown-title">Technical Advisory Council</span>
+<span class="dropdown-title">技术顾问委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/staff">
-<span class="dropdown-title">Staff</span>
+<span class="dropdown-title">员工</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/contact-us">
-<span class="dropdown-title">Contact Us</span>
+<span class="dropdown-title">联系我们</span><p></p>
 </a>
 </div>
 </div>
 </li>
 <li class="main-menu-item">
 <div class="no-dropdown">
-<a data-cta="join" href="https://pytorch.org/join">
-                Become a Member
-              </a>
+<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
 </div>
 </li>
 <li>
@@ -239,9 +221,9 @@
 </div>
 </div>
 </div>
-<body class="pytorch-body">
+
 <div class="table-of-contents-link-wrapper">
-<span>Table of Contents</span>
+<span>目录</span>
 <a class="toggle-table-of-contents" data-behavior="toggle-table-of-contents" href="#"></a>
 </div>
 <nav class="pytorch-left-menu" data-toggle="wy-nav-shift" id="pytorch-left-menu">
@@ -260,22 +242,18 @@
 <div id="sphinxSearchBox" style="display: none;">
 <div role="search">
 <form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
-<input name="q" placeholder="Search Docs" type="text"/>
-<input name="check_keywords" type="hidden" value="yes"/>
-<input name="area" type="hidden" value="default"/>
+<input name="q" placeholder="Search Docs" type="text">
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default">
 </form>
 </div>
 </div>
 </div>
 <form id="searchForm">
 <label style="margin-bottom: 1rem">
-<input checked="" name="searchType" type="radio" value="google"/>
-      Google Search
-    </label>
+<input checked="" name="searchType" type="radio" value="google">谷歌搜索</label>
 <label style="margin-bottom: 1rem">
-<input name="searchType" type="radio" value="sphinx"/>
-      Classic Search
-    </label>
+<input name="searchType" type="radio" value="sphinx">经典搜索</label>
 </form>
 <script>
      document.addEventListener('DOMContentLoaded', function() {
@@ -317,181 +295,181 @@
     });
   </script>
 </div>
-<p class="caption" role="heading"><span class="caption-text">PyTorch Recipes</span></p>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 食谱</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../recipes/recipes_index.html">See All Recipes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../prototype/prototype_index.html">See All Prototype Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/recipes_index.html">查看所有菜谱</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prototype/prototype_index.html">查看所有原型食谱</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Introduction to PyTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 入门</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/basics/intro.html">Learn the Basics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/quickstart_tutorial.html">Quickstart</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/tensorqs_tutorial.html">Tensors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/data_tutorial.html">Datasets &amp; DataLoaders</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/transforms_tutorial.html">Transforms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/buildmodel_tutorial.html">Build the Neural Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/autogradqs_tutorial.html">Automatic Differentiation with <code class="docutils literal "><span class="pre">torch.autograd</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/optimization_tutorial.html">Optimizing Model Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/saveloadrun_tutorial.html">Save and Load the Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/basics/intro.html">学习基础知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/quickstart_tutorial.html">快速入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/tensorqs_tutorial.html">张量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/data_tutorial.html">数据集与数据加载器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/transforms_tutorial.html">变换</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/buildmodel_tutorial.html">构建神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/autogradqs_tutorial.html">使用 <code class="docutils literal "><span class="pre">torch.autograd</span></code> 进行自动微分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/optimization_tutorial.html">优化模型参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/saveloadrun_tutorial.html">保存和加载模型</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/introyt/introyt_index.html">Introduction to PyTorch - YouTube Series</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/introyt1_tutorial.html">Introduction to PyTorch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensors_deeper_tutorial.html">Introduction to PyTorch Tensors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/autogradyt_tutorial.html">The Fundamentals of Autograd</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/modelsyt_tutorial.html">Building Models with PyTorch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensorboardyt_tutorial.html">PyTorch TensorBoard Support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/trainingyt.html">Training with PyTorch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/captumyt.html">Model Understanding with Captum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/introyt/introyt_index.html">PyTorch 入门 - YouTube 系列</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/introyt1_tutorial.html">PyTorch 入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensors_deeper_tutorial.html">PyTorch 张量入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/autogradyt_tutorial.html">Autograd 的基础</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/modelsyt_tutorial.html">使用 PyTorch 构建模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensorboardyt_tutorial.html">PyTorch TensorBoard 支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/trainingyt.html">使用 PyTorch 进行训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/captumyt.html">使用 Captum 理解模型</a></li>
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Learning PyTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">学习 PyTorch</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/deep_learning_60min_blitz.html">Deep Learning with PyTorch: A 60 Minute Blitz</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/pytorch_with_examples.html">Learning PyTorch with Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/nn_tutorial.html">What is <cite>torch.nn</cite> <em>really</em>?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nlp_from_scratch_index.html">NLP from Scratch</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tensorboard_tutorial.html">Visualizing Models, Data, and Training with TensorBoard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pinmem_nonblock.html">A guide on good usage of <code class="docutils literal "><span class="pre">non_blocking</span></code> and <code class="docutils literal "><span class="pre">pin_memory()</span></code> in PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/deep_learning_60min_blitz.html">使用 PyTorch 进行深度学习：60 分钟速成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/pytorch_with_examples.html">通过示例学习 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/nn_tutorial.html">火炬.nn 究竟是什么？</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlp_from_scratch_index.html">从零开始的自然语言处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tensorboard_tutorial.html">使用 TensorBoard 可视化模型、数据和训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pinmem_nonblock.html">PyTorch 中 <code class="docutils literal "><span class="pre">non_blocking</span></code> 和 <code class="docutils literal "><span class="pre">pin_memory()</span></code> 的良好使用指南</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Image and Video</span></p>
+<p class="caption" role="heading"><span class="caption-text">图像和视频</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="torchvision_tutorial.html">TorchVision Object Detection Finetuning Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/transfer_learning_tutorial.html">Transfer Learning for Computer Vision Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/fgsm_tutorial.html">Adversarial Example Generation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/dcgan_faces_tutorial.html">DCGAN Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="spatial_transformer_tutorial.html">Spatial Transformer Networks Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">Optimizing Vision Transformer Model for Deployment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tiatoolbox_tutorial.html">Whole Slide Image Classification Using PyTorch and TIAToolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchvision_tutorial.html">TorchVision 目标检测微调教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/transfer_learning_tutorial.html">计算机视觉迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/fgsm_tutorial.html">对抗样本生成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dcgan_faces_tutorial.html">DCGAN 教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial_transformer_tutorial.html">空间变换网络教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">针对部署优化视觉 Transformer 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiatoolbox_tutorial.html">使用 PyTorch 和 TIAToolbox 进行全切片图像分类</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Audio</span></p>
+<p class="caption" role="heading"><span class="caption-text">音频</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_io_tutorial.html">Audio I/O</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_resampling_tutorial.html">Audio Resampling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_data_augmentation_tutorial.html">Audio Data Augmentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_extractions_tutorial.html">Audio Feature Extractions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_augmentation_tutorial.html">Audio Feature Augmentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_datasets_tutorial.html">Audio Datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="speech_recognition_pipeline_tutorial.html">Speech Recognition with Wav2Vec2</a></li>
-<li class="toctree-l1"><a class="reference internal" href="text_to_speech_with_torchaudio.html">Text-to-speech with Tacotron2</a></li>
-<li class="toctree-l1"><a class="reference internal" href="forced_alignment_with_torchaudio_tutorial.html">Forced Alignment with Wav2Vec2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_io_tutorial.html">音频输入/输出</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_resampling_tutorial.html">音频重采样</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_data_augmentation_tutorial.html">音频数据增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_extractions_tutorial.html">音频特征提取</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_augmentation_tutorial.html">音频特征增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_datasets_tutorial.html">音频数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="speech_recognition_pipeline_tutorial.html">使用 Wav2Vec2 的语音识别</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text_to_speech_with_torchaudio.html">使用 Tacotron2 的文本转语音</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forced_alignment_with_torchaudio_tutorial.html">使用 Wav2Vec2 的强制对齐</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Backends</span></p>
+<p class="caption" role="heading"><span class="caption-text">后端</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">Introduction to ONNX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Reinforcement Learning</span></p>
+<p class="caption" role="heading"><span class="caption-text">强化学习</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="reinforcement_q_learning.html">Reinforcement Learning (DQN) Tutorial</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Reinforcement Learning (PPO) with TorchRL Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mario_rl_tutorial.html">Train a Mario-playing RL Agent</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/pendulum.html">Pendulum: Writing your environment and transforms with TorchRL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_q_learning.html">强化学习（DQN）教程</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">强化学习（PPO）与 TorchRL 教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mario_rl_tutorial.html">训练玩马里奥的强化学习智能体</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/pendulum.html">摆锤：使用 TorchRL 编写你的环境和转换</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Deploying PyTorch Models in Production</span></p>
+<p class="caption" role="heading"><span class="caption-text">在生产中部署 PyTorch 模型</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">Introduction to ONNX</a></li>
-<li class="toctree-l1"><a class="reference internal" href="flask_rest_api_tutorial.html">Deploying PyTorch in Python via a REST API with Flask</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/Intro_to_TorchScript_tutorial.html">Introduction to TorchScript</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_export.html">Loading a TorchScript Model in C++</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/super_resolution_with_onnxruntime.html">(optional) Exporting a Model from PyTorch to ONNX and Running it using ONNX Runtime</a></li>
-<li class="toctree-l1"><a class="reference internal" href="realtime_rpi.html">Real Time Inference on Raspberry Pi 4 (30 fps!)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flask_rest_api_tutorial.html">使用 Flask 通过 REST API 部署 Python 中的 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/Intro_to_TorchScript_tutorial.html">火炬脚本入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_export.html">在 C++中加载 TorchScript 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/super_resolution_with_onnxruntime.html">（可选）将 PyTorch 模型导出为 ONNX 并使用 ONNX 运行时运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="realtime_rpi.html">Raspberry Pi 4 实时推理（30 fps！）</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Profiling PyTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 性能分析</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">Profiling your PyTorch Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_intro_tutorial.html">Introduction to Holistic Trace Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_trace_diff_tutorial.html">Trace Diff using Holistic Trace Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">分析你的 PyTorch 模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_intro_tutorial.html">全景式跟踪分析简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_trace_diff_tutorial.html">使用全景式跟踪分析进行跟踪差异</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Code Transforms with FX</span></p>
+<p class="caption" role="heading"><span class="caption-text">使用 FX 进行代码转换</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="fx_conv_bn_fuser.html">(beta) Building a Convolution/Batch Norm fuser in FX</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fx_profiling_tutorial.html">(beta) Building a Simple CPU Performance Profiler with FX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fx_conv_bn_fuser.html">(beta) 在 FX 中构建卷积/批量归一化融合器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fx_profiling_tutorial.html">(beta) 使用 FX 构建简单的 CPU 性能分析器</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Frontend APIs</span></p>
+<p class="caption" role="heading"><span class="caption-text">前端 API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="memory_format_tutorial.html">(beta) Channels Last Memory Format in PyTorch</a></li>
-<li class="toctree-l1"><a class="reference internal" href="forward_ad_usage.html">Forward-mode Automatic Differentiation (Beta)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="jacobians_hessians.html">Jacobians, Hessians, hvp, vhp, and more: composing function transforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ensembling.html">Model ensembling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="per_sample_grads.html">Per-sample-gradients</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_frontend.html">Using the PyTorch C++ Frontend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/torch-script-parallelism.html">Dynamic Parallelism in TorchScript</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_autograd.html">Autograd in C++ Frontend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="memory_format_tutorial.html">PyTorch 中的（beta）通道最后记忆格式</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forward_ad_usage.html">前向模式自动微分（Beta）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jacobians_hessians.html">雅可比矩阵、海森矩阵、hvp、vhp 以及更多：函数变换的组成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ensembling.html">模型集成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="per_sample_grads.html">每样本梯度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_frontend.html">使用 PyTorch C++前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch-script-parallelism.html">TorchScript 中的动态并行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_autograd.html">C++前端中的 Autograd</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Extending PyTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">扩展 PyTorch</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/custom_ops_landing_page.html">PyTorch Custom Operators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/python_custom_ops.html">Custom Python Operators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_custom_ops.html">Custom C++ and CUDA Operators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="custom_function_double_backward_tutorial.html">Double Backward with Custom Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="custom_function_conv_bn_tutorial.html">Fusing Convolution and Batch Norm using Custom Function</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_extension.html">Custom C++ and CUDA Extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_ops.html">Extending TorchScript with Custom C++ Operators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_classes.html">Extending TorchScript with Custom C++ Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/dispatcher.html">Registering a Dispatched Operator in C++</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/extend_dispatcher.html">Extending dispatcher for a new backend in C++</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/privateuseone.html">Facilitating New Backend Integration by PrivateUse1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/custom_ops_landing_page.html">PyTorch 自定义算子</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/python_custom_ops.html">自定义 Python 算子</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_custom_ops.html">自定义 C++和 CUDA 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_function_double_backward_tutorial.html">使用自定义函数的双向传播</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_function_conv_bn_tutorial.html">使用自定义函数融合卷积和批量归一化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_extension.html">自定义 C++ 和 CUDA 扩展</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_ops.html">使用自定义 C++ 操作符扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_classes.html">使用自定义 C++ 类扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dispatcher.html">在 C++ 中注册分派操作符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/extend_dispatcher.html">C++中扩展后端调度器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/privateuseone.html">通过 PrivateUse1 促进新后端集成</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Model Optimization</span></p>
+<p class="caption" role="heading"><span class="caption-text">模型优化</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">Profiling your PyTorch Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tensorboard_profiler_tutorial.html">PyTorch Profiler With TensorBoard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/hyperparameter_tuning_tutorial.html">Hyperparameter tuning with Ray Tune</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">Optimizing Vision Transformer Model for Deployment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parametrizations.html">Parametrizations Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pruning_tutorial.html">Pruning Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/dynamic_quantization_tutorial.html">(beta) Dynamic Quantization on an LSTM Word Language Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dynamic_quantization_bert_tutorial.html">(beta) Dynamic Quantization on BERT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quantized_transfer_learning_tutorial.html">(beta) Quantized Transfer Learning for Computer Vision Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/static_quantization_tutorial.html">(beta) Static Quantization with Eager Mode in PyTorch</a></li>
-<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex.html">Grokking PyTorch Intel CPU performance from first principles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex_2.html">Grokking PyTorch Intel CPU performance from first principles (Part 2)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nvfuser_intro_tutorial.html">Getting Started - Accelerate Your Scripts with nvFuser</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ax_multiobjective_nas_tutorial.html">Multi-Objective NAS with Ax</a></li>
-<li class="toctree-l1"><a class="reference internal" href="torch_compile_tutorial.html">Introduction to <code class="docutils literal "><span class="pre">torch.compile</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="compiled_autograd_tutorial.html">Compiled Autograd: Capturing a larger backward graph for <code class="docutils literal "><span class="pre">torch.compile</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="inductor_debug_cpu.html">Inductor CPU backend debugging and profiling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="scaled_dot_product_attention_tutorial.html">(Beta) Implementing High-Performance Transformers with Scaled Dot Product Attention (SDPA)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/knowledge_distillation_tutorial.html">Knowledge Distillation Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">分析你的 PyTorch 模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tensorboard_profiler_tutorial.html">使用 TensorBoard 的 PyTorch 分析器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hyperparameter_tuning_tutorial.html">使用 Ray Tune 进行超参数调整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">针对部署优化视觉 Transformer 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametrizations.html">参数化教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruning_tutorial.html">剪枝教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dynamic_quantization_tutorial.html">(beta) 在 LSTM 词语言模型上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_quantization_bert_tutorial.html">(beta) BERT 动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantized_transfer_learning_tutorial.html">(beta) 计算机视觉教程：量化迁移学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/static_quantization_tutorial.html">(beta) PyTorch 情急模式下的静态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex.html">从原理出发掌握 PyTorch Intel CPU 性能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex_2.html">从第一性原理深入理解 PyTorch Intel CPU 性能（第二部分）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nvfuser_intro_tutorial.html">入门指南 - 使用 nvFuser 加速您的脚本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ax_multiobjective_nas_tutorial.html">基于 Ax 的多目标 NAS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torch_compile_tutorial.html"> <code class="docutils literal "><span class="pre">torch.compile</span></code> 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compiled_autograd_tutorial.html">编译自动微分：捕获更大的反向图 <code class="docutils literal "><span class="pre">torch.compile</span></code> </a></li>
+<li class="toctree-l1"><a class="reference internal" href="inductor_debug_cpu.html">电感 CPU 后端调试和性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scaled_dot_product_attention_tutorial.html">（Beta）使用缩放点积注意力（SDPA）实现高性能 Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/knowledge_distillation_tutorial.html">知识蒸馏教程</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Parallel and Distributed Training</span></p>
+<p class="caption" role="heading"><span class="caption-text">并行与分布式训练</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../distributed/home.html">Distributed and Parallel Training Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/dist_overview.html">PyTorch Distributed Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/ddp_series_intro.html">Distributed Data Parallel in PyTorch - Video Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="model_parallel_tutorial.html">Single-Machine Model Parallel Best Practices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ddp_tutorial.html">Getting Started with Distributed Data Parallel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dist_tuto.html">Writing Distributed Applications with PyTorch</a></li>
-<li class="toctree-l1"><a class="reference internal" href="FSDP_tutorial.html">Getting Started with Fully Sharded Data Parallel(FSDP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="FSDP_advanced_tutorial.html">Advanced Model Training with Fully Sharded Data Parallel (FSDP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="TCPStore_libuv_backend.html">Introduction to Libuv TCPStore Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="TP_tutorial.html">Large Scale Transformer model training with Tensor Parallel (TP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pipelining_tutorial.html">Introduction to Distributed Pipeline Parallelism</a></li>
-<li class="toctree-l1"><a class="reference internal" href="process_group_cpp_extension_tutorial.html">Customize Process Group Backends Using Cpp Extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rpc_tutorial.html">Getting Started with Distributed RPC Framework</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rpc_param_server_tutorial.html">Implementing a Parameter Server Using Distributed RPC Framework</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rpc_async_execution.html">Implementing Batch RPC Processing Using Asynchronous Executions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/rpc_ddp_tutorial.html">Combining Distributed DataParallel with Distributed RPC Framework</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/generic_join.html">Distributed Training with Uneven Inputs Using the Join Context Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../distributed/home.html">分布式与并行训练教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dist_overview.html">PyTorch 分布式概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/ddp_series_intro.html">PyTorch 分布式数据并行 - 视频教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_parallel_tutorial.html">单机模型并行最佳实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ddp_tutorial.html">分布式数据并行入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dist_tuto.html">使用 PyTorch 编写分布式应用程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FSDP_tutorial.html">完全分片数据并行（FSDP）入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FSDP_advanced_tutorial.html">使用完全分片数据并行（FSDP）的高级模型训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TCPStore_libuv_backend.html">Libuv TCPStore 后端简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TP_tutorial.html">使用张量并行（TP）进行大规模 Transformer 模型训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelining_tutorial.html">分布式管道并行简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process_group_cpp_extension_tutorial.html">使用 Cpp 扩展自定义进程组后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_tutorial.html">分布式 RPC 框架入门指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_param_server_tutorial.html">实现使用分布式 RPC 框架的参数服务器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_async_execution.html">使用异步执行实现批处理 RPC 处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/rpc_ddp_tutorial.html">结合 Distributed DataParallel 与分布式 RPC 框架</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/generic_join.html">使用 Join Context Manager 进行不均匀输入的分布式训练</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Edge with ExecuTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">基于 ExecuTorch 的边缘计算</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html">Exporting to ExecuTorch Tutorial</a></li>
-<li class="toctree-l1"><a class="reference external" href=" https://pytorch.org/executorch/stable/running-a-model-cpp-tutorial.html">Running an ExecuTorch Model in C++ Tutorial</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/sdk-integration-tutorial.html">Using the ExecuTorch SDK to Profile a Model</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-ios.html">Building an ExecuTorch iOS Demo App</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-android.html">Building an ExecuTorch Android Demo App</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/examples-end-to-end-to-lower-model-to-delegate.html">Lowering a Model as a Delegate</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html">导出至 ExecuTorch 教程</a></li>
+<li class="toctree-l1"><a class="reference external" href=" https://pytorch.org/executorch/stable/running-a-model-cpp-tutorial.html">在 C++中运行 ExecuTorch 模型教程</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/sdk-integration-tutorial.html">使用 ExecuTorch SDK 对模型进行性能分析</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-ios.html">构建 ExecuTorch iOS 演示应用程序</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-android.html">构建 ExecuTorch Android 演示应用程序</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/examples-end-to-end-to-lower-model-to-delegate.html">模型作为代理降低</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Recommendation Systems</span></p>
+<p class="caption" role="heading"><span class="caption-text">推荐系统</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="torchrec_intro_tutorial.html">Introduction to TorchRec</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/sharding.html">Exploring TorchRec sharding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchrec_intro_tutorial.html">《TorchRec 简介》</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/sharding.html">探索 TorchRec 分片</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Multimodality</span></p>
+<p class="caption" role="heading"><span class="caption-text">多模态</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/flava_finetuning_tutorial.html">TorchMultimodal Tutorial: Finetuning FLAVA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/flava_finetuning_tutorial.html">Torch 多模态教程：微调 FLAVA</a></li>
 </ul>
 </div>
 </div>
@@ -502,40 +480,33 @@
 <div aria-label="breadcrumbs navigation" role="navigation">
 <ul class="pytorch-breadcrumbs">
 <li>
-<a href="../index.html">
-          
-            Tutorials
-          
-        </a> &gt;
-      </li>
-<li>Reinforcement Learning (PPO) with TorchRL Tutorial</li>
+教程 &gt;</li>
+<li>强化学习（PPO）与 TorchRL 教程</li>
 <li class="pytorch-breadcrumbs-aside">
-<a href="../_sources/intermediate/reinforcement_ppo.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg"/></a>
+<a href="../_sources/intermediate/reinforcement_ppo.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg" width="16" height="16"></a>
 </li>
 </ul>
 </div>
 </div>
-<div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">
-          Shortcuts
-        </div>
+<div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">快捷键</div>
 </div>
 <section class="pytorch-content-wrap" data-toggle="wy-nav-shift" id="pytorch-content-wrap">
 <div class="pytorch-content-left">
 <div class="pytorch-call-to-action-links">
-<div id="tutorial-type">intermediate/reinforcement_ppo</div>
+<div id="tutorial-type">intermediate/强化 PPO</div>
 <div id="google-colab-link">
-<img class="call-to-action-img" src="../_static/images/pytorch-colab.svg">
-<div class="call-to-action-desktop-view">Run in Google Colab</div>
+<img class="call-to-action-img" src="../_static/images/pytorch-colab.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 Google Colab 中运行</div>
 <div class="call-to-action-mobile-view">Colab</div>
-</img></div>
+</div>
 <div id="download-notebook-link">
-<img class="call-to-action-notebook-img" src="../_static/images/pytorch-download.svg"/>
-<div class="call-to-action-desktop-view">Download Notebook</div>
-<div class="call-to-action-mobile-view">Notebook</div>
+<img class="call-to-action-notebook-img" src="../_static/images/pytorch-download.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">下载笔记本</div>
+<div class="call-to-action-mobile-view">笔记本</div>
 </div>
 <div id="github-view-link">
-<img class="call-to-action-img" src="../_static/images/pytorch-github.svg"/>
-<div class="call-to-action-desktop-view">View on GitHub</div>
+<img class="call-to-action-img" src="../_static/images/pytorch-github.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 GitHub 上查看</div>
 <div class="call-to-action-mobile-view">GitHub</div>
 </div>
 </div>
@@ -546,95 +517,63 @@
 <div class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
 <article class="pytorch-article" id="pytorch-article" itemprop="articleBody">
 <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-intermediate-reinforcement-ppo-py"><span class="std std-ref">here</span></a>
-to download the full example code</p>
+<p class="admonition-title">备注</p>
+<p>点击此处下载完整示例代码</p>
 </div>
 <div class="sphx-glr-example-title section" id="reinforcement-learning-ppo-with-torchrl-tutorial">
-<span id="sphx-glr-intermediate-reinforcement-ppo-py"></span><h1>Reinforcement Learning (PPO) with TorchRL Tutorial<a class="headerlink" href="#reinforcement-learning-ppo-with-torchrl-tutorial" title="Permalink to this heading">¶</a></h1><p class="date-info-last-verified" style="color: #6c6c6d; font-size: small;">Created On: Apr 01, 2025 | Last Updated: Apr 01, 2025 | Last Verified: Nov 05, 2024</p>
-<p><strong>Author</strong>: <a class="reference external" href="https://github.com/vmoens">Vincent Moens</a></p>
-<p>This tutorial demonstrates how to use PyTorch and <code class="xref py py-mod docutils literal "><span class="pre">torchrl</span></code> to train a parametric policy
-network to solve the Inverted Pendulum task from the <a class="reference external" href="https://github.com/Farama-Foundation/Gymnasium">OpenAI-Gym/Farama-Gymnasium
-control library</a>.</p>
+<span id="sphx-glr-intermediate-reinforcement-ppo-py"></span><h1>强化学习（PPO）与 TorchRL 教程 ¶</font></font></font></h1><p class="date-info-last-verified" style="color: #6c6c6d; font-size: small;"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">创建于：2025 年 4 月 1 日 | 最后更新：2025 年 4 月 1 日 | 最后验证：2024 年 11 月 5 日</p>
+<p>作者：Vincent Moens</p>
+<p>本教程演示了如何使用 PyTorch 和 <code class="xref py py-mod docutils literal "><span class="pre">torchrl</span></code> 训练一个参数化策略网络来解决来自 OpenAI-Gym/Farama-Gymnasium 控制库的倒立摆任务。</p>
 <div class="figure align-default" id="id1">
-<img alt="Inverted pendulum" src="../_images/invpendulum.gif"/>
-<p class="caption"><span class="caption-text">Inverted pendulum</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<img alt="Inverted pendulum" src="../_images/invpendulum.gif" width="162.78750610351562" height="20.80000114440918">
+<p class="caption">倒立摆 ¶</p>
 </div>
-<p>Key learnings:</p>
+<p>关键学习点：</p>
 <ul class="simple">
-<li><p>How to create an environment in TorchRL, transform its outputs, and collect data from this environment;</p></li>
-<li><p>How to make your classes talk to each other using <code class="xref py py-class docutils literal "><span class="pre">TensorDict</span></code>;</p></li>
-<li><p>The basics of building your training loop with TorchRL:</p>
+<li><p>如何在 TorchRL 中创建环境，转换其输出，并从该环境中收集数据；</p></li>
+<li><p>如何使用 <code class="xref py py-class docutils literal "><span class="pre">TensorDict</span></code> 使你的类相互通信；</p></li>
+<li><p>使用 TorchRL 构建训练循环的基础</p>
 <ul>
-<li><p>How to compute the advantage signal for policy gradient methods;</p></li>
-<li><p>How to create a stochastic policy using a probabilistic neural network;</p></li>
-<li><p>How to create a dynamic replay buffer and sample from it without repetition.</p></li>
+<li><p>如何计算策略梯度方法的优势信号</p></li>
+<li><p>如何使用概率神经网络创建随机策略</p></li>
+<li><p>如何创建动态重放缓冲区并从中无重复地采样</p></li>
 </ul>
 </li>
 </ul>
-<p>We will cover six crucial components of TorchRL:</p>
+<p>我们将介绍 TorchRL 的六个关键组件：</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://pytorch.org/rl/reference/envs.html">environments</a></p></li>
-<li><p><a class="reference external" href="https://pytorch.org/rl/reference/envs.html#transforms">transforms</a></p></li>
-<li><p><a class="reference external" href="https://pytorch.org/rl/reference/modules.html">models (policy and value function)</a></p></li>
-<li><p><a class="reference external" href="https://pytorch.org/rl/reference/objectives.html">loss modules</a></p></li>
-<li><p><a class="reference external" href="https://pytorch.org/rl/reference/collectors.html">data collectors</a></p></li>
-<li><p><a class="reference external" href="https://pytorch.org/rl/reference/data.html#replay-buffers">replay buffers</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/rl/reference/envs.html">环境</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/rl/reference/envs.html#transforms">转换</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/rl/reference/modules.html">模型（策略和价值函数）</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/rl/reference/objectives.html">损失模块</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/rl/reference/collectors.html">数据收集器</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/rl/reference/data.html#replay-buffers">重放缓冲区</a></p></li>
 </ul>
-<p>If you are running this in Google Colab, make sure you install the following dependencies:</p>
+<p>如果你在 Google Colab 上运行此代码，请确保安装以下依赖项：</p>
 <div class="highlight-bash "><div class="highlight"><pre><span></span>!pip3<span class="w"> </span>install<span class="w"> </span>torchrl
 !pip3<span class="w"> </span>install<span class="w"> </span>gym<span class="o">[</span>mujoco<span class="o">]</span>
 !pip3<span class="w"> </span>install<span class="w"> </span>tqdm
 </pre></div>
 </div>
-<p>Proximal Policy Optimization (PPO) is a policy-gradient algorithm where a
-batch of data is being collected and directly consumed to train the policy to maximise
-the expected return given some proximality constraints. You can think of it
-as a sophisticated version of <a class="reference external" href="https://link.springer.com/content/pdf/10.1007/BF00992696.pdf">REINFORCE</a>,
-the foundational policy-optimization algorithm. For more information, see the
-<a class="reference external" href="https://arxiv.org/abs/1707.06347">Proximal Policy Optimization Algorithms</a> paper.</p>
-<p>PPO is usually regarded as a fast and efficient method for online, on-policy
-reinforcement algorithm. TorchRL provides a loss-module that does all the work
-for you, so that you can rely on this implementation and focus on solving your
-problem rather than re-inventing the wheel every time you want to train a policy.</p>
-<p>For completeness, here is a brief overview of what the loss computes, even though
-this is taken care of by our <code class="xref py py-class docutils literal "><span class="pre">ClipPPOLoss</span></code> module—the algorithm works as follows:
-1. we will sample a batch of data by playing the
-policy in the environment for a given number of steps.
-2. Then, we will perform a given number of optimization steps with random sub-samples of this batch using
-a clipped version of the REINFORCE loss.
-3. The clipping will put a pessimistic bound on our loss: lower return estimates will
-be favored compared to higher ones.
-The precise formula of the loss is:</p>
+<p>近端策略优化（PPO）是一种策略梯度算法，其中收集一批数据并直接用于训练策略，以最大化给定某些近端约束的预期回报。你可以将其视为 REINFORCE 基础策略优化算法的复杂版本。更多信息，请参阅近端策略优化算法论文。</p>
+<p>PPO 通常被视为一种快速高效的在线策略强化算法。TorchRL 提供了一个损失模块，为你完成所有工作，因此你可以依赖这个实现，专注于解决问题，而不是每次训练策略时都重新发明轮子。</p>
+<p>为了完整性，这里简要概述一下损失函数的计算内容，尽管这一点已经由我们的 <code class="xref py py-class docutils literal "><span class="pre">ClipPPOLoss</span></code> 模块处理——算法的工作原理如下：1. 我们将通过在环境中运行策略来采样一批数据，并对其进行给定步数的操作。2. 然后，我们将使用该批次的随机子样本进行给定数量的优化步骤，并使用剪裁版本的 REINFORCE 损失。3. 剪裁将给我们的损失设置一个悲观的上限：较低的回报估计将比较高的回报估计更有利。损失的精确公式如下：</p>
 <div class="math">
 \[L(s,a,\theta_k,\theta) = \min\left(
 \frac{\pi_{\theta}(a|s)}{\pi_{\theta_k}(a|s)}  A^{\pi_{\theta_k}}(s,a), \;\;
 g(\epsilon, A^{\pi_{\theta_k}}(s,a))
 \right),\]</div>
-<p>There are two components in that loss: in the first part of the minimum operator,
-we simply compute an importance-weighted version of the REINFORCE loss (for example, a
-REINFORCE loss that we have corrected for the fact that the current policy
-configuration lags the one that was used for the data collection).
-The second part of that minimum operator is a similar loss where we have clipped
-the ratios when they exceeded or were below a given pair of thresholds.</p>
-<p>This loss ensures that whether the advantage is positive or negative, policy
-updates that would produce significant shifts from the previous configuration
-are being discouraged.</p>
-<p>This tutorial is structured as follows:</p>
+<p>该损失函数包含两个部分：在最小值操作符的第一部分，我们简单地计算了加权版本的 REINFORCE 损失（例如，一个已经修正了当前策略配置落后于用于数据收集的配置的 REINFORCE 损失）。最小值操作符的第二部分是一个类似的损失，其中当比率超过或低于给定的阈值对时，我们将对它们进行剪裁。</p>
+<p>这种损失确保无论优势是正还是负，都会阻止产生显著偏离先前配置的策略更新。</p>
+<p>本教程的结构如下：</p>
 <ol class="arabic simple">
-<li><p>First, we will define a set of hyperparameters we will be using for training.</p></li>
-<li><p>Next, we will focus on creating our environment, or simulator, using TorchRL’s
-wrappers and transforms.</p></li>
-<li><p>Next, we will design the policy network and the value model,
-which is indispensable to the loss function. These modules will be used
-to configure our loss module.</p></li>
-<li><p>Next, we will create the replay buffer and data loader.</p></li>
-<li><p>Finally, we will run our training loop and analyze the results.</p></li>
+<li><p>首先，我们将定义一组我们将用于训练的超参数。</p></li>
+<li><p>接下来，我们将专注于创建我们的环境或模拟器，使用 TorchRL 的包装器和转换。</p></li>
+<li><p>接下来，我们将设计策略网络和值模型，这对于损失函数是必不可少的。这些模块将被用于配置我们的损失模块。</p></li>
+<li><p>接下来，我们将创建重放缓冲区和数据加载器。</p></li>
+<li><p>最后，我们将运行我们的训练循环并分析结果。</p></li>
 </ol>
-<p>Throughout this tutorial, we’ll be using the <code class="xref py py-mod docutils literal "><span class="pre">tensordict</span></code> library.
-<code class="xref py py-class docutils literal "><span class="pre">TensorDict</span></code> is the lingua franca of TorchRL: it helps us abstract
-what a module reads and writes and care less about the specific data
-description and more about the algorithm itself.</p>
+<p>在整个教程中，我们将使用 <code class="xref py py-mod docutils literal "><span class="pre">tensordict</span></code> 库。 <code class="xref py py-class docutils literal "><span class="pre">TensorDict</span></code> 是 TorchRL 的通用语言：它帮助我们抽象模块读取和写入的内容，而无需过多关注具体的数据描述，更多地关注算法本身。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">multiprocessing</span>
@@ -662,14 +601,8 @@ description and more about the algorithm itself.</p>
 </pre></div>
 </div>
 <div class="section" id="define-hyperparameters">
-<h2>Define Hyperparameters<a class="headerlink" href="#define-hyperparameters" title="Permalink to this heading">¶</a></h2>
-<p>We set the hyperparameters for our algorithm. Depending on the resources
-available, one may choose to execute the policy on GPU or on another
-device.
-The <code class="docutils literal "><span class="pre">frame_skip</span></code> will control how for how many frames is a single
-action being executed. The rest of the arguments that count frames
-must be corrected for this value (since one environment step will
-actually return <code class="docutils literal "><span class="pre">frame_skip</span></code> frames).</p>
+<h2>定义超参数 ¶</h2>
+<p>我们为我们的算法设置超参数。根据可用的资源，可以选择在 GPU 上或在其他设备上执行策略。 <code class="docutils literal "><span class="pre">frame_skip</span></code> 将控制单个动作执行多少帧。其余需要计算帧数的参数都必须对此值进行调整（因为实际上一个环境步骤会返回 <code class="docutils literal "><span class="pre">frame_skip</span></code> 帧）。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">is_fork</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">get_start_method</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"fork"</span>
 <span class="n">device</span> <span class="o">=</span> <span class="p">(</span>
     <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -682,13 +615,8 @@ actually return <code class="docutils literal "><span class="pre">frame_skip</sp
 </pre></div>
 </div>
 <div class="section" id="data-collection-parameters">
-<h3>Data collection parameters<a class="headerlink" href="#data-collection-parameters" title="Permalink to this heading">¶</a></h3>
-<p>When collecting data, we will be able to choose how big each batch will be
-by defining a <code class="docutils literal "><span class="pre">frames_per_batch</span></code> parameter. We will also define how many
-frames (such as the number of interactions with the simulator) we will allow ourselves to
-use. In general, the goal of an RL algorithm is to learn to solve the task
-as fast as it can in terms of environment interactions: the lower the <code class="docutils literal "><span class="pre">total_frames</span></code>
-the better.</p>
+<h3>数据收集参数 ¶</h3>
+<p>在收集数据时，我们可以通过定义 <code class="docutils literal "><span class="pre">frames_per_batch</span></code> 参数来选择每个批次的大小。我们还将定义我们允许使用的帧数（例如与模拟器的交互次数）。一般来说，强化学习算法的目标是尽可能快地学习解决任务，从环境交互的角度来看： <code class="docutils literal "><span class="pre">total_frames</span></code> 越低越好。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">frames_per_batch</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="c1"># For a complete training, bring the number of frames up to 1M</span>
 <span class="n">total_frames</span> <span class="o">=</span> <span class="mi">50_000</span>
@@ -696,14 +624,8 @@ the better.</p>
 </div>
 </div>
 <div class="section" id="ppo-parameters">
-<h3>PPO parameters<a class="headerlink" href="#ppo-parameters" title="Permalink to this heading">¶</a></h3>
-<p>At each data collection (or batch collection) we will run the optimization
-over a certain number of <em>epochs</em>, each time consuming the entire data we just
-acquired in a nested training loop. Here, the <code class="docutils literal "><span class="pre">sub_batch_size</span></code> is different from the
-<code class="docutils literal "><span class="pre">frames_per_batch</span></code> here above: recall that we are working with a “batch of data”
-coming from our collector, which size is defined by <code class="docutils literal "><span class="pre">frames_per_batch</span></code>, and that
-we will further split in smaller sub-batches during the inner training loop.
-The size of these sub-batches is controlled by <code class="docutils literal "><span class="pre">sub_batch_size</span></code>.</p>
+<h3>PPO 参数 ¶</h3>
+<p>在每次数据收集（或批量收集）时，我们将在一定数量的 epoch 上运行优化，每次都消耗我们刚刚获取的全部数据，在一个嵌套的训练循环中。这里的 <code class="docutils literal "><span class="pre">sub_batch_size</span></code> 与上面的 <code class="docutils literal "><span class="pre">frames_per_batch</span></code> 不同：回想一下，我们正在处理来自我们的收集器的“数据批次”，其大小由 <code class="docutils literal "><span class="pre">frames_per_batch</span></code> 定义，并且我们将在内部训练循环中进一步将其拆分为更小的子批次。这些子批次的大小由 <code class="docutils literal "><span class="pre">sub_batch_size</span></code> 控制。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">sub_batch_size</span> <span class="o">=</span> <span class="mi">64</span>  <span class="c1"># cardinality of the sub-samples gathered from the current data in the inner loop</span>
 <span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># optimization steps per batch of data collected</span>
 <span class="n">clip_epsilon</span> <span class="o">=</span> <span class="p">(</span>
@@ -717,60 +639,22 @@ The size of these sub-batches is controlled by <code class="docutils literal "><
 </div>
 </div>
 <div class="section" id="define-an-environment">
-<h2>Define an environment<a class="headerlink" href="#define-an-environment" title="Permalink to this heading">¶</a></h2>
-<p>In RL, an <em>environment</em> is usually the way we refer to a simulator or a
-control system. Various libraries provide simulation environments for reinforcement
-learning, including Gymnasium (previously OpenAI Gym), DeepMind control suite, and
-many others.
-As a general library, TorchRL’s goal is to provide an interchangeable interface
-to a large panel of RL simulators, allowing you to easily swap one environment
-with another. For example, creating a wrapped gym environment can be achieved with few characters:</p>
+<h2>定义环境 ¶</h2>
+<p>在强化学习（RL）中，环境通常是我们指代模拟器或控制系统的方式。各种库提供了强化学习的模拟环境，包括 Gymnasium（之前称为 OpenAI Gym）、DeepMind 控制套件等。作为一个通用库，TorchRL 的目标是提供一个可互换的接口，以访问大量的 RL 模拟器，允许你轻松地交换一个环境与另一个环境。例如，创建一个包装的 gym 环境只需要几个字符：</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">base_env</span> <span class="o">=</span> <span class="n">GymEnv</span><span class="p">(</span><span class="s2">"InvertedDoublePendulum-v4"</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>There are a few things to notice in this code: first, we created
-the environment by calling the <code class="docutils literal "><span class="pre">GymEnv</span></code> wrapper. If extra keyword arguments
-are passed, they will be transmitted to the <code class="docutils literal "><span class="pre">gym.make</span></code> method, hence covering
-the most common environment construction commands.
-Alternatively, one could also directly create a gym environment using <code class="docutils literal "><span class="pre">gym.make(env_name,</span> <span class="pre">**kwargs)</span></code>
-and wrap it in a <cite>GymWrapper</cite> class.</p>
-<p>Also the <code class="docutils literal "><span class="pre">device</span></code> argument: for gym, this only controls the device where
-input action and observed states will be stored, but the execution will always
-be done on CPU. The reason for this is simply that gym does not support on-device
-execution, unless specified otherwise. For other libraries, we have control over
-the execution device and, as much as we can, we try to stay consistent in terms of
-storing and execution backends.</p>
+<p>在此代码中需要注意几个要点：首先，我们通过调用 <code class="docutils literal "><span class="pre">GymEnv</span></code> 包装器创建了环境。如果传递了额外的关键字参数，它们将被传递给 <code class="docutils literal "><span class="pre">gym.make</span></code> 方法，从而覆盖了最常见的环境构建命令。或者，也可以直接使用 <code class="docutils literal "><span class="pre">gym.make(env_name,</span> <span class="pre">**kwargs)</span></code> 创建 gym 环境，并将其包装在 GymWrapper 类中。</p>
+<p>同样， <code class="docutils literal "><span class="pre">device</span></code> 参数：对于 gym，这仅控制输入动作和观察状态存储的设备，但执行始终在 CPU 上完成。原因很简单，除非另有说明，否则 gym 不支持设备上的执行。对于其他库，我们控制执行设备，并在尽可能的情况下保持存储和执行后端的一致性。</p>
 <div class="section" id="transforms">
-<h3>Transforms<a class="headerlink" href="#transforms" title="Permalink to this heading">¶</a></h3>
-<p>We will append some transforms to our environments to prepare the data for
-the policy. In Gym, this is usually achieved via wrappers. TorchRL takes a different
-approach, more similar to other pytorch domain libraries, through the use of transforms.
-To add transforms to an environment, one should simply wrap it in a <code class="xref py py-class docutils literal "><span class="pre">TransformedEnv</span></code>
-instance and append the sequence of transforms to it. The transformed environment will inherit
-the device and meta-data of the wrapped environment, and transform these depending on the sequence
-of transforms it contains.</p>
+<h3>转换</h3>
+<p>我们将向环境添加一些转换，以准备策略数据。在 Gym 中，这通常通过包装器来实现。TorchRL 采用了一种不同的方法，更类似于其他 PyTorch 领域库，通过使用转换。要向环境添加转换，只需将其包装在 <code class="xref py py-class docutils literal "><span class="pre">TransformedEnv</span></code> 实例中，并将转换序列附加到它上面。转换后的环境将继承包装环境的设备和元数据，并根据包含的转换序列对其进行转换。</p>
 </div>
 <div class="section" id="normalization">
-<h3>Normalization<a class="headerlink" href="#normalization" title="Permalink to this heading">¶</a></h3>
-<p>The first to encode is a normalization transform.
-As a rule of thumbs, it is preferable to have data that loosely
-match a unit Gaussian distribution: to obtain this, we will
-run a certain number of random steps in the environment and compute
-the summary statistics of these observations.</p>
-<p>We’ll append two other transforms: the <code class="xref py py-class docutils literal "><span class="pre">DoubleToFloat</span></code> transform will
-convert double entries to single-precision numbers, ready to be read by the
-policy. The <code class="xref py py-class docutils literal "><span class="pre">StepCounter</span></code> transform will be used to count the steps before
-the environment is terminated. We will use this measure as a supplementary measure
-of performance.</p>
-<p>As we will see later, many of the TorchRL’s classes rely on <code class="xref py py-class docutils literal "><span class="pre">TensorDict</span></code>
-to communicate. You could think of it as a python dictionary with some extra
-tensor features. In practice, this means that many modules we will be working
-with need to be told what key to read (<code class="docutils literal "><span class="pre">in_keys</span></code>) and what key to write
-(<code class="docutils literal "><span class="pre">out_keys</span></code>) in the <code class="docutils literal "><span class="pre">tensordict</span></code> they will receive. Usually, if <code class="docutils literal "><span class="pre">out_keys</span></code>
-is omitted, it is assumed that the <code class="docutils literal "><span class="pre">in_keys</span></code> entries will be updated
-in-place. For our transforms, the only entry we are interested in is referred
-to as <code class="docutils literal "><span class="pre">"observation"</span></code> and our transform layers will be told to modify this
-entry and this entry only:</p>
+<h3>归一化</h3>
+<p>首先要编码的是归一化转换。作为一个经验法则，最好有与单位高斯分布松散匹配的数据：为了获得这种数据，我们将在环境中运行一定数量的随机步骤，并计算这些观察结果的汇总统计。</p>
+<p>我们将附加另外两个转换： <code class="xref py py-class docutils literal "><span class="pre">DoubleToFloat</span></code> 转换将双精度条目转换为单精度数字，以便策略读取。 <code class="xref py py-class docutils literal "><span class="pre">StepCounter</span></code> 转换将用于计算环境终止前的步骤数。我们将使用这个指标作为性能的补充指标。</p>
+<p>如我们稍后所见，许多 TorchRL 的类依赖于 <code class="xref py py-class docutils literal "><span class="pre">TensorDict</span></code> 进行通信。你可以将其视为具有一些额外张量功能的 Python 字典。在实践中，这意味着我们将要使用的许多模块需要被告知在 <code class="docutils literal "><span class="pre">tensordict</span></code> 中读取哪个键（ <code class="docutils literal "><span class="pre">in_keys</span></code> ）以及写入哪个键（ <code class="docutils literal "><span class="pre">out_keys</span></code> ）。通常，如果省略 <code class="docutils literal "><span class="pre">out_keys</span></code> ，则假定将就地更新 <code class="docutils literal "><span class="pre">in_keys</span></code> 条目。对于我们的转换，我们感兴趣的只有一个条目，被称为 <code class="docutils literal "><span class="pre">"observation"</span></code> ，我们的转换层将被告知只修改这个条目：</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">TransformedEnv</span><span class="p">(</span>
     <span class="n">base_env</span><span class="p">,</span>
     <span class="n">Compose</span><span class="p">(</span>
@@ -782,88 +666,49 @@ entry and this entry only:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>As you may have noticed, we have created a normalization layer but we did not
-set its normalization parameters. To do this, <code class="xref py py-class docutils literal "><span class="pre">ObservationNorm</span></code> can
-automatically gather the summary statistics of our environment:</p>
+<p>你可能已经注意到，我们已经创建了一个归一化层，但我们没有设置其归一化参数。为此， <code class="xref py py-class docutils literal "><span class="pre">ObservationNorm</span></code> 可以自动收集我们环境的摘要统计信息：</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">env</span><span class="o">.</span><span class="n">transform</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">init_stats</span><span class="p">(</span><span class="n">num_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">reduce_dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cat_dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The <code class="xref py py-class docutils literal "><span class="pre">ObservationNorm</span></code> transform has now been populated with a
-location and a scale that will be used to normalize the data.</p>
-<p>Let us do a little sanity check for the shape of our summary stats:</p>
+<p>现在 <code class="xref py py-class docutils literal "><span class="pre">ObservationNorm</span></code> 转换已经填充了用于归一化数据的位置和缩放。</p>
+<p>让我们对我们的摘要统计信息的形状进行一个小小的合理性检查：</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"normalization constant shape:"</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">transform</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>An environment is not only defined by its simulator and transforms, but also
-by a series of metadata that describe what can be expected during its
-execution.
-For efficiency purposes, TorchRL is quite stringent when it comes to
-environment specs, but you can easily check that your environment specs are
-adequate.
-In our example, the <code class="xref py py-class docutils literal "><span class="pre">GymWrapper</span></code> and
-<code class="xref py py-class docutils literal "><span class="pre">GymEnv</span></code> that inherits
-from it already take care of setting the proper specs for your environment so
-you should not have to care about this.</p>
-<p>Nevertheless, let’s see a concrete example using our transformed
-environment by looking at its specs.
-There are three specs to look at: <code class="docutils literal "><span class="pre">observation_spec</span></code> which defines what
-is to be expected when executing an action in the environment,
-<code class="docutils literal "><span class="pre">reward_spec</span></code> which indicates the reward domain and finally the
-<code class="docutils literal "><span class="pre">input_spec</span></code> (which contains the <code class="docutils literal "><span class="pre">action_spec</span></code>) and which represents
-everything an environment requires to execute a single step.</p>
+<p>环境不仅由其模拟器和转换器定义，还由一系列描述执行期间可以期待什么的元数据定义。为了提高效率，TorchRL 在环境规格方面相当严格，但你可以轻松地检查你的环境规格是否足够。在我们的例子中，继承自它的 <code class="xref py py-class docutils literal "><span class="pre">GymWrapper</span></code> 和 <code class="xref py py-class docutils literal "><span class="pre">GymEnv</span></code> 已经负责设置适当的环境规格，因此你不必担心这一点。</p>
+<p>然而，让我们通过查看其规格来查看使用我们转换后的环境的具体示例。有三个规格需要查看： <code class="docutils literal "><span class="pre">observation_spec</span></code> 定义在环境中执行动作时可以期待什么， <code class="docutils literal "><span class="pre">reward_spec</span></code> 指示奖励域，最后是 <code class="docutils literal "><span class="pre">input_spec</span></code> （包含 <code class="docutils literal "><span class="pre">action_spec</span></code> ）代表环境执行单个步骤所需的一切。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"observation_spec:"</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_spec</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"reward_spec:"</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">reward_spec</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"input_spec:"</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">input_spec</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"action_spec (as defined by input_spec):"</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">action_spec</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>the <code class="xref py py-func docutils literal "><span class="pre">check_env_specs()</span></code> function runs a small rollout and compares its output against the environment
-specs. If no error is raised, we can be confident that the specs are properly defined:</p>
+<p> <code class="xref py py-func docutils literal "><span class="pre">check_env_specs()</span></code> 函数运行一个小型的模拟并比较其输出与环境规格。如果没有引发错误，我们可以确信规格已经正确定义：</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">check_env_specs</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For fun, let’s see what a simple random rollout looks like. You can
-call <cite>env.rollout(n_steps)</cite> and get an overview of what the environment inputs
-and outputs look like. Actions will automatically be drawn from the action spec
-domain, so you don’t need to care about designing a random sampler.</p>
-<p>Typically, at each step, an RL environment receives an
-action as input, and outputs an observation, a reward and a done state. The
-observation may be composite, meaning that it could be composed of more than one
-tensor. This is not a problem for TorchRL, since the whole set of observations
-is automatically packed in the output <code class="xref py py-class docutils literal "><span class="pre">TensorDict</span></code>. After executing a rollout
-(for example, a sequence of environment steps and random action generations) over a given
-number of steps, we will retrieve a <code class="xref py py-class docutils literal "><span class="pre">TensorDict</span></code> instance with a shape
-that matches this trajectory length:</p>
+<p>为了娱乐，让我们看看简单的随机 rollout 是什么样子。你可以调用 env.rollout(n_steps) 来了解环境输入和输出的概览。动作将自动从动作规范域中抽取，所以你不需要担心设计随机采样器。</p>
+<p>通常，在每一步中，强化学习环境接收一个动作作为输入，并输出一个观察结果、奖励和完成状态。观察结果可能是复合的，这意味着它可能由多个张量组成。这对 TorchRL 来说不是问题，因为整个观察集会自动打包在输出 <code class="xref py py-class docutils literal "><span class="pre">TensorDict</span></code> 中。在执行完一定步数的 rollout（例如，一系列环境步骤和随机动作生成）后，我们将检索到一个 <code class="xref py py-class docutils literal "><span class="pre">TensorDict</span></code> 实例，其形状与该轨迹长度相匹配：</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">rollout</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">rollout</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"rollout of three steps:"</span><span class="p">,</span> <span class="n">rollout</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Shape of the rollout TensorDict:"</span><span class="p">,</span> <span class="n">rollout</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Our rollout data has a shape of <code class="docutils literal "><span class="pre">torch.Size([3])</span></code>, which matches the number of steps
-we ran it for. The <code class="docutils literal "><span class="pre">"next"</span></code> entry points to the data coming after the current step.
-In most cases, the <code class="docutils literal "><span class="pre">"next"</span></code> data at time <cite>t</cite> matches the data at <code class="docutils literal "><span class="pre">t+1</span></code>, but this
-may not be the case if we are using some specific transformations (for example, multi-step).</p>
+<p>我们的 rollout 数据形状为 <code class="docutils literal "><span class="pre">torch.Size([3])</span></code> ，这与我们运行的步数相匹配。 <code class="docutils literal "><span class="pre">"next"</span></code> 条目指向当前步骤之后的数据。在大多数情况下，时间 t 的 <code class="docutils literal "><span class="pre">"next"</span></code> 数据与 <code class="docutils literal "><span class="pre">t+1</span></code> 的数据相匹配，但如果我们使用某些特定的转换（例如，多步），则可能不是这种情况。</p>
 </div>
 </div>
 <div class="section" id="policy">
-<h2>Policy<a class="headerlink" href="#policy" title="Permalink to this heading">¶</a></h2>
-<p>PPO utilizes a stochastic policy to handle exploration. This means that our
-neural network will have to output the parameters of a distribution, rather
-than a single value corresponding to the action taken.</p>
-<p>As the data is continuous, we use a Tanh-Normal distribution to respect the
-action space boundaries. TorchRL provides such distribution, and the only
-thing we need to care about is to build a neural network that outputs the
-right number of parameters for the policy to work with (a location, or mean,
-and a scale):</p>
+<h2>策略 ¶</h2>
+<p>PPO 使用随机策略来处理探索。这意味着我们的神经网络将不得不输出分布的参数，而不是对应于采取的动作的单个值。</p>
+<p>由于数据是连续的，我们使用 Tanh-Normal 分布来尊重动作空间边界。TorchRL 提供了这样的分布，我们唯一需要关心的是构建一个输出正确数量参数的神经网络，以便策略可以使用（一个位置或均值和一个尺度）：</p>
 <div class="math">
 \[f_{\theta}(\text{observation}) = \mu_{\theta}(\text{observation}), \sigma^{+}_{\theta}(\text{observation})\]</div>
-<p>The only extra-difficulty that is brought up here is to split our output in two
-equal parts and map the second to a strictly positive space.</p>
-<p>We design the policy in three steps:</p>
+<p>这里唯一额外的难度是将我们的输出分成两等份，并将第二部分映射到一个严格正的空间。</p>
+<p>我们将策略设计为三个步骤：</p>
 <ol class="arabic simple">
-<li><p>Define a neural network <code class="docutils literal "><span class="pre">D_obs</span></code> -&gt; <code class="docutils literal "><span class="pre">2</span> <span class="pre">*</span> <span class="pre">D_action</span></code>. Indeed, our <code class="docutils literal "><span class="pre">loc</span></code> (mu) and <code class="docutils literal "><span class="pre">scale</span></code> (sigma) both have dimension <code class="docutils literal "><span class="pre">D_action</span></code>.</p></li>
-<li><p>Append a <code class="xref py py-class docutils literal "><span class="pre">NormalParamExtractor</span></code> to extract a location and a scale (for example, splits the input in two equal parts and applies a positive transformation to the scale parameter).</p></li>
-<li><p>Create a probabilistic <code class="xref py py-class docutils literal "><span class="pre">TensorDictModule</span></code> that can generate this distribution and sample from it.</p></li>
+<li><p>定义一个神经网络 <code class="docutils literal "><span class="pre">D_obs</span></code> -&gt; <code class="docutils literal "><span class="pre">2</span> <span class="pre">*</span> <span class="pre">D_action</span></code> 。实际上，我们的 <code class="docutils literal "><span class="pre">loc</span></code> （均值）和 <code class="docutils literal "><span class="pre">scale</span></code> （标准差）都具有 <code class="docutils literal "><span class="pre">D_action</span></code> 维度。</p></li>
+<li><p>在提取位置和缩放比例时添加 <code class="xref py py-class docutils literal "><span class="pre">NormalParamExtractor</span></code> （例如，将输入分成两等份并对缩放参数应用正变换）。</p></li>
+<li><p>创建一个概率性 <code class="xref py py-class docutils literal "><span class="pre">TensorDictModule</span></code> 以生成此分布并从中采样。</p></li>
 </ol>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">actor_net</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Sequential.html#torch.nn.Sequential" title="torch.nn.Sequential"><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span></a><span class="p">(</span>
     <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.LazyLinear.html#torch.nn.LazyLinear" title="torch.nn.LazyLinear"><span class="n">nn</span><span class="o">.</span><span class="n">LazyLinear</span></a><span class="p">(</span><span class="n">num_cells</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">),</span>
@@ -877,28 +722,14 @@ equal parts and map the second to a strictly positive space.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>To enable the policy to “talk” with the environment through the <code class="docutils literal "><span class="pre">tensordict</span></code>
-data carrier, we wrap the <code class="docutils literal "><span class="pre">nn.Module</span></code> in a <code class="xref py py-class docutils literal "><span class="pre">TensorDictModule</span></code>. This
-class will simply ready the <code class="docutils literal "><span class="pre">in_keys</span></code> it is provided with and write the
-outputs in-place at the registered <code class="docutils literal "><span class="pre">out_keys</span></code>.</p>
+<p>要使策略能够通过 <code class="docutils literal "><span class="pre">tensordict</span></code> 数据载体与环境“交流”，我们将 <code class="docutils literal "><span class="pre">nn.Module</span></code> 封装在 <code class="xref py py-class docutils literal "><span class="pre">TensorDictModule</span></code> 中。这个类将简单地准备它所提供的 <code class="docutils literal "><span class="pre">in_keys</span></code> ，并将输出直接写入注册的 <code class="docutils literal "><span class="pre">out_keys</span></code> 。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">policy_module</span> <span class="o">=</span> <span class="n">TensorDictModule</span><span class="p">(</span>
     <span class="n">actor_net</span><span class="p">,</span> <span class="n">in_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">"observation"</span><span class="p">],</span> <span class="n">out_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">"loc"</span><span class="p">,</span> <span class="s2">"scale"</span><span class="p">]</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>We now need to build a distribution out of the location and scale of our
-normal distribution. To do so, we instruct the
-<code class="xref py py-class docutils literal "><span class="pre">ProbabilisticActor</span></code>
-class to build a <code class="xref py py-class docutils literal "><span class="pre">TanhNormal</span></code> out of the location and scale
-parameters. We also provide the minimum and maximum values of this
-distribution, which we gather from the environment specs.</p>
-<p>The name of the <code class="docutils literal "><span class="pre">in_keys</span></code> (and hence the name of the <code class="docutils literal "><span class="pre">out_keys</span></code> from
-the <code class="xref py py-class docutils literal "><span class="pre">TensorDictModule</span></code> above) cannot be set to any value one may
-like, as the <code class="xref py py-class docutils literal "><span class="pre">TanhNormal</span></code> distribution constructor will expect the
-<code class="docutils literal "><span class="pre">loc</span></code> and <code class="docutils literal "><span class="pre">scale</span></code> keyword arguments. That being said,
-<code class="xref py py-class docutils literal "><span class="pre">ProbabilisticActor</span></code> also accepts
-<code class="docutils literal "><span class="pre">Dict[str,</span> <span class="pre">str]</span></code> typed <code class="docutils literal "><span class="pre">in_keys</span></code> where the key-value pair indicates
-what <code class="docutils literal "><span class="pre">in_key</span></code> string should be used for every keyword argument that is to be used.</p>
+<p>现在我们需要根据我们的正态分布的位置和规模构建一个分布。为此，我们指示 <code class="xref py py-class docutils literal "><span class="pre">ProbabilisticActor</span></code> 类使用位置和规模参数构建一个 <code class="xref py py-class docutils literal "><span class="pre">TanhNormal</span></code> 。我们还提供这个分布的最小值和最大值，这些值来自环境规格。</p>
+<p> <code class="docutils literal "><span class="pre">in_keys</span></code> （以及因此来自上面的 <code class="xref py py-class docutils literal "><span class="pre">TensorDictModule</span></code> 的 <code class="docutils literal "><span class="pre">out_keys</span></code> ）的名称不能设置为任何可能的价值，因为 <code class="xref py py-class docutils literal "><span class="pre">TanhNormal</span></code> 分布构造函数将期望 <code class="docutils literal "><span class="pre">loc</span></code> 和 <code class="docutils literal "><span class="pre">scale</span></code> 关键字参数。话虽如此， <code class="xref py py-class docutils literal "><span class="pre">ProbabilisticActor</span></code> 也接受 <code class="docutils literal "><span class="pre">Dict[str,</span> <span class="pre">str]</span></code> 类型的 <code class="docutils literal "><span class="pre">in_keys</span></code> ，其中键值对表示应该为每个要使用的关键字参数使用什么 <code class="docutils literal "><span class="pre">in_key</span></code> 字符串。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">policy_module</span> <span class="o">=</span> <span class="n">ProbabilisticActor</span><span class="p">(</span>
     <span class="n">module</span><span class="o">=</span><span class="n">policy_module</span><span class="p">,</span>
     <span class="n">spec</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">action_spec</span><span class="p">,</span>
@@ -915,14 +746,8 @@ what <code class="docutils literal "><span class="pre">in_key</span></code> stri
 </div>
 </div>
 <div class="section" id="value-network">
-<h2>Value network<a class="headerlink" href="#value-network" title="Permalink to this heading">¶</a></h2>
-<p>The value network is a crucial component of the PPO algorithm, even though it
-won’t be used at inference time. This module will read the observations and
-return an estimation of the discounted return for the following trajectory.
-This allows us to amortize learning by relying on the some utility estimation
-that is learned on-the-fly during training. Our value network share the same
-structure as the policy, but for simplicity we assign it its own set of
-parameters.</p>
+<h2>值网络 ¶</h2>
+<p>值网络是 PPO 算法的一个关键组件，尽管在推理时间它不会被使用。该模块将读取观察结果，并返回后续轨迹的折扣回报估计。这使我们能够通过依赖在训练过程中动态学习的某些效用估计来分摊学习成本。我们的值网络与策略共享相同的结构，但为了简单起见，我们给它分配了自己的参数集。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">value_net</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Sequential.html#torch.nn.Sequential" title="torch.nn.Sequential"><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span></a><span class="p">(</span>
     <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.LazyLinear.html#torch.nn.LazyLinear" title="torch.nn.LazyLinear"><span class="n">nn</span><span class="o">.</span><span class="n">LazyLinear</span></a><span class="p">(</span><span class="n">num_cells</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">),</span>
     <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html#torch.nn.Tanh" title="torch.nn.Tanh"><span class="n">nn</span><span class="o">.</span><span class="n">Tanh</span></a><span class="p">(),</span>
@@ -939,40 +764,18 @@ parameters.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>let’s try our policy and value modules. As we said earlier, the usage of
-<code class="xref py py-class docutils literal "><span class="pre">TensorDictModule</span></code> makes it possible to directly read the output
-of the environment to run these modules, as they know what information to read
-and where to write it:</p>
+<p>让我们尝试我们的策略和价值模块。正如我们之前所说的，使用 <code class="xref py py-class docutils literal "><span class="pre">TensorDictModule</span></code> 可以直接读取环境的输出以运行这些模块，因为它们知道要读取什么信息以及在哪里写入信息：</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Running policy:"</span><span class="p">,</span> <span class="n">policy_module</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Running value:"</span><span class="p">,</span> <span class="n">value_module</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()))</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="data-collector">
-<h2>Data collector<a class="headerlink" href="#data-collector" title="Permalink to this heading">¶</a></h2>
-<p>TorchRL provides a set of <a class="reference external" href="https://pytorch.org/rl/reference/collectors.html">DataCollector classes</a>.
-Briefly, these classes execute three operations: reset an environment,
-compute an action given the latest observation, execute a step in the environment,
-and repeat the last two steps until the environment signals a stop (or reaches
-a done state).</p>
-<p>They allow you to control how many frames to collect at each iteration
-(through the <code class="docutils literal "><span class="pre">frames_per_batch</span></code> parameter),
-when to reset the environment (through the <code class="docutils literal "><span class="pre">max_frames_per_traj</span></code> argument),
-on which <code class="docutils literal "><span class="pre">device</span></code> the policy should be executed, etc. They are also
-designed to work efficiently with batched and multiprocessed environments.</p>
-<p>The simplest data collector is the <code class="xref py py-class docutils literal "><span class="pre">SyncDataCollector</span></code>:
-it is an iterator that you can use to get batches of data of a given length, and
-that will stop once a total number of frames (<code class="docutils literal "><span class="pre">total_frames</span></code>) have been
-collected.
-Other data collectors (<code class="xref py py-class docutils literal "><span class="pre">MultiSyncDataCollector</span></code> and
-<code class="xref py py-class docutils literal "><span class="pre">MultiaSyncDataCollector</span></code>) will execute
-the same operations in synchronous and asynchronous manner over a
-set of multiprocessed workers.</p>
-<p>As for the policy and environment before, the data collector will return
-<code class="xref py py-class docutils literal "><span class="pre">TensorDict</span></code> instances with a total number of elements that will
-match <code class="docutils literal "><span class="pre">frames_per_batch</span></code>. Using <code class="xref py py-class docutils literal "><span class="pre">TensorDict</span></code> to pass data to the
-training loop allows you to write data loading pipelines
-that are 100% oblivious to the actual specificities of the rollout content.</p>
+<h2>数据收集器</h2>
+<p>TorchRL 提供了一组 DataCollector 类。简要来说，这些类执行三个操作：重置环境、根据最新的观察结果计算动作、在环境中执行一步，并重复最后两个步骤，直到环境发出停止信号（或达到完成状态）。</p>
+<p>它们允许您控制每次迭代收集多少帧（通过 <code class="docutils literal "><span class="pre">frames_per_batch</span></code> 参数），何时重置环境（通过 <code class="docutils literal "><span class="pre">max_frames_per_traj</span></code> 参数），在哪个 <code class="docutils literal "><span class="pre">device</span></code> 上执行策略，等等。它们还设计用于高效地与批处理和多进程环境协同工作。</p>
+<p>最简单的数据收集器是 <code class="xref py py-class docutils literal "><span class="pre">SyncDataCollector</span></code> ：它是一个迭代器，您可以使用它获取给定长度的数据批次，并在收集到一定数量的帧（ <code class="docutils literal "><span class="pre">total_frames</span></code> ）后停止。其他数据收集器（ <code class="xref py py-class docutils literal "><span class="pre">MultiSyncDataCollector</span></code> 和 <code class="xref py py-class docutils literal "><span class="pre">MultiaSyncDataCollector</span></code> ）将在一组多进程工作者上以同步和异步方式执行相同的操作。</p>
+<p>对于之前的策略和环境，数据收集器将返回 <code class="xref py py-class docutils literal "><span class="pre">TensorDict</span></code> 实例，其元素总数将与 <code class="docutils literal "><span class="pre">frames_per_batch</span></code> 匹配。使用 <code class="xref py py-class docutils literal "><span class="pre">TensorDict</span></code> 将数据传递到训练循环，可以让您编写对实际特定内容完全无知的加载数据管道。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">collector</span> <span class="o">=</span> <span class="n">SyncDataCollector</span><span class="p">(</span>
     <span class="n">env</span><span class="p">,</span>
     <span class="n">policy_module</span><span class="p">,</span>
@@ -985,20 +788,9 @@ that are 100% oblivious to the actual specificities of the rollout content.</p>
 </div>
 </div>
 <div class="section" id="replay-buffer">
-<h2>Replay buffer<a class="headerlink" href="#replay-buffer" title="Permalink to this heading">¶</a></h2>
-<p>Replay buffers are a common building piece of off-policy RL algorithms.
-In on-policy contexts, a replay buffer is refilled every time a batch of
-data is collected, and its data is repeatedly consumed for a certain number
-of epochs.</p>
-<p>TorchRL’s replay buffers are built using a common container
-<code class="xref py py-class docutils literal "><span class="pre">ReplayBuffer</span></code> which takes as argument the components
-of the buffer: a storage, a writer, a sampler and possibly some transforms.
-Only the storage (which indicates the replay buffer capacity) is mandatory.
-We also specify a sampler without repetition to avoid sampling multiple times
-the same item in one epoch.
-Using a replay buffer for PPO is not mandatory and we could simply
-sample the sub-batches from the collected batch, but using these classes
-make it easy for us to build the inner training loop in a reproducible way.</p>
+<h2>回放缓冲区</h2>
+<p>重放缓冲区是离策略强化学习算法的常见构建块。在策略上下文中，每当收集到一批数据时，重放缓冲区就会被填充，其数据会反复消耗一定数量的轮次。</p>
+<p>TorchRL 的回放缓冲区使用一个通用的容器 <code class="xref py py-class docutils literal "><span class="pre">ReplayBuffer</span></code> 构建，该容器以缓冲区的组件作为参数：一个存储器、一个写入器、一个采样器以及可能的一些转换。只有存储器（表示回放缓冲区容量）是必须的。我们还指定了一个无重复的采样器，以避免在一个 epoch 中多次采样相同的项。对于 PPO 来说，使用回放缓冲区不是必须的，我们也可以简单地从收集到的批次中采样子批次，但使用这些类可以让我们以可重复的方式构建内部训练循环。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">replay_buffer</span> <span class="o">=</span> <span class="n">ReplayBuffer</span><span class="p">(</span>
     <span class="n">storage</span><span class="o">=</span><span class="n">LazyTensorStorage</span><span class="p">(</span><span class="n">max_size</span><span class="o">=</span><span class="n">frames_per_batch</span><span class="p">),</span>
     <span class="n">sampler</span><span class="o">=</span><span class="n">SamplerWithoutReplacement</span><span class="p">(),</span>
@@ -1007,23 +799,9 @@ make it easy for us to build the inner training loop in a reproducible way.</p>
 </div>
 </div>
 <div class="section" id="loss-function">
-<h2>Loss function<a class="headerlink" href="#loss-function" title="Permalink to this heading">¶</a></h2>
-<p>The PPO loss can be directly imported from TorchRL for convenience using the
-<code class="xref py py-class docutils literal "><span class="pre">ClipPPOLoss</span></code> class. This is the easiest way of utilizing PPO:
-it hides away the mathematical operations of PPO and the control flow that
-goes with it.</p>
-<p>PPO requires some “advantage estimation” to be computed. In short, an advantage
-is a value that reflects an expectancy over the return value while dealing with
-the bias / variance tradeoff.
-To compute the advantage, one just needs to (1) build the advantage module, which
-utilizes our value operator, and (2) pass each batch of data through it before each
-epoch.
-The GAE module will update the input <code class="docutils literal "><span class="pre">tensordict</span></code> with new <code class="docutils literal "><span class="pre">"advantage"</span></code> and
-<code class="docutils literal "><span class="pre">"value_target"</span></code> entries.
-The <code class="docutils literal "><span class="pre">"value_target"</span></code> is a gradient-free tensor that represents the empirical
-value that the value network should represent with the input observation.
-Both of these will be used by <code class="xref py py-class docutils literal "><span class="pre">ClipPPOLoss</span></code> to
-return the policy and value losses.</p>
+<h2>损失函数</h2>
+<p>可以方便地从 TorchRL 直接导入 PPO 损失函数，使用 <code class="xref py py-class docutils literal "><span class="pre">ClipPPOLoss</span></code> 类。这是利用 PPO 最简单的方式：它隐藏了 PPO 的数学运算及其相关的控制流程。</p>
+<p>PPO 需要一些“优势估计”来计算。简而言之，优势是一个反映在处理偏差/方差权衡时的期望回报值的值。要计算优势，只需要（1）构建优势模块，该模块利用我们的值操作符，以及（2）在每个 epoch 之前将每个数据批次通过它。GAE 模块将更新输入 <code class="docutils literal "><span class="pre">tensordict</span></code> ，并添加新的 <code class="docutils literal "><span class="pre">"advantage"</span></code> 和 <code class="docutils literal "><span class="pre">"value_target"</span></code> 条目。 <code class="docutils literal "><span class="pre">"value_target"</span></code> 是一个无梯度的张量，它表示值网络应该用输入观察到的经验值。这两个都将被 <code class="xref py py-class docutils literal "><span class="pre">ClipPPOLoss</span></code> 用来返回策略和值损失。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">advantage_module</span> <span class="o">=</span> <span class="n">GAE</span><span class="p">(</span>
     <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="n">lmbda</span><span class="o">=</span><span class="n">lmbda</span><span class="p">,</span> <span class="n">value_network</span><span class="o">=</span><span class="n">value_module</span><span class="p">,</span> <span class="n">average_gae</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span>
 <span class="p">)</span>
@@ -1047,24 +825,23 @@ return the policy and value losses.</p>
 </div>
 </div>
 <div class="section" id="training-loop">
-<h2>Training loop<a class="headerlink" href="#training-loop" title="Permalink to this heading">¶</a></h2>
-<p>We now have all the pieces needed to code our training loop.
-The steps include:</p>
+<h2>训练循环</h2>
+<p>现在我们已经有了编写训练循环所需的所有组件。步骤包括：</p>
 <ul class="simple">
-<li><p>Collect data</p>
+<li><p>收集数据</p>
 <ul>
-<li><p>Compute advantage</p>
+<li><p>计算优势</p>
 <ul>
-<li><p>Loop over the collected to compute loss values</p></li>
-<li><p>Back propagate</p></li>
-<li><p>Optimize</p></li>
-<li><p>Repeat</p></li>
+<li><p>遍历收集的数据以计算损失值</p></li>
+<li><p>反向传播</p></li>
+<li><p>优化</p></li>
+<li><p>重复</p></li>
 </ul>
 </li>
-<li><p>Repeat</p></li>
+<li><p>重复</p></li>
 </ul>
 </li>
-<li><p>Repeat</p></li>
+<li><p>重复</p></li>
 </ul>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">logs</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">total_frames</span><span class="p">)</span>
@@ -1137,10 +914,8 @@ The steps include:</p>
 </div>
 </div>
 <div class="section" id="results">
-<h2>Results<a class="headerlink" href="#results" title="Permalink to this heading">¶</a></h2>
-<p>Before the 1M step cap is reached, the algorithm should have reached a max
-step count of 1000 steps, which is the maximum number of steps before the
-trajectory is truncated.</p>
+<h2>结果 ¶</h2>
+<p>在达到 100 万步的阈值之前，算法应达到最大步数 1000 步，这是轨迹被截断前的最大步数。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">logs</span><span class="p">[</span><span class="s2">"reward"</span><span class="p">])</span>
@@ -1159,24 +934,19 @@ trajectory is truncated.</p>
 </div>
 </div>
 <div class="section" id="conclusion-and-next-steps">
-<h2>Conclusion and next steps<a class="headerlink" href="#conclusion-and-next-steps" title="Permalink to this heading">¶</a></h2>
-<p>In this tutorial, we have learned:</p>
+<h2>结论和下一步计划 ¶</h2>
+<p>在本教程中，我们学习了：</p>
 <ol class="arabic simple">
-<li><p>How to create and customize an environment with <code class="xref py py-mod docutils literal "><span class="pre">torchrl</span></code>;</p></li>
-<li><p>How to write a model and a loss function;</p></li>
-<li><p>How to set up a typical training loop.</p></li>
+<li><p>如何创建和自定义一个环境；</p></li>
+<li><p>如何编写模型和损失函数；</p></li>
+<li><p>如何设置典型的训练循环。</p></li>
 </ol>
-<p>If you want to experiment with this tutorial a bit more, you can apply the following modifications:</p>
+<p>如果你想更深入地实验这个教程，你可以应用以下修改：</p>
 <ul class="simple">
-<li><p>From an efficiency perspective,
-we could run several simulations in parallel to speed up data collection.
-Check <code class="xref py py-class docutils literal "><span class="pre">ParallelEnv</span></code> for further information.</p></li>
-<li><p>From a logging perspective, one could add a <code class="xref py py-class docutils literal "><span class="pre">torchrl.record.VideoRecorder</span></code> transform to
-the environment after asking for rendering to get a visual rendering of the
-inverted pendulum in action. Check <code class="xref py py-mod docutils literal "><span class="pre">torchrl.record</span></code> to
-know more.</p></li>
+<li><p>从效率的角度来看，我们可以并行运行多个模拟来加速数据收集。查看 <code class="xref py py-class docutils literal "><span class="pre">ParallelEnv</span></code> 获取更多信息。</p></li>
+<li><p>从日志记录的角度来看，在请求渲染后，可以向环境中添加 <code class="xref py py-class docutils literal "><span class="pre">torchrl.record.VideoRecorder</span></code> 转换，以获取倒立摆动作的视觉渲染。查看 <code class="xref py py-mod docutils literal "><span class="pre">torchrl.record</span></code> 了解更多信息。</p></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
+<p class="sphx-glr-timing">脚本总运行时间：（0 分钟 0.000 秒）</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-intermediate-reinforcement-ppo-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/7ed508ed54ec36ee5c1d3fa1e8ceede0/reinforcement_ppo.py"><code class="xref download docutils literal "><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">reinforcement_ppo.py</span></code></a></p>
@@ -1185,19 +955,18 @@ know more.</p></li>
 <p><a class="reference download internal" download="" href="../_downloads/4065a985b933a4377d3c7d93557e2282/reinforcement_ppo.ipynb"><code class="xref download docutils literal "><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">reinforcement_ppo.ipynb</span></code></a></p>
 </div>
 </div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">由 Sphinx-Gallery 生成的画廊</a></p>
 </div>
 </div>
 </article>
 </div>
 <footer>
 <div aria-label="footer navigation" class="rst-footer-buttons" role="navigation">
-<a accesskey="n" class="btn btn-neutral float-right" href="mario_rl_tutorial.html" rel="next" title="Train a Mario-playing RL Agent">Next <img class="next-page" src="../_static/images/chevron-right-orange.svg"/></a>
-<a accesskey="p" class="btn btn-neutral" href="reinforcement_q_learning.html" rel="prev" title="Reinforcement Learning (DQN) Tutorial"><img class="previous-page" src="../_static/images/chevron-right-orange.svg"/> Previous</a>
+下一页 <img height="16" width="16" src="../_static/images/chevron-right-orange.svg" class="next-page"> <img height="16" width="16" src="../_static/images/chevron-right-orange.svg" class="previous-page"> 上一页
 </div>
-<hr class="rating-hr hr-top"/>
+<hr class="rating-hr hr-top">
 <div class="rating-container">
-<div class="rating-prompt">Rate this Tutorial</div>
+<div class="rating-prompt">评分这个教程</div>
 <div class="stars-outer">
 <i class="far fa-star" data-behavior="tutorial-rating" data-count="1" title="1 Star"></i>
 <i class="far fa-star" data-behavior="tutorial-rating" data-count="2" title="2 Stars"></i>
@@ -1208,15 +977,10 @@ know more.</p></li>
 </div>
 <hr class="rating-hr hr-bottom">
 <div role="contentinfo">
-<p>
-        © Copyright 2024, PyTorch.
-
-    </p>
+<p>© 版权所有 2024，PyTorch。</p>
 </div>
-<div>
-        Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-      </div>
-</hr></footer>
+<div>使用 Sphinx 构建，主题由 Read the Docs 提供。</div>
+</footer>
 </div>
 <script>
 if((window.location.href.indexOf("/prototype/")!= -1) && (window.location.href.indexOf("/prototype/prototype_index")< 1))
@@ -1230,25 +994,25 @@ if((window.location.href.indexOf("/prototype/")!= -1) && (window.location.href.i
 <div class="pytorch-right-menu" id="pytorch-right-menu">
 <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
 <ul>
-<li><a class="reference internal" href="#">Reinforcement Learning (PPO) with TorchRL Tutorial</a><ul>
-<li><a class="reference internal" href="#define-hyperparameters">Define Hyperparameters</a><ul>
-<li><a class="reference internal" href="#data-collection-parameters">Data collection parameters</a></li>
-<li><a class="reference internal" href="#ppo-parameters">PPO parameters</a></li>
+<li><a class="reference internal" href="#">使用 TorchRL 的强化学习（PPO）教程</a><ul>
+<li><a class="reference internal" href="#define-hyperparameters">定义超参数</a><ul>
+<li><a class="reference internal" href="#data-collection-parameters">数据收集参数</a></li>
+<li><a class="reference internal" href="#ppo-parameters">PPO 参数</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#define-an-environment">Define an environment</a><ul>
-<li><a class="reference internal" href="#transforms">Transforms</a></li>
-<li><a class="reference internal" href="#normalization">Normalization</a></li>
+<li><a class="reference internal" href="#define-an-environment">定义环境</a><ul>
+<li><a class="reference internal" href="#transforms">变换</a></li>
+<li><a class="reference internal" href="#normalization">标准化</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#policy">Policy</a></li>
-<li><a class="reference internal" href="#value-network">Value network</a></li>
-<li><a class="reference internal" href="#data-collector">Data collector</a></li>
-<li><a class="reference internal" href="#replay-buffer">Replay buffer</a></li>
-<li><a class="reference internal" href="#loss-function">Loss function</a></li>
-<li><a class="reference internal" href="#training-loop">Training loop</a></li>
-<li><a class="reference internal" href="#results">Results</a></li>
-<li><a class="reference internal" href="#conclusion-and-next-steps">Conclusion and next steps</a></li>
+<li><a class="reference internal" href="#policy">策略</a></li>
+<li><a class="reference internal" href="#value-network">值网络</a></li>
+<li><a class="reference internal" href="#data-collector">数据收集器</a></li>
+<li><a class="reference internal" href="#replay-buffer">重放缓冲区</a></li>
+<li><a class="reference internal" href="#loss-function">损失函数</a></li>
+<li><a class="reference internal" href="#training-loop">训练循环</a></li>
+<li><a class="reference internal" href="#results">结果</a></li>
+<li><a class="reference internal" href="#conclusion-and-next-steps">结论与下一步</a></li>
 </ul>
 </li>
 </ul>
@@ -1368,14 +1132,11 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <noscript>
 <img height="1" src="https://www.facebook.com/tr?id=243028289693773&amp;ev=PageView
   &amp;noscript=1" width="1">
-</img></noscript>
+</noscript>
 <script type="text/javascript">
   var collapsedSections = ['PyTorch Recipes', 'Learning PyTorch', 'Image and Video', 'Audio', 'Text', 'Backends', 'Reinforcement Learning', 'Deploying PyTorch Models in Production', 'Profiling PyTorch', 'Code Transforms with FX', 'Frontend APIs', 'Extending PyTorch', 'Model Optimization', 'Parallel and Distributed Training', 'Edge with ExecuTorch', 'Recommendation Systems', 'Multimodality'];
 </script>
-<img alt="" height="1" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0" style="border-style:none;" width="1">
-
-//temporarily add a link to survey
-<script>
+ <img width="1" style="border-style:none;" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0" height="1" alt=""> //暂时添加调查链接<script>
     var survey = '<div class="survey-banner"><p><i class="fas fa-poll" aria-hidden="true">&nbsp </i> Take the <a href="https://forms.gle/KZ4xGL65VRMYNbbG6">PyTorch Docs/Tutorials survey</a>.</p></div>'
     if ($(".pytorch-call-to-action-links").length) {
         $(".pytorch-call-to-action-links").before(survey);
@@ -1388,19 +1149,19 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <div class="container">
 <div class="row">
 <div class="col-md-4 text-center">
-<h2>Docs</h2>
-<p>Access comprehensive developer documentation for PyTorch</p>
-<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">View Docs</a>
+<h2>文档</h2>
+<p>访问 PyTorch 的全面开发者文档</p>
+<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
 </div>
 <div class="col-md-4 text-center">
-<h2>Tutorials</h2>
-<p>Get in-depth tutorials for beginners and advanced developers</p>
-<a class="with-right-arrow" href="https://maskerprc.github.io/tutorials">View Tutorials</a>
+<h2>教程</h2>
+<p>获取初学者和高级开发者的深入教程</p>
+<a class="with-right-arrow" href="https://maskerprc.github.io/tutorials">查看教程</a>
 </div>
 <div class="col-md-4 text-center">
-<h2>Resources</h2>
-<p>Find development resources and get your questions answered</p>
-<a class="with-right-arrow" href="https://pytorch.org/resources">View Resources</a>
+<h2>资源</h2>
+<p>查找开发资源并获得您的疑问解答</p>
+<a class="with-right-arrow" href="https://pytorch.org/resources">查看资源</a>
 </div>
 </div>
 </div>
@@ -1414,62 +1175,59 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <div class="footer-links-col">
 <ul>
 <li class="list-title"><a href="https://pytorch.org/">PyTorch</a></li>
-<li><a href="https://pytorch.org/get-started">Get Started</a></li>
-<li><a href="https://pytorch.org/features">Features</a></li>
-<li><a href="https://pytorch.org/ecosystem">Ecosystem</a></li>
-<li><a href="https://pytorch.org/blog/">Blog</a></li>
-<li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">Contributing</a></li>
+<li><a href="https://pytorch.org/get-started">开始使用</a></li>
+<li><a href="https://pytorch.org/features">功能</a></li>
+<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://pytorch.org/blog/">博客</a></li>
+<li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
 </ul>
 </div>
 <div class="footer-links-col">
 <ul>
-<li class="list-title"><a href="https://pytorch.org/resources">Resources</a></li>
-<li><a href="https://maskerprc.github.io/tutorials">Tutorials</a></li>
-<li><a href="https://pytorch.org/docs/stable/index.html">Docs</a></li>
-<li><a href="https://discuss.pytorch.org" target="_blank">Discuss</a></li>
-<li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">Github Issues</a></li>
-<li><a href="https://pytorch.org/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">Brand Guidelines</a></li>
+<li class="list-title"><a href="https://pytorch.org/resources">资源</a></li>
+<li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
+<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
+<li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
+<li><a href="https://pytorch.org/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
 </ul>
 </div>
 <div class="footer-links-col">
 <ul>
-<li class="list-title">Stay up to date</li>
+<li class="list-title">保持更新</li>
 <li><a href="https://www.facebook.com/pytorch" target="_blank">Facebook</a></li>
 <li><a href="https://twitter.com/pytorch" target="_blank">Twitter</a></li>
-<li><a href="https://www.youtube.com/pytorch" target="_blank">YouTube</a></li>
-<li><a href="https://www.linkedin.com/company/pytorch" target="_blank">LinkedIn</a></li>
+<li><a href="https://www.youtube.com/pytorch" target="_blank"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">YouTube
+油管</font></font></font></a></li>
+<li><a href="https://www.linkedin.com/company/pytorch" target="_blank">领英</a></li>
 </ul>
 </div>
 <div class="footer-links-col">
 <ul>
-<li class="list-title">PyTorch Podcasts</li>
+<li class="list-title">PyTorch 播客</li>
 <li><a href="https://open.spotify.com/show/6UzHKeiy368jKfQMKKvJY5" target="_blank">Spotify</a></li>
-<li><a href="https://podcasts.apple.com/us/podcast/pytorch-developer-podcast/id1566080008" target="_blank">Apple</a></li>
+<li><a href="https://podcasts.apple.com/us/podcast/pytorch-developer-podcast/id1566080008" target="_blank">苹果</a></li>
 <li><a href="https://www.google.com/podcasts?feed=aHR0cHM6Ly9mZWVkcy5zaW1wbGVjYXN0LmNvbS9PQjVGa0lsOA%3D%3D" target="_blank">Google</a></li>
-<li><a href="https://music.amazon.com/podcasts/7a4e6f0e-26c2-49e9-a478-41bd244197d0/PyTorch-Developer-Podcast?" target="_blank">Amazon</a></li>
+<li><a href="https://music.amazon.com/podcasts/7a4e6f0e-26c2-49e9-a478-41bd244197d0/PyTorch-Developer-Podcast?" target="_blank">亚马逊</a></li>
 </ul>
 </div>
 </div>
 <div class="privacy-policy">
 <ul>
-<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/terms/" target="_blank">Terms</a></li>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/terms/" target="_blank">条款</a></li>
 <li class="privacy-policy-links">|</li>
-<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/privacy-policy/" target="_blank">Privacy</a></li>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/privacy-policy/" target="_blank">隐私</a></li>
 </ul>
 </div>
 <div class="copyright">
-<p>© Copyright The Linux Foundation. The PyTorch Foundation is a project of The Linux Foundation.
-          For web site terms of use, trademark policy and other policies applicable to The PyTorch Foundation please see
-          <a href="https://www.linuxfoundation.org/policies/">www.linuxfoundation.org/policies/</a>. The PyTorch Foundation supports the PyTorch open source
-          project, which has been established as PyTorch Project a Series of LF Projects, LLC. For policies applicable to the PyTorch Project a Series of LF Projects, LLC,
-          please see <a href="https://www.lfprojects.org/policies/">www.lfprojects.org/policies/</a>.</p>
+<p>© 版权所有 Linux 基金会。PyTorch 基金会是 Linux 基金会的一个项目。有关 PyTorch 基金会的网站使用条款、商标政策以及其他适用政策，请参阅 www.linuxfoundation.org/policies/。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列 LF Projects, LLC 的政策，请参阅 www.lfprojects.org/policies/。</p>
 </div>
 </div>
 </footer>
 <div class="cookie-banner-wrapper">
 <div class="container">
-<p class="gdpr-notice">To analyze traffic and optimize your experience, we serve cookies on this site. By clicking or navigating, you agree to allow our usage of cookies. As the current maintainers of this site, Facebook’s Cookies Policy applies. Learn more, including about available controls: <a href="https://www.facebook.com/policies/cookies/">Cookies Policy</a>.</p>
-<img class="close-button" src="../_static/images/pytorch-x.svg"/>
+<p class="gdpr-notice">为了分析流量并优化您的体验，我们在本网站上提供 cookies。通过点击或导航，您同意允许我们使用 cookies。作为本站点的当前维护者，适用 Facebook 的 Cookies 政策。了解更多信息，包括可用的控制选项：Cookies 政策。</p>
+<img class="close-button" src="../_static/images/pytorch-x.svg" width="16" height="16">
 </div>
 </div>
 <!-- End Footer -->
@@ -1487,114 +1245,114 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <div class="main-menu">
 <ul>
 <li class="resources-mobile-menu-title">
-<a>Learn</a>
+<a>学习</a>
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/get-started">Get Started</a>
+<a href="https://pytorch.org/get-started">开始使用</a>
 </li>
 <li>
-<a href="https://maskerprc.github.io/tutorials">Tutorials</a>
+<a href="https://maskerprc.github.io/tutorials">教程</a>
 </li>
 <li>
-<a href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">Learn the Basics</a>
+<a href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">学习基础知识</a>
 </li>
 <li>
-<a href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">PyTorch Recipes</a>
+<a href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">PyTorch 食谱</a>
 </li>
 <li>
-<a href="https://maskerprc.github.io/tutorials/beginner/introyt.html">Introduction to PyTorch - YouTube Series</a>
+<a href="https://maskerprc.github.io/tutorials/beginner/introyt.html">PyTorch 入门 - YouTube 系列</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
-<a>Ecosystem</a>
+<a>生态系统</a>
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/ecosystem">Tools</a>
+<a href="https://pytorch.org/ecosystem">工具</a>
 </li>
 <li>
-<a href="https://pytorch.org/#community-module">Community</a>
+<a href="https://pytorch.org/#community-module">社区</a>
 </li>
 <li>
-<a href="https://discuss.pytorch.org/">Forums</a>
+<a href="https://discuss.pytorch.org/">论坛</a>
 </li>
 <li>
-<a href="https://pytorch.org/resources">Developer Resources</a>
+<a href="https://pytorch.org/resources">开发者资源</a>
 </li>
 <li>
-<a href="https://pytorch.org/ecosystem/contributor-awards-2023">Contributor Awards - 2024</a>
+<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
-<a>Edge</a>
+<a>边缘</a>
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/edge">About PyTorch Edge</a>
+<a href="https://pytorch.org/edge">关于 PyTorch Edge</a>
 </li>
 <li>
 <a href="https://pytorch.org/executorch-overview">ExecuTorch</a>
 </li>
 <li>
-<a href="https://pytorch.org/executorch/stable/index.html">ExecuTorch Documentation</a>
+<a href="https://pytorch.org/executorch/stable/index.html">ExecuTorch 文档</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
-<a>Docs</a>
+<a>文档</a>
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
 <a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
 </li>
 <li>
-<a href="https://pytorch.org/pytorch-domains">PyTorch Domains</a>
+<a href="https://pytorch.org/pytorch-domains">PyTorch 领域</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
-<a>Blog &amp; News</a>
+<a>博客 &amp; 新闻</a>
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/blog/">PyTorch Blog</a>
+<a href="https://pytorch.org/blog/">PyTorch 博客</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-blog">Community Blog</a>
+<a href="https://pytorch.org/community-blog">社区博客</a>
 </li>
 <li>
-<a href="https://pytorch.org/videos">Videos</a>
+<a href="https://pytorch.org/videos">视频</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-stories">Community Stories</a>
+<a href="https://pytorch.org/community-stories">社区故事</a>
 </li>
 <li>
-<a href="https://pytorch.org/events">Events</a>
+<a href="https://pytorch.org/events">活动</a>
 </li>
 <li>
-<a href="https://pytorch.org/newsletter">Newsletter</a>
+<a href="https://pytorch.org/newsletter">通讯简报</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
-<a>About</a>
+<a>关于</a>
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/foundation">PyTorch Foundation</a>
+<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
 </li>
 <li>
-<a href="https://pytorch.org/governing-board">Governing Board</a>
+<a href="https://pytorch.org/governing-board">管理委员会</a>
 </li>
 <li>
-<a href="https://pytorch.org/credits">Cloud Credit Program</a>
+<a href="https://pytorch.org/credits">云积分计划</a>
 </li>
 <li>
-<a href="https://pytorch.org/tac">Technical Advisory Council</a>
+<a href="https://pytorch.org/tac">技术顾问委员会</a>
 </li>
 <li>
-<a href="https://pytorch.org/staff">Staff</a>
+<a href="https://pytorch.org/staff">员工</a>
 </li>
 <li>
-<a href="https://pytorch.org/contact-us">Contact Us</a>
+<a href="https://pytorch.org/contact-us">联系我们</a>
 </li>
 </ul>
 </ul>
@@ -1620,5 +1378,5 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
       });
     })
   </script>
-</img></body>
-</html>
+
+</body></html>

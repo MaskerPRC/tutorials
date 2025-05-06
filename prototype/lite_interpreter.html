@@ -1,15 +1,11 @@
-
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><!DOCTYPE html>
 <html lang="zh_CN">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>(Prototype) Introduce lite interpreter workflow in Android and iOS &mdash; PyTorch Tutorials 2.3.0+cpu documentation</title>
+  <title>(Prototype) Introduce lite interpreter workflow in Android and iOS — PyTorch Tutorials 2.3.0+cpu documentation</title>
   
 
   
@@ -25,23 +21,23 @@
 
   
 
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css">
   <!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" type="text/css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/custom2.css" type="text/css" />
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css">
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css">
+  <link rel="stylesheet" href="../_static/copybutton.css" type="text/css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" type="text/css">
+  <link rel="stylesheet" href="../_static/katex-math.css" type="text/css">
+  <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css">
+  <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css">
+  <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css">
+  <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css">
+  <link rel="stylesheet" href="../_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" type="text/css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" type="text/css">
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css">
+  <link rel="stylesheet" href="../_static/css/custom2.css" type="text/css">
+    <link rel="index" title="Index" href="../genindex.html">
+    <link rel="search" title="Search" href="../search.html">
   <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -74,9 +70,7 @@
 <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 <link rel="preload" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" crossorigin="anonymous">
-</head>
-
-<div class="container-fluid header-holder tutorials-header" id="header-holder">
+</head><body class="pytorch-body"><div class="container-fluid header-holder tutorials-header" id="header-holder">
   <div class="container">
     <div class="header-container">
       <a class="header-logo" href="https://pytorch.org/" aria-label="PyTorch"></a>
@@ -86,29 +80,27 @@
 
           <li class="main-menu-item">
           <div id="resourcesDropdownButton" data-toggle="resources-dropdown" class="resources-dropdown">
-              <a class="with-down-arrow">
-                Learn
-              </a>
+              <a class="with-down-arrow">学习</a>
               <div class="resources-dropdown-menu">
                 <a class="nav-dropdown-item" href="https://pytorch.org/get-started">
-                  <span class=dropdown-title>Get Started</span>
-                  <p>Run PyTorch locally or get started quickly with one of the supported cloud platforms</p>
+                  <span class="dropdown-title">开始使用</span>
+                  <p>在本地运行 PyTorch 或快速开始使用支持的云平台之一</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials">
-                  <span class="dropdown-title">Tutorials</span>
-                  <p>Whats new in PyTorch tutorials</p>
+                  <span class="dropdown-title">教程</span><p></p>
+                  <p>PyTorch 教程中的新内容是什么</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">
-                  <span class="dropdown-title">Learn the Basics</span>
-                  <p>Familiarize yourself with PyTorch concepts and modules</p>
+                  <span class="dropdown-title">学习基础知识</span><p></p>
+                  <p>熟悉 PyTorch 的概念和模块</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">
-                  <span class="dropdown-title">PyTorch Recipes</span>
-                  <p>Bite-size, ready-to-deploy PyTorch code examples</p>
+                  <span class="dropdown-title">PyTorch 食谱</span><p></p>
+                  <p>精简版、可直接部署的 PyTorch 代码示例</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/introyt.html">
-                  <span class="dropdown-title">Intro to PyTorch - YouTube Series</span>
-                  <p>Master PyTorch basics with our engaging YouTube tutorial series</p>
+                  <span class="dropdown-title">PyTorch 简介 - YouTube 系列</span><p></p>
+                  <p>通过我们引人入胜的 YouTube 教程系列掌握 PyTorch 基础知识</p>
                 </a>
               </div>
             </div>
@@ -116,29 +108,27 @@
 
           <li>
           <div id="resourcesDropdownButton" data-toggle="resources-dropdown" class="resources-dropdown">
-              <a class="with-down-arrow">
-                Ecosystem
-              </a>
+              <a class="with-down-arrow">生态系统</a>
               <div class="resources-dropdown-menu">
                 <a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
-                  <span class="dropdown-title">Tools</span>
-                  <p>Learn about the tools and frameworks in the PyTorch Ecosystem</p>
+                  <span class="dropdown-title">工具</span><p></p>
+                  <p>了解 PyTorch 生态系统中的工具和框架</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://pytorch.org/#community-module">
-                  <span class=dropdown-title>Community</span>
-                  <p>Join the PyTorch developer community to contribute, learn, and get your questions answered</p>
+                  <span class="dropdown-title">社区</span>
+                  <p>加入 PyTorch 开发者社区，贡献、学习并获得问题解答</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://discuss.pytorch.org/" target="_blank">
-                  <span class=dropdown-title>Forums</span>
-                  <p>A place to discuss PyTorch code, issues, install, research</p>
+                  <span class="dropdown-title">论坛</span>
+                  <p>讨论 PyTorch 代码、问题、安装、研究的地方</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://pytorch.org/resources">
-                  <span class=dropdown-title>Developer Resources</span>
-                  <p>Find resources and get questions answered</p>
+                  <span class="dropdown-title">开发者资源</span>
+                  <p>查找资源并解答问题</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
-                  <span class="dropdown-title">Contributor Awards - 2024</span>
-                  <p>Award winners announced at this year's PyTorch Conference</p>
+                  <span class="dropdown-title">2024 年度贡献者奖项</span><p></p>
+                  <p>本年度 PyTorch 大会获奖者揭晓</p>
                 </a>
               </div>
             </div>
@@ -146,20 +136,18 @@
 
           <li>
           <div id="resourcesDropdownButton" data-toggle="resources-dropdown" class="resources-dropdown">
-              <a class="with-down-arrow">
-                Edge
-              </a>
+              <a class="with-down-arrow">边缘</a>
               <div class="resources-dropdown-menu">
                 <a class="nav-dropdown-item" href="https://pytorch.org/edge">
-                  <span class="dropdown-title">About PyTorch Edge</span>
-                  <p>Build innovative and privacy-aware AI experiences for edge devices</p>
+                  <span class="dropdown-title">关于 PyTorch Edge</span><p></p>
+                  <p>为边缘设备构建创新和隐私感知的 AI 体验</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://pytorch.org/executorch-overview">
-                  <span class="dropdown-title">ExecuTorch</span>
-                  <p>End-to-end solution for enabling on-device inference capabilities across mobile and edge devices</p>
+                  <span class="dropdown-title">ExecuTorch</span><p></p>
+                  <p>实现移动和边缘设备端到端推理能力的解决方案</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://pytorch.org/executorch/stable/index.html">
-                  <span class="dropdown-title">ExecuTorch Docs</span>
+                  <span class="dropdown-title">ExecuTorch 文档</span><p></p>
                 </a>
               </div>
             </div>  
@@ -167,17 +155,15 @@
 
           <li class="main-menu-item">
             <div id="resourcesDropdownButton" data-toggle="resources-dropdown" class="resources-dropdown">
-              <a class="with-down-arrow">
-                Docs
-              </a>
+              <a class="with-down-arrow">文档</a>
               <div class="resources-dropdown-menu">
                 <a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
-                  <span class="dropdown-title">PyTorch</span>
-                  <p>Explore the documentation for comprehensive guidance on how to use PyTorch</p>
+                  <span class="dropdown-title">PyTorch</span><p></p>
+                  <p>探索文档以获取全面指导，了解如何使用 PyTorch</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://pytorch.org/pytorch-domains">
-                  <span class="dropdown-title">PyTorch Domains</span>
-                  <p>Read the PyTorch Domains documentation to learn more about domain-specific libraries</p>
+                  <span class="dropdown-title">PyTorch 领域</span><p></p>
+                  <p>阅读 PyTorch Domains 文档，了解更多关于特定领域库的信息</p>
                 </a>
               </div>
             </div>
@@ -185,60 +171,56 @@
 
           <li>
             <div id="resourcesDropdownButton" data-toggle="resources-dropdown" class="resources-dropdown">
-              <a class="with-down-arrow">
-                Blogs & News 
-              </a>
+              <a class="with-down-arrow">博客与新闻</a>
               <div class="resources-dropdown-menu">
                 <a class="nav-dropdown-item" href="https://pytorch.org/blog/">
-                  <span class="dropdown-title">PyTorch Blog</span>
+                  <span class="dropdown-title">PyTorch Blog</span><p></p>
                   <p>Catch up on the latest technical news and happenings</p>
                 </a>
                  <a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
-                  <span class="dropdown-title">Community Blog</span>
-                  <p>Stories from the PyTorch ecosystem</p>
+                  <span class="dropdown-title">社区博客</span><p></p>
+                  <p>PyTorch 生态系统故事</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://pytorch.org/videos">
-                  <span class="dropdown-title">Videos</span>
-                  <p>Learn about the latest PyTorch tutorials, new, and more </p>
-                <a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
-                  <span class="dropdown-title">Community Stories</span>
-                  <p>Learn how our community solves real, everyday machine learning problems with PyTorch</p>
+                  <span class="dropdown-title">视频</span><p></p>
+                  <p>了解最新的 PyTorch 教程、新内容等</p>
+                </a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+                  <span class="dropdown-title">社区故事</span><p></p>
+                  <p>了解我们的社区如何使用 PyTorch 解决真实、日常的机器学习问题</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://pytorch.org/events">
-                  <span class="dropdown-title">Events</span>
-                  <p>Find events, webinars, and podcasts</p>
+                  <span class="dropdown-title">活动</span><p></p>
+                  <p>查找活动、网络研讨会和播客</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
-                  <span class="dropdown-title">Newsletter</span>
-                  <p>Stay up-to-date with the latest updates</p>
+                  <span class="dropdown-title">通讯</span><p></p>
+                  <p>跟踪最新更新</p>
                 </a>
             </div>
-          </li>
+          </div></li>
 
           <li>
             <div id="resourcesDropdownButton" data-toggle="resources-dropdown" class="resources-dropdown">
-              <a class="with-down-arrow">
-                About
-              </a>
+              <a class="with-down-arrow">关于</a>
               <div class="resources-dropdown-menu">
                 <a class="nav-dropdown-item" href="https://pytorch.org/foundation">
-                  <span class="dropdown-title">PyTorch Foundation</span>
-                  <p>Learn more about the PyTorch Foundation</p>
+                  <span class="dropdown-title">PyTorch 基金会</span><p></p>
+                  <p>了解更多关于 PyTorch 基金会</p>
                 </a>
                 <a class="nav-dropdown-item" href="https://pytorch.org/governing-board">
-                  <span class="dropdown-title">Governing Board</span>
+                  <span class="dropdown-title">管理委员会</span><p></p>
                 </a>
                 <a class="nav-dropdown-item" href="https://pytorch.org/credits">
-                  <span class="dropdown-title">Cloud Credit Program</span>
+                  <span class="dropdown-title">云信用计划</span><p></p>
                 </a>
                 <a class="nav-dropdown-item" href="https://pytorch.org/tac">
-                  <span class="dropdown-title">Technical Advisory Council</span>
+                  <span class="dropdown-title">技术顾问委员会</span><p></p>
                 </a>
                 <a class="nav-dropdown-item" href="https://pytorch.org/staff">
-                  <span class="dropdown-title">Staff</span>
+                  <span class="dropdown-title">员工</span><p></p>
                 </a>
                 <a class="nav-dropdown-item" href="https://pytorch.org/contact-us">
-                  <span class="dropdown-title">Contact Us</span>
+                  <span class="dropdown-title">联系我们</span><p></p>
                 </a>
               </div>
             </div>
@@ -246,9 +228,7 @@
 
           <li class="main-menu-item">
             <div class="no-dropdown">
-              <a href="https://pytorch.org/join" data-cta="join">
-                Become a Member
-              </a>
+              <a href="https://pytorch.org/join" data-cta="join">成为会员</a>
             </div>
           </li>
           <li>
@@ -273,14 +253,14 @@
   </div>
 </div>
 
-<body class="pytorch-body">
+
 
    
 
     
 
     <div class="table-of-contents-link-wrapper">
-      <span>Table of Contents</span>
+      <span>目录</span>
       <a href="#" class="toggle-table-of-contents" data-behavior="toggle-table-of-contents"></a>
     </div>
 
@@ -302,28 +282,24 @@
   <!-- Search box -->
   <div id="searchBox">
     <div class="searchbox" id="googleSearchBox">
-      <script async src="https://cse.google.com/cse.js?cx=e65585f8c3ea1440e"></script>
+      <script async="" src="https://cse.google.com/cse.js?cx=e65585f8c3ea1440e"></script>
       <div class="gcse-search"></div>
     </div>
     <div id="sphinxSearchBox" style="display: none;">
       <div role="search">
         <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-          <input type="text" name="q" placeholder="Search Docs" />
-          <input type="hidden" name="check_keywords" value="yes" />
-          <input type="hidden" name="area" value="default" />
+          <input type="text" name="q" placeholder="Search Docs">
+          <input type="hidden" name="check_keywords" value="yes">
+          <input type="hidden" name="area" value="default">
         </form>
       </div>
     </div>
   </div>
   <form id="searchForm">
     <label style="margin-bottom: 1rem">
-      <input type="radio" name="searchType" value="google" checked>
-      Google Search
-    </label>
+      <input type="radio" name="searchType" value="google" checked="">谷歌搜索</label>
     <label style="margin-bottom: 1rem">
-      <input type="radio" name="searchType" value="sphinx">
-      Classic Search
-    </label>
+      <input type="radio" name="searchType" value="sphinx">经典搜索</label>
   </form>
 
   <script>
@@ -373,181 +349,181 @@
         
     
     
-        <p class="caption" role="heading"><span class="caption-text">PyTorch Recipes</span></p>
+        <p class="caption" role="heading"><span class="caption-text">PyTorch 食谱</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../recipes/recipes_index.html">See All Recipes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="prototype_index.html">See All Prototype Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/recipes_index.html">查看所有菜谱</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prototype_index.html">查看所有原型食谱</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Introduction to PyTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 入门</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/basics/intro.html">Learn the Basics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/quickstart_tutorial.html">Quickstart</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/tensorqs_tutorial.html">Tensors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/data_tutorial.html">Datasets &amp; DataLoaders</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/transforms_tutorial.html">Transforms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/buildmodel_tutorial.html">Build the Neural Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/autogradqs_tutorial.html">Automatic Differentiation with <code class="docutils literal "><span class="pre">torch.autograd</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/optimization_tutorial.html">Optimizing Model Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/saveloadrun_tutorial.html">Save and Load the Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/basics/intro.html">学习基础知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/quickstart_tutorial.html">快速入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/tensorqs_tutorial.html">张量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/data_tutorial.html">数据集与数据加载器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/transforms_tutorial.html">变换</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/buildmodel_tutorial.html">构建神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/autogradqs_tutorial.html">使用 <code class="docutils literal "><span class="pre">torch.autograd</span></code> 进行自动微分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/optimization_tutorial.html">优化模型参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/saveloadrun_tutorial.html">保存和加载模型</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/introyt/introyt_index.html">Introduction to PyTorch - YouTube Series</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/introyt1_tutorial.html">Introduction to PyTorch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensors_deeper_tutorial.html">Introduction to PyTorch Tensors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/autogradyt_tutorial.html">The Fundamentals of Autograd</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/modelsyt_tutorial.html">Building Models with PyTorch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensorboardyt_tutorial.html">PyTorch TensorBoard Support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/trainingyt.html">Training with PyTorch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/captumyt.html">Model Understanding with Captum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/introyt/introyt_index.html">PyTorch 入门 - YouTube 系列</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/introyt1_tutorial.html">PyTorch 入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensors_deeper_tutorial.html">PyTorch 张量入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/autogradyt_tutorial.html">Autograd 的基础</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/modelsyt_tutorial.html">使用 PyTorch 构建模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensorboardyt_tutorial.html">PyTorch TensorBoard 支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/trainingyt.html">使用 PyTorch 进行训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/captumyt.html">使用 Captum 理解模型</a></li>
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Learning PyTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">学习 PyTorch</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/deep_learning_60min_blitz.html">Deep Learning with PyTorch: A 60 Minute Blitz</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/pytorch_with_examples.html">Learning PyTorch with Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/nn_tutorial.html">What is <cite>torch.nn</cite> <em>really</em>?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/nlp_from_scratch_index.html">NLP from Scratch</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/tensorboard_tutorial.html">Visualizing Models, Data, and Training with TensorBoard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/pinmem_nonblock.html">A guide on good usage of <code class="docutils literal "><span class="pre">non_blocking</span></code> and <code class="docutils literal "><span class="pre">pin_memory()</span></code> in PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/deep_learning_60min_blitz.html">使用 PyTorch 进行深度学习：60 分钟速成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/pytorch_with_examples.html">通过示例学习 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/nn_tutorial.html">火炬.nn 究竟是什么？</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/nlp_from_scratch_index.html">从零开始的自然语言处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/tensorboard_tutorial.html">使用 TensorBoard 可视化模型、数据和训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/pinmem_nonblock.html">PyTorch 中 <code class="docutils literal "><span class="pre">non_blocking</span></code> 和 <code class="docutils literal "><span class="pre">pin_memory()</span></code> 的良好使用指南</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Image and Video</span></p>
+<p class="caption" role="heading"><span class="caption-text">图像和视频</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchvision_tutorial.html">TorchVision Object Detection Finetuning Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/transfer_learning_tutorial.html">Transfer Learning for Computer Vision Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/fgsm_tutorial.html">Adversarial Example Generation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/dcgan_faces_tutorial.html">DCGAN Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/spatial_transformer_tutorial.html">Spatial Transformer Networks Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">Optimizing Vision Transformer Model for Deployment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/tiatoolbox_tutorial.html">Whole Slide Image Classification Using PyTorch and TIAToolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchvision_tutorial.html">TorchVision 目标检测微调教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/transfer_learning_tutorial.html">计算机视觉迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/fgsm_tutorial.html">对抗样本生成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dcgan_faces_tutorial.html">DCGAN 教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/spatial_transformer_tutorial.html">空间变换网络教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">针对部署优化视觉 Transformer 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/tiatoolbox_tutorial.html">使用 PyTorch 和 TIAToolbox 进行全切片图像分类</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Audio</span></p>
+<p class="caption" role="heading"><span class="caption-text">音频</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_io_tutorial.html">Audio I/O</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_resampling_tutorial.html">Audio Resampling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_data_augmentation_tutorial.html">Audio Data Augmentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_extractions_tutorial.html">Audio Feature Extractions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_augmentation_tutorial.html">Audio Feature Augmentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_datasets_tutorial.html">Audio Datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/speech_recognition_pipeline_tutorial.html">Speech Recognition with Wav2Vec2</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/text_to_speech_with_torchaudio.html">Text-to-speech with Tacotron2</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/forced_alignment_with_torchaudio_tutorial.html">Forced Alignment with Wav2Vec2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_io_tutorial.html">音频输入/输出</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_resampling_tutorial.html">音频重采样</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_data_augmentation_tutorial.html">音频数据增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_extractions_tutorial.html">音频特征提取</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_augmentation_tutorial.html">音频特征增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_datasets_tutorial.html">音频数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/speech_recognition_pipeline_tutorial.html">使用 Wav2Vec2 的语音识别</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/text_to_speech_with_torchaudio.html">使用 Tacotron2 的文本转语音</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/forced_alignment_with_torchaudio_tutorial.html">使用 Wav2Vec2 的强制对齐</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Backends</span></p>
+<p class="caption" role="heading"><span class="caption-text">后端</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">Introduction to ONNX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Reinforcement Learning</span></p>
+<p class="caption" role="heading"><span class="caption-text">强化学习</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/reinforcement_q_learning.html">Reinforcement Learning (DQN) Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/reinforcement_ppo.html">Reinforcement Learning (PPO) with TorchRL Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/mario_rl_tutorial.html">Train a Mario-playing RL Agent</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/pendulum.html">Pendulum: Writing your environment and transforms with TorchRL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/reinforcement_q_learning.html">强化学习（DQN）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/reinforcement_ppo.html">强化学习（PPO）与 TorchRL 教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/mario_rl_tutorial.html">训练玩马里奥的强化学习智能体</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/pendulum.html">摆锤：使用 TorchRL 编写你的环境和转换</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Deploying PyTorch Models in Production</span></p>
+<p class="caption" role="heading"><span class="caption-text">在生产中部署 PyTorch 模型</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">Introduction to ONNX</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/flask_rest_api_tutorial.html">Deploying PyTorch in Python via a REST API with Flask</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/Intro_to_TorchScript_tutorial.html">Introduction to TorchScript</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_export.html">Loading a TorchScript Model in C++</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/super_resolution_with_onnxruntime.html">(optional) Exporting a Model from PyTorch to ONNX and Running it using ONNX Runtime</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/realtime_rpi.html">Real Time Inference on Raspberry Pi 4 (30 fps!)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/flask_rest_api_tutorial.html">使用 Flask 通过 REST API 部署 Python 中的 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/Intro_to_TorchScript_tutorial.html">火炬脚本入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_export.html">在 C++中加载 TorchScript 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/super_resolution_with_onnxruntime.html">（可选）将 PyTorch 模型导出为 ONNX 并使用 ONNX 运行时运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/realtime_rpi.html">Raspberry Pi 4 实时推理（30 fps！）</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Profiling PyTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 性能分析</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">Profiling your PyTorch Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_intro_tutorial.html">Introduction to Holistic Trace Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_trace_diff_tutorial.html">Trace Diff using Holistic Trace Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">分析你的 PyTorch 模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_intro_tutorial.html">全景式跟踪分析简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_trace_diff_tutorial.html">使用全景式跟踪分析进行跟踪差异</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Code Transforms with FX</span></p>
+<p class="caption" role="heading"><span class="caption-text">使用 FX 进行代码转换</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/fx_conv_bn_fuser.html">(beta) Building a Convolution/Batch Norm fuser in FX</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/fx_profiling_tutorial.html">(beta) Building a Simple CPU Performance Profiler with FX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/fx_conv_bn_fuser.html">(beta) 在 FX 中构建卷积/批量归一化融合器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/fx_profiling_tutorial.html">(beta) 使用 FX 构建简单的 CPU 性能分析器</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Frontend APIs</span></p>
+<p class="caption" role="heading"><span class="caption-text">前端 API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/memory_format_tutorial.html">(beta) Channels Last Memory Format in PyTorch</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/forward_ad_usage.html">Forward-mode Automatic Differentiation (Beta)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/jacobians_hessians.html">Jacobians, Hessians, hvp, vhp, and more: composing function transforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/ensembling.html">Model ensembling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/per_sample_grads.html">Per-sample-gradients</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_frontend.html">Using the PyTorch C++ Frontend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/torch-script-parallelism.html">Dynamic Parallelism in TorchScript</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_autograd.html">Autograd in C++ Frontend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/memory_format_tutorial.html">PyTorch 中的（beta）通道最后记忆格式</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/forward_ad_usage.html">前向模式自动微分（Beta）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/jacobians_hessians.html">雅可比矩阵、海森矩阵、hvp、vhp 以及更多：函数变换的组成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/ensembling.html">模型集成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/per_sample_grads.html">每样本梯度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_frontend.html">使用 PyTorch C++前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch-script-parallelism.html">TorchScript 中的动态并行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_autograd.html">C++前端中的 Autograd</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Extending PyTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">扩展 PyTorch</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/custom_ops_landing_page.html">PyTorch Custom Operators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/python_custom_ops.html">Custom Python Operators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_custom_ops.html">Custom C++ and CUDA Operators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/custom_function_double_backward_tutorial.html">Double Backward with Custom Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/custom_function_conv_bn_tutorial.html">Fusing Convolution and Batch Norm using Custom Function</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_extension.html">Custom C++ and CUDA Extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_ops.html">Extending TorchScript with Custom C++ Operators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_classes.html">Extending TorchScript with Custom C++ Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/dispatcher.html">Registering a Dispatched Operator in C++</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/extend_dispatcher.html">Extending dispatcher for a new backend in C++</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/privateuseone.html">Facilitating New Backend Integration by PrivateUse1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/custom_ops_landing_page.html">PyTorch 自定义算子</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/python_custom_ops.html">自定义 Python 算子</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_custom_ops.html">自定义 C++和 CUDA 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/custom_function_double_backward_tutorial.html">使用自定义函数的双向传播</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/custom_function_conv_bn_tutorial.html">使用自定义函数融合卷积和批量归一化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_extension.html">自定义 C++ 和 CUDA 扩展</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_ops.html">使用自定义 C++ 操作符扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_classes.html">使用自定义 C++ 类扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dispatcher.html">在 C++ 中注册分派操作符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/extend_dispatcher.html">C++中扩展后端调度器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/privateuseone.html">通过 PrivateUse1 促进新后端集成</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Model Optimization</span></p>
+<p class="caption" role="heading"><span class="caption-text">模型优化</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">Profiling your PyTorch Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/tensorboard_profiler_tutorial.html">PyTorch Profiler With TensorBoard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/hyperparameter_tuning_tutorial.html">Hyperparameter tuning with Ray Tune</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">Optimizing Vision Transformer Model for Deployment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/parametrizations.html">Parametrizations Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/pruning_tutorial.html">Pruning Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/dynamic_quantization_tutorial.html">(beta) Dynamic Quantization on an LSTM Word Language Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/dynamic_quantization_bert_tutorial.html">(beta) Dynamic Quantization on BERT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/quantized_transfer_learning_tutorial.html">(beta) Quantized Transfer Learning for Computer Vision Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/static_quantization_tutorial.html">(beta) Static Quantization with Eager Mode in PyTorch</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchserve_with_ipex.html">Grokking PyTorch Intel CPU performance from first principles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchserve_with_ipex_2.html">Grokking PyTorch Intel CPU performance from first principles (Part 2)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/nvfuser_intro_tutorial.html">Getting Started - Accelerate Your Scripts with nvFuser</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/ax_multiobjective_nas_tutorial.html">Multi-Objective NAS with Ax</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/torch_compile_tutorial.html">Introduction to <code class="docutils literal "><span class="pre">torch.compile</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/compiled_autograd_tutorial.html">Compiled Autograd: Capturing a larger backward graph for <code class="docutils literal "><span class="pre">torch.compile</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/inductor_debug_cpu.html">Inductor CPU backend debugging and profiling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/scaled_dot_product_attention_tutorial.html">(Beta) Implementing High-Performance Transformers with Scaled Dot Product Attention (SDPA)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/knowledge_distillation_tutorial.html">Knowledge Distillation Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">分析你的 PyTorch 模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/tensorboard_profiler_tutorial.html">使用 TensorBoard 的 PyTorch 分析器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hyperparameter_tuning_tutorial.html">使用 Ray Tune 进行超参数调整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">针对部署优化视觉 Transformer 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/parametrizations.html">参数化教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/pruning_tutorial.html">剪枝教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dynamic_quantization_tutorial.html">(beta) 在 LSTM 词语言模型上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/dynamic_quantization_bert_tutorial.html">(beta) BERT 动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/quantized_transfer_learning_tutorial.html">(beta) 计算机视觉教程：量化迁移学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/static_quantization_tutorial.html">(beta) PyTorch 情急模式下的静态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchserve_with_ipex.html">从原理出发掌握 PyTorch Intel CPU 性能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchserve_with_ipex_2.html">从第一性原理深入理解 PyTorch Intel CPU 性能（第二部分）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/nvfuser_intro_tutorial.html">入门指南 - 使用 nvFuser 加速您的脚本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/ax_multiobjective_nas_tutorial.html">基于 Ax 的多目标 NAS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torch_compile_tutorial.html"> <code class="docutils literal "><span class="pre">torch.compile</span></code> 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/compiled_autograd_tutorial.html">编译自动微分：捕获更大的反向图 <code class="docutils literal "><span class="pre">torch.compile</span></code> </a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/inductor_debug_cpu.html">电感 CPU 后端调试和性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/scaled_dot_product_attention_tutorial.html">（Beta）使用缩放点积注意力（SDPA）实现高性能 Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/knowledge_distillation_tutorial.html">知识蒸馏教程</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Parallel and Distributed Training</span></p>
+<p class="caption" role="heading"><span class="caption-text">并行与分布式训练</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../distributed/home.html">Distributed and Parallel Training Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/dist_overview.html">PyTorch Distributed Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/ddp_series_intro.html">Distributed Data Parallel in PyTorch - Video Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/model_parallel_tutorial.html">Single-Machine Model Parallel Best Practices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/ddp_tutorial.html">Getting Started with Distributed Data Parallel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/dist_tuto.html">Writing Distributed Applications with PyTorch</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/FSDP_tutorial.html">Getting Started with Fully Sharded Data Parallel(FSDP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/FSDP_advanced_tutorial.html">Advanced Model Training with Fully Sharded Data Parallel (FSDP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/TCPStore_libuv_backend.html">Introduction to Libuv TCPStore Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/TP_tutorial.html">Large Scale Transformer model training with Tensor Parallel (TP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/pipelining_tutorial.html">Introduction to Distributed Pipeline Parallelism</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/process_group_cpp_extension_tutorial.html">Customize Process Group Backends Using Cpp Extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/rpc_tutorial.html">Getting Started with Distributed RPC Framework</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/rpc_param_server_tutorial.html">Implementing a Parameter Server Using Distributed RPC Framework</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/rpc_async_execution.html">Implementing Batch RPC Processing Using Asynchronous Executions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/rpc_ddp_tutorial.html">Combining Distributed DataParallel with Distributed RPC Framework</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/generic_join.html">Distributed Training with Uneven Inputs Using the Join Context Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../distributed/home.html">分布式与并行训练教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dist_overview.html">PyTorch 分布式概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/ddp_series_intro.html">PyTorch 分布式数据并行 - 视频教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/model_parallel_tutorial.html">单机模型并行最佳实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/ddp_tutorial.html">分布式数据并行入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/dist_tuto.html">使用 PyTorch 编写分布式应用程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/FSDP_tutorial.html">完全分片数据并行（FSDP）入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/FSDP_advanced_tutorial.html">使用完全分片数据并行（FSDP）的高级模型训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/TCPStore_libuv_backend.html">Libuv TCPStore 后端简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/TP_tutorial.html">使用张量并行（TP）进行大规模 Transformer 模型训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/pipelining_tutorial.html">分布式管道并行简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/process_group_cpp_extension_tutorial.html">使用 Cpp 扩展自定义进程组后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/rpc_tutorial.html">分布式 RPC 框架入门指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/rpc_param_server_tutorial.html">实现使用分布式 RPC 框架的参数服务器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/rpc_async_execution.html">使用异步执行实现批处理 RPC 处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/rpc_ddp_tutorial.html">结合 Distributed DataParallel 与分布式 RPC 框架</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/generic_join.html">使用 Join Context Manager 进行不均匀输入的分布式训练</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Edge with ExecuTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">基于 ExecuTorch 的边缘计算</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html">Exporting to ExecuTorch Tutorial</a></li>
-<li class="toctree-l1"><a class="reference external" href=" https://pytorch.org/executorch/stable/running-a-model-cpp-tutorial.html">Running an ExecuTorch Model in C++ Tutorial</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/sdk-integration-tutorial.html">Using the ExecuTorch SDK to Profile a Model</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-ios.html">Building an ExecuTorch iOS Demo App</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-android.html">Building an ExecuTorch Android Demo App</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/examples-end-to-end-to-lower-model-to-delegate.html">Lowering a Model as a Delegate</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html">导出至 ExecuTorch 教程</a></li>
+<li class="toctree-l1"><a class="reference external" href=" https://pytorch.org/executorch/stable/running-a-model-cpp-tutorial.html">在 C++中运行 ExecuTorch 模型教程</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/sdk-integration-tutorial.html">使用 ExecuTorch SDK 对模型进行性能分析</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-ios.html">构建 ExecuTorch iOS 演示应用程序</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-android.html">构建 ExecuTorch Android 演示应用程序</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/examples-end-to-end-to-lower-model-to-delegate.html">模型作为代理降低</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Recommendation Systems</span></p>
+<p class="caption" role="heading"><span class="caption-text">推荐系统</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchrec_intro_tutorial.html">Introduction to TorchRec</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/sharding.html">Exploring TorchRec sharding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intermediate/torchrec_intro_tutorial.html">《TorchRec 简介》</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/sharding.html">探索 TorchRec 分片</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Multimodality</span></p>
+<p class="caption" role="heading"><span class="caption-text">多模态</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/flava_finetuning_tutorial.html">TorchMultimodal Tutorial: Finetuning FLAVA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/flava_finetuning_tutorial.html">Torch 多模态教程：微调 FLAVA</a></li>
 </ul>
 
     
@@ -580,21 +556,16 @@
   <ul class="pytorch-breadcrumbs">
     
       <li>
-        <a href="../index.html">
-          
-            Tutorials
-          
-        </a> &gt;
-      </li>
+        教程 &gt;</li>
 
         
-      <li>(Prototype) Introduce lite interpreter workflow in Android and iOS</li>
+      <li>（原型）在 Android 和 iOS 中引入轻量级解释器工作流程</li>
     
     
       <li class="pytorch-breadcrumbs-aside">
         
             
-            <a href="../_sources/prototype/lite_interpreter.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg"></a>
+            <a href="../_sources/prototype/lite_interpreter.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg" width="16" height="16"></a>
           
         
       </li>
@@ -605,9 +576,7 @@
 </div>
         </div>
 
-        <div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">
-          Shortcuts
-        </div>
+        <div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">快捷键</div>
       </div>
 
       <section data-toggle="wy-nav-shift" id="pytorch-content-wrap" class="pytorch-content-wrap">
@@ -619,18 +588,18 @@
             <div id="tutorial-type">prototype/lite_interpreter</div>
 
             <div id="google-colab-link">
-              <img class="call-to-action-img" src="../_static/images/pytorch-colab.svg"/>
-              <div class="call-to-action-desktop-view">Run in Google Colab</div>
+              <img class="call-to-action-img" src="../_static/images/pytorch-colab.svg" width="16" height="16">
+              <div class="call-to-action-desktop-view">在 Google Colab 中运行</div>
               <div class="call-to-action-mobile-view">Colab</div>
             </div>
             <div id="download-notebook-link">
-              <img class="call-to-action-notebook-img" src="../_static/images/pytorch-download.svg"/>
-              <div class="call-to-action-desktop-view">Download Notebook</div>
-              <div class="call-to-action-mobile-view">Notebook</div>
+              <img class="call-to-action-notebook-img" src="../_static/images/pytorch-download.svg" width="16" height="16">
+              <div class="call-to-action-desktop-view">下载笔记本</div>
+              <div class="call-to-action-mobile-view">笔记本</div>
             </div>
             <div id="github-view-link">
-              <img class="call-to-action-img" src="../_static/images/pytorch-github.svg"/>
-              <div class="call-to-action-desktop-view">View on GitHub</div>
+              <img class="call-to-action-img" src="../_static/images/pytorch-github.svg" width="16" height="16">
+              <div class="call-to-action-desktop-view">在 GitHub 上查看</div>
               <div class="call-to-action-mobile-view">GitHub</div>
             </div>
           </div>
@@ -638,8 +607,7 @@
         
 
           <!-- Google Tag Manager (noscript) -->
-          <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8XT4PS"
-          height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+          <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8XT4PS" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <!-- End Google Tag Manager (noscript) -->
           
           <div class="rst-content">
@@ -648,9 +616,9 @@
              <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
               
   <div class="section" id="prototype-introduce-lite-interpreter-workflow-in-android-and-ios">
-<h1>(Prototype) Introduce lite interpreter workflow in Android and iOS<a class="headerlink" href="#prototype-introduce-lite-interpreter-workflow-in-android-and-ios" title="Permalink to this heading">¶</a></h1>
-<p>This tutorial has been moved to <a class="reference external" href="https://maskerprc.github.io/tutorials/recipes/mobile_interpreter.html">https://maskerprc.github.io/tutorials/recipes/mobile_interpreter.html</a></p>
-<meta http-equiv="Refresh" content="0; url='https://maskerprc.github.io/tutorials/recipes/mobile_interpreter.html'" /></div>
+<h1>（原型）在 Android 和 iOS 中引入轻量级解释器工作流程 ¶</h1>
+<p>本教程已移至 https://maskerprc.github.io/tutorials/recipes/mobile_interpreter.html</p>
+<meta http-equiv="Refresh" content="0; url='https://maskerprc.github.io/tutorials/recipes/mobile_interpreter.html'"></div>
 
 
              </article>
@@ -663,7 +631,7 @@
 
     <hr class="rating-hr hr-top">
       <div class="rating-container">
-        <div class="rating-prompt">Rate this Tutorial</div>
+        <div class="rating-prompt">评分这个教程</div>
         <div class="stars-outer">
           <i class="far fa-star" title="1 Star" data-behavior="tutorial-rating" data-count="1"></i>
           <i class="far fa-star" title="2 Stars" data-behavior="tutorial-rating" data-count="2"></i>
@@ -672,20 +640,15 @@
           <i class="far fa-star" title="5 Stars" data-behavior="tutorial-rating" data-count="5"></i>
         </div>
       </div>
-    <hr class="rating-hr hr-bottom"/>
+    <hr class="rating-hr hr-bottom">
 
   
 
   <div role="contentinfo">
-    <p>
-        &copy; Copyright 2024, PyTorch.
-
-    </p>
+    <p>© 版权所有 2024，PyTorch。</p>
   </div>
     
-      <div>
-        Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-      </div>
+      <div>使用 Sphinx 构建，主题由 Read the Docs 提供。</div>
      
 
 </footer>
@@ -704,7 +667,7 @@ if((window.location.href.indexOf("/prototype/")!= -1) && (window.location.href.i
           <div class="pytorch-right-menu" id="pytorch-right-menu">
             <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
               <ul>
-<li><a class="reference internal" href="#">(Prototype) Introduce lite interpreter workflow in Android and iOS</a></li>
+<li><a class="reference internal" href="#">（原型）在 Android 和 iOS 中引入轻量级解释器工作流程</a></li>
 </ul>
 
             </div>
@@ -835,19 +798,15 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </script>
 
 <noscript>
-  <img height="1" width="1"
-  src="https://www.facebook.com/tr?id=243028289693773&ev=PageView
-  &noscript=1"/>
+  <img height="1" width="1" src="https://www.facebook.com/tr?id=243028289693773&amp;ev=PageView
+  &amp;noscript=1">
 </noscript>
 
 <script type="text/javascript">
   var collapsedSections = ['PyTorch Recipes', 'Learning PyTorch', 'Image and Video', 'Audio', 'Text', 'Backends', 'Reinforcement Learning', 'Deploying PyTorch Models in Production', 'Profiling PyTorch', 'Code Transforms with FX', 'Frontend APIs', 'Extending PyTorch', 'Model Optimization', 'Parallel and Distributed Training', 'Edge with ExecuTorch', 'Recommendation Systems', 'Multimodality'];
 </script>
 
-<img height="1" width="1" style="border-style:none;" alt="" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0"/>
-
-//temporarily add a link to survey
-<script>
+ <img src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0" alt="" style="border-style:none;" width="1" height="1"> //暂时添加调查链接<script>
     var survey = '<div class="survey-banner"><p><i class="fas fa-poll" aria-hidden="true">&nbsp </i> Take the <a href="https://forms.gle/KZ4xGL65VRMYNbbG6">PyTorch Docs/Tutorials survey</a>.</p></div>'
     if ($(".pytorch-call-to-action-links").length) {
         $(".pytorch-call-to-action-links").before(survey);
@@ -864,21 +823,21 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
     <div class="container">
       <div class="row">
         <div class="col-md-4 text-center">
-          <h2>Docs</h2>
-          <p>Access comprehensive developer documentation for PyTorch</p>
-          <a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">View Docs</a>
+          <h2>文档</h2>
+          <p>访问 PyTorch 的全面开发者文档</p>
+          <a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
         </div>
 
         <div class="col-md-4 text-center">
-          <h2>Tutorials</h2>
-          <p>Get in-depth tutorials for beginners and advanced developers</p>
-          <a class="with-right-arrow" href="https://maskerprc.github.io/tutorials">View Tutorials</a>
+          <h2>教程</h2>
+          <p>获取初学者和高级开发者的深入教程</p>
+          <a class="with-right-arrow" href="https://maskerprc.github.io/tutorials">查看教程</a>
         </div>
 
         <div class="col-md-4 text-center">
-          <h2>Resources</h2>
-          <p>Find development resources and get your questions answered</p>
-          <a class="with-right-arrow" href="https://pytorch.org/resources">View Resources</a>
+          <h2>资源</h2>
+          <p>查找开发资源并获得您的疑问解答</p>
+          <a class="with-right-arrow" href="https://pytorch.org/resources">查看资源</a>
         </div>
       </div>
     </div>
@@ -894,59 +853,56 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
         <div class="footer-links-col">
           <ul>
             <li class="list-title"><a href="https://pytorch.org/">PyTorch</a></li>
-            <li><a href="https://pytorch.org/get-started">Get Started</a></li>
-            <li><a href="https://pytorch.org/features">Features</a></li>
-            <li><a href="https://pytorch.org/ecosystem">Ecosystem</a></li>
-            <li><a href="https://pytorch.org/blog/">Blog</a></li>
-            <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">Contributing</a></li>
+            <li><a href="https://pytorch.org/get-started">开始使用</a></li>
+            <li><a href="https://pytorch.org/features">功能</a></li>
+            <li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+            <li><a href="https://pytorch.org/blog/">博客</a></li>
+            <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
           </ul>
         </div>
 
         <div class="footer-links-col">
           <ul>
-            <li class="list-title"><a href="https://pytorch.org/resources">Resources</a></li>
-            <li><a href="https://maskerprc.github.io/tutorials">Tutorials</a></li>
-            <li><a href="https://pytorch.org/docs/stable/index.html">Docs</a></li>
-            <li><a href="https://discuss.pytorch.org" target="_blank">Discuss</a></li>
-            <li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">Github Issues</a></li>
-            <li><a href="https://pytorch.org/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">Brand Guidelines</a></li>
+            <li class="list-title"><a href="https://pytorch.org/resources">资源</a></li>
+            <li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
+            <li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+            <li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
+            <li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
+            <li><a href="https://pytorch.org/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
           </ul>
         </div>
 
         <div class="footer-links-col">
           <ul>
-            <li class="list-title">Stay up to date</li>
+            <li class="list-title">保持更新</li>
             <li><a href="https://www.facebook.com/pytorch" target="_blank">Facebook</a></li>
             <li><a href="https://twitter.com/pytorch" target="_blank">Twitter</a></li>
-            <li><a href="https://www.youtube.com/pytorch" target="_blank">YouTube</a></li>
-            <li><a href="https://www.linkedin.com/company/pytorch" target="_blank">LinkedIn</a></li>
+            <li><a href="https://www.youtube.com/pytorch" target="_blank"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">YouTube
+油管</font></font></font></a></li>
+            <li><a href="https://www.linkedin.com/company/pytorch" target="_blank">领英</a></li>
           </ul>  
           </div>
 
         <div class="footer-links-col">
           <ul>
-            <li class="list-title">PyTorch Podcasts</li>
+            <li class="list-title">PyTorch 播客</li>
             <li><a href="https://open.spotify.com/show/6UzHKeiy368jKfQMKKvJY5" target="_blank">Spotify</a></li>
-            <li><a href="https://podcasts.apple.com/us/podcast/pytorch-developer-podcast/id1566080008" target="_blank">Apple</a></li>
+            <li><a href="https://podcasts.apple.com/us/podcast/pytorch-developer-podcast/id1566080008" target="_blank">苹果</a></li>
             <li><a href="https://www.google.com/podcasts?feed=aHR0cHM6Ly9mZWVkcy5zaW1wbGVjYXN0LmNvbS9PQjVGa0lsOA%3D%3D" target="_blank">Google</a></li>
-            <li><a href="https://music.amazon.com/podcasts/7a4e6f0e-26c2-49e9-a478-41bd244197d0/PyTorch-Developer-Podcast?" target="_blank">Amazon</a></li>
+            <li><a href="https://music.amazon.com/podcasts/7a4e6f0e-26c2-49e9-a478-41bd244197d0/PyTorch-Developer-Podcast?" target="_blank">亚马逊</a></li>
           </ul>
          </div>
         </div>
         
         <div class="privacy-policy">
           <ul>
-            <li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/terms/" target="_blank">Terms</a></li>
+            <li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/terms/" target="_blank">条款</a></li>
             <li class="privacy-policy-links">|</li>
-            <li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/privacy-policy/" target="_blank">Privacy</a></li>
+            <li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/privacy-policy/" target="_blank">隐私</a></li>
           </ul>
         </div>
         <div class="copyright">
-        <p>© Copyright The Linux Foundation. The PyTorch Foundation is a project of The Linux Foundation.
-          For web site terms of use, trademark policy and other policies applicable to The PyTorch Foundation please see
-          <a href="https://www.linuxfoundation.org/policies/">www.linuxfoundation.org/policies/</a>. The PyTorch Foundation supports the PyTorch open source
-          project, which has been established as PyTorch Project a Series of LF Projects, LLC. For policies applicable to the PyTorch Project a Series of LF Projects, LLC,
-          please see <a href="https://www.lfprojects.org/policies/">www.lfprojects.org/policies/</a>.</p>
+        <p>© 版权所有 Linux 基金会。PyTorch 基金会是 Linux 基金会的一个项目。有关 PyTorch 基金会的网站使用条款、商标政策以及其他适用政策，请参阅 www.linuxfoundation.org/policies/。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列 LF Projects, LLC 的政策，请参阅 www.lfprojects.org/policies/。</p>
       </div>
      </div>
 
@@ -954,8 +910,8 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 
   <div class="cookie-banner-wrapper">
   <div class="container">
-    <p class="gdpr-notice">To analyze traffic and optimize your experience, we serve cookies on this site. By clicking or navigating, you agree to allow our usage of cookies. As the current maintainers of this site, Facebook’s Cookies Policy applies. Learn more, including about available controls: <a href="https://www.facebook.com/policies/cookies/">Cookies Policy</a>.</p>
-    <img class="close-button" src="../_static/images/pytorch-x.svg">
+    <p class="gdpr-notice">为了分析流量并优化您的体验，我们在本网站上提供 cookies。通过点击或导航，您同意允许我们使用 cookies。作为本站点的当前维护者，适用 Facebook 的 Cookies 政策。了解更多信息，包括可用的控制选项：Cookies 政策。</p>
+    <img class="close-button" src="../_static/images/pytorch-x.svg" width="16" height="16">
   </div>
 </div>
 
@@ -977,65 +933,65 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
       <div class="main-menu">
         <ul>
            <li class="resources-mobile-menu-title">
-             <a>Learn</a>
+             <a>学习</a>
            </li>
            <ul class="resources-mobile-menu-items">
              <li>
-               <a href="https://pytorch.org/get-started">Get Started</a>
+               <a href="https://pytorch.org/get-started">开始使用</a>
              </li>
              <li>
-               <a href="https://maskerprc.github.io/tutorials">Tutorials</a>
+               <a href="https://maskerprc.github.io/tutorials">教程</a>
              </li>
              <li>
-               <a href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">Learn the Basics</a>
+               <a href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">学习基础知识</a>
              </li>
              <li>
-               <a href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">PyTorch Recipes</a>
+               <a href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">PyTorch 食谱</a>
              </li>
              <li>
-               <a href="https://maskerprc.github.io/tutorials/beginner/introyt.html">Introduction to PyTorch - YouTube Series</a>
+               <a href="https://maskerprc.github.io/tutorials/beginner/introyt.html">PyTorch 入门 - YouTube 系列</a>
              </li>
            </ul>
            <li class="resources-mobile-menu-title">
-             <a>Ecosystem</a>
+             <a>生态系统</a>
            </li>
            <ul class="resources-mobile-menu-items">
              <li>
-               <a href="https://pytorch.org/ecosystem">Tools</a>
+               <a href="https://pytorch.org/ecosystem">工具</a>
              </li>
              <li>
-               <a href="https://pytorch.org/#community-module">Community</a>
+               <a href="https://pytorch.org/#community-module">社区</a>
              </li>
              <li>
-               <a href="https://discuss.pytorch.org/">Forums</a>
+               <a href="https://discuss.pytorch.org/">论坛</a>
              </li>
              <li>
-               <a href="https://pytorch.org/resources">Developer Resources</a>
+               <a href="https://pytorch.org/resources">开发者资源</a>
              </li>
              <li>
-               <a href="https://pytorch.org/ecosystem/contributor-awards-2023">Contributor Awards - 2024</a>
+               <a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
              </li>
            </ul>
 
            <li class="resources-mobile-menu-title">
-             <a>Edge</a>
+             <a>边缘</a>
            </li>
 
            <ul class="resources-mobile-menu-items">
              <li>
-               <a href="https://pytorch.org/edge">About PyTorch Edge</a>
+               <a href="https://pytorch.org/edge">关于 PyTorch Edge</a>
              </li>
              
              <li>
                <a href="https://pytorch.org/executorch-overview">ExecuTorch</a>
              </li>
              <li>
-               <a href="https://pytorch.org/executorch/stable/index.html">ExecuTorch Documentation</a>
+               <a href="https://pytorch.org/executorch/stable/index.html">ExecuTorch 文档</a>
              </li>
            </ul>
 
            <li class="resources-mobile-menu-title">
-             <a>Docs</a>
+             <a>文档</a>
            </li>
 
            <ul class="resources-mobile-menu-items">
@@ -1044,59 +1000,59 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
             </li>
 
             <li>
-              <a href="https://pytorch.org/pytorch-domains">PyTorch Domains</a>
+              <a href="https://pytorch.org/pytorch-domains">PyTorch 领域</a>
             </li>
           </ul>
 
           <li class="resources-mobile-menu-title">
-            <a>Blog & News</a>
+            <a>博客 &amp; 新闻</a>
           </li>
             
            <ul class="resources-mobile-menu-items">
             <li>
-              <a href="https://pytorch.org/blog/">PyTorch Blog</a>
+              <a href="https://pytorch.org/blog/">PyTorch 博客</a>
             </li>
             <li>
-              <a href="https://pytorch.org/community-blog">Community Blog</a>
-            </li>
-
-            <li>
-              <a href="https://pytorch.org/videos">Videos</a>
+              <a href="https://pytorch.org/community-blog">社区博客</a>
             </li>
 
             <li>
-              <a href="https://pytorch.org/community-stories">Community Stories</a>
+              <a href="https://pytorch.org/videos">视频</a>
+            </li>
+
+            <li>
+              <a href="https://pytorch.org/community-stories">社区故事</a>
             </li>
             <li>
-              <a href="https://pytorch.org/events">Events</a>
+              <a href="https://pytorch.org/events">活动</a>
             </li>
             <li>
-               <a href="https://pytorch.org/newsletter">Newsletter</a>
+               <a href="https://pytorch.org/newsletter">通讯简报</a>
              </li>
           </ul>
           
           <li class="resources-mobile-menu-title">
-            <a>About</a>
+            <a>关于</a>
           </li>
 
           <ul class="resources-mobile-menu-items">
             <li>
-              <a href="https://pytorch.org/foundation">PyTorch Foundation</a>
+              <a href="https://pytorch.org/foundation">PyTorch 基金会</a>
             </li>
             <li>
-              <a href="https://pytorch.org/governing-board">Governing Board</a>
+              <a href="https://pytorch.org/governing-board">管理委员会</a>
             </li>
             <li>
-               <a href="https://pytorch.org/credits">Cloud Credit Program</a>
+               <a href="https://pytorch.org/credits">云积分计划</a>
             </li>
             <li>
-               <a href="https://pytorch.org/tac">Technical Advisory Council</a>
+               <a href="https://pytorch.org/tac">技术顾问委员会</a>
             </li>
             <li>
-               <a href="https://pytorch.org/staff">Staff</a>
+               <a href="https://pytorch.org/staff">员工</a>
             </li>
             <li>
-               <a href="https://pytorch.org/contact-us">Contact Us</a>
+               <a href="https://pytorch.org/contact-us">联系我们</a>
             </li>
           </ul>
         </ul>
@@ -1125,5 +1081,5 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
       });
     })
   </script>
-</body>
-</html>
+
+</body></html>

@@ -1,31 +1,28 @@
-
 <!DOCTYPE html>
-
-<!--[if IE 8]><!DOCTYPE html>
 <html lang="zh_CN">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="UTF-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>Large Scale Transformer model training with Tensor Parallel (TP) — PyTorch Tutorials 2.3.0+cpu documentation</title>
-<link href="../_static/css/theme.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
 <!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
-<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/css/theme.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/copybutton.css" rel="stylesheet" type="text/css"/>
-<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/katex-math.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/sg_gallery.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/sg_gallery-binder.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/sg_gallery-dataframe.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/sg_gallery-rendered-html.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" rel="stylesheet" type="text/css"/>
-<link href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/css/custom.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/css/custom2.css" rel="stylesheet" type="text/css"/>
-<link href="../genindex.html" rel="index" title="Index"/>
-<link href="../search.html" rel="search" title="Search"/>
-<link href="pipelining_tutorial.html" rel="next" title="Introduction to Distributed Pipeline Parallelism"/>
-<link href="TCPStore_libuv_backend.html" rel="prev" title="Introduction to Libuv TCPStore Backend"/>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/theme.css" rel="stylesheet" type="text/css">
+<link href="../_static/copybutton.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/katex-math.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-binder.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-dataframe.css" rel="stylesheet" type="text/css">
+<link href="../_static/sg_gallery-rendered-html.css" rel="stylesheet" type="text/css">
+<link href="../_static/sphinx-design.5ea377869091fd0449014c60fc090103.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdn.jsdelivr.net/npm/katex@0.10.0-beta/dist/katex.min.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom.css" rel="stylesheet" type="text/css">
+<link href="../_static/css/custom2.css" rel="stylesheet" type="text/css">
+<link href="../genindex.html" rel="index" title="Index">
+<link href="../search.html" rel="search" title="Search">
+<link href="pipelining_tutorial.html" rel="next" title="Introduction to Distributed Pipeline Parallelism">
+<link href="TCPStore_libuv_backend.html" rel="prev" title="Introduction to Libuv TCPStore Backend">
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -35,24 +32,23 @@
 <!-- End Google Tag Manager -->
 <script src="../_static/js/modernizr.min.js"></script>
 <!-- Preload the theme fonts -->
-<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-book.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-book.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" rel="preload" type="font/woff2">
 <!-- Preload the katex fonts -->
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" rel="preload" type="font/woff2"/>
-<link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" rel="stylesheet"/>
-</head>
-<div class="container-fluid header-holder tutorials-header" id="header-holder">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Math-Italic.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Main-Bold.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size1-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size4-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size2-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Size3-Regular.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/fonts/KaTeX_Caligraphic-Regular.woff2" rel="preload" type="font/woff2">
+<link crossorigin="anonymous" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-vSIIfh2YWi9wW0r9iZe7RJPrKwp6bG+s9QZMoITbCckVJqGCCRhc+ccxNcdpHuYu" rel="stylesheet">
+</head><body class="pytorch-body"><div class="container-fluid header-holder tutorials-header" id="header-holder">
 <div class="container">
 <div class="header-container">
 <a aria-label="PyTorch" class="header-logo" href="https://pytorch.org/"></a>
@@ -60,163 +56,149 @@
 <ul>
 <li class="main-menu-item">
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
-<a class="with-down-arrow">
-                Learn
-              </a>
+<a class="with-down-arrow">学习</a>
 <div class="resources-dropdown-menu">
 <a class="nav-dropdown-item" href="https://pytorch.org/get-started">
-<span class="dropdown-title">Get Started</span>
-<p>Run PyTorch locally or get started quickly with one of the supported cloud platforms</p>
+<span class="dropdown-title">开始使用</span><p></p>
+<p>在本地运行 PyTorch 或快速开始使用支持的云平台之一</p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials">
-<span class="dropdown-title">Tutorials</span>
-<p>Whats new in PyTorch tutorials</p>
+<span class="dropdown-title">教程</span><p></p>
+<p>PyTorch 教程中的新内容是什么</p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">
-<span class="dropdown-title">Learn the Basics</span>
-<p>Familiarize yourself with PyTorch concepts and modules</p>
+<span class="dropdown-title">学习基础知识</span><p></p>
+<p>熟悉 PyTorch 的概念和模块</p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">
-<span class="dropdown-title">PyTorch Recipes</span>
-<p>Bite-size, ready-to-deploy PyTorch code examples</p>
+<span class="dropdown-title">PyTorch 食谱</span><p></p>
+<p>精简版、可直接部署的 PyTorch 代码示例</p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/tutorials/beginner/introyt.html">
-<span class="dropdown-title">Intro to PyTorch - YouTube Series</span>
-<p>Master PyTorch basics with our engaging YouTube tutorial series</p>
+<span class="dropdown-title">PyTorch 简介 - YouTube 系列</span><p></p>
+<p>通过我们引人入胜的 YouTube 教程系列掌握 PyTorch 基础知识</p>
 </a>
 </div>
 </div>
 </li>
 <li>
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
-<a class="with-down-arrow">
-                Ecosystem
-              </a>
+<a class="with-down-arrow">生态系统</a>
 <div class="resources-dropdown-menu">
 <a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
-<span class="dropdown-title">Tools</span>
-<p>Learn about the tools and frameworks in the PyTorch Ecosystem</p>
+<span class="dropdown-title">工具</span><p></p>
+<p>了解 PyTorch 生态系统中的工具和框架</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/#community-module">
-<span class="dropdown-title">Community</span>
-<p>Join the PyTorch developer community to contribute, learn, and get your questions answered</p>
+<span class="dropdown-title">社区</span><p></p>
+<p>加入 PyTorch 开发者社区，贡献、学习并获得问题解答</p>
 </a>
 <a class="nav-dropdown-item" href="https://discuss.pytorch.org/" target="_blank">
-<span class="dropdown-title">Forums</span>
-<p>A place to discuss PyTorch code, issues, install, research</p>
+<span class="dropdown-title">论坛</span><p></p>
+<p>讨论 PyTorch 代码、问题、安装、研究的地方</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/resources">
-<span class="dropdown-title">Developer Resources</span>
-<p>Find resources and get questions answered</p>
+<span class="dropdown-title">开发者资源</span><p></p>
+<p>查找资源并解答问题</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
-<span class="dropdown-title">Contributor Awards - 2024</span>
-<p>Award winners announced at this year's PyTorch Conference</p>
+<span class="dropdown-title">2024 年度贡献者奖项</span><p></p>
+<p>本年度 PyTorch 大会获奖者揭晓</p>
 </a>
 </div>
 </div>
 </li>
 <li>
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
-<a class="with-down-arrow">
-                Edge
-              </a>
+<a class="with-down-arrow">边缘</a>
 <div class="resources-dropdown-menu">
 <a class="nav-dropdown-item" href="https://pytorch.org/edge">
-<span class="dropdown-title">About PyTorch Edge</span>
-<p>Build innovative and privacy-aware AI experiences for edge devices</p>
+<span class="dropdown-title">关于 PyTorch Edge</span><p></p>
+<p>为边缘设备构建创新和隐私感知的 AI 体验</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/executorch-overview">
-<span class="dropdown-title">ExecuTorch</span>
-<p>End-to-end solution for enabling on-device inference capabilities across mobile and edge devices</p>
+<span class="dropdown-title">ExecuTorch</span><p></p>
+<p>实现移动和边缘设备端到端推理能力的解决方案</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/executorch/stable/index.html">
-<span class="dropdown-title">ExecuTorch Docs</span>
+<span class="dropdown-title">ExecuTorch 文档</span><p></p>
 </a>
 </div>
 </div>
 </li>
 <li class="main-menu-item">
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
-<a class="with-down-arrow">
-                Docs
-              </a>
+<a class="with-down-arrow">文档</a>
 <div class="resources-dropdown-menu">
 <a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
-<span class="dropdown-title">PyTorch</span>
-<p>Explore the documentation for comprehensive guidance on how to use PyTorch</p>
+<span class="dropdown-title">PyTorch</span><p></p>
+<p>探索文档以获取全面指导，了解如何使用 PyTorch</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/pytorch-domains">
-<span class="dropdown-title">PyTorch Domains</span>
-<p>Read the PyTorch Domains documentation to learn more about domain-specific libraries</p>
+<span class="dropdown-title">PyTorch 领域</span><p></p>
+<p>阅读 PyTorch Domains 文档，了解更多关于特定领域库的信息</p>
 </a>
 </div>
 </div>
 </li>
 <li>
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
-<a class="with-down-arrow">
-                Blogs &amp; News 
-              </a>
+<a class="with-down-arrow">博客与新闻</a>
 <div class="resources-dropdown-menu">
 <a class="nav-dropdown-item" href="https://pytorch.org/blog/">
-<span class="dropdown-title">PyTorch Blog</span>
+<span class="dropdown-title">PyTorch Blog</span><p></p>
 <p>Catch up on the latest technical news and happenings</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
-<span class="dropdown-title">Community Blog</span>
-<p>Stories from the PyTorch ecosystem</p>
+<span class="dropdown-title">社区博客</span><p></p>
+<p>PyTorch 生态系统故事</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/videos">
-<span class="dropdown-title">Videos</span>
-<p>Learn about the latest PyTorch tutorials, new, and more </p>
-<a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
-<span class="dropdown-title">Community Stories</span>
-<p>Learn how our community solves real, everyday machine learning problems with PyTorch</p>
+<span class="dropdown-title">视频</span><p></p>
+<p>了解最新的 PyTorch 教程、新内容等</p>
+</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+<span class="dropdown-title">社区故事</span><p></p>
+<p>了解我们的社区如何使用 PyTorch 解决真实、日常的机器学习问题</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/events">
-<span class="dropdown-title">Events</span>
-<p>Find events, webinars, and podcasts</p>
+<span class="dropdown-title">活动</span><p></p>
+<p>查找活动、网络研讨会和播客</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
-<span class="dropdown-title">Newsletter</span>
-<p>Stay up-to-date with the latest updates</p>
+<span class="dropdown-title">通讯</span><p></p>
+<p>跟踪最新更新</p>
 </a>
-</a></div>
+</div>
 </div></li>
 <li>
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
-<a class="with-down-arrow">
-                About
-              </a>
+<a class="with-down-arrow">关于</a>
 <div class="resources-dropdown-menu">
 <a class="nav-dropdown-item" href="https://pytorch.org/foundation">
-<span class="dropdown-title">PyTorch Foundation</span>
-<p>Learn more about the PyTorch Foundation</p>
+<span class="dropdown-title">PyTorch 基金会</span><p></p>
+<p>了解更多关于 PyTorch 基金会</p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/governing-board">
-<span class="dropdown-title">Governing Board</span>
+<span class="dropdown-title">管理委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/credits">
-<span class="dropdown-title">Cloud Credit Program</span>
+<span class="dropdown-title">云信用计划</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/tac">
-<span class="dropdown-title">Technical Advisory Council</span>
+<span class="dropdown-title">技术顾问委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/staff">
-<span class="dropdown-title">Staff</span>
+<span class="dropdown-title">员工</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://pytorch.org/contact-us">
-<span class="dropdown-title">Contact Us</span>
+<span class="dropdown-title">联系我们</span><p></p>
 </a>
 </div>
 </div>
 </li>
 <li class="main-menu-item">
 <div class="no-dropdown">
-<a data-cta="join" href="https://pytorch.org/join">
-                Become a Member
-              </a>
+<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
 </div>
 </li>
 <li>
@@ -239,9 +221,9 @@
 </div>
 </div>
 </div>
-<body class="pytorch-body">
+
 <div class="table-of-contents-link-wrapper">
-<span>Table of Contents</span>
+<span>目录</span>
 <a class="toggle-table-of-contents" data-behavior="toggle-table-of-contents" href="#"></a>
 </div>
 <nav class="pytorch-left-menu" data-toggle="wy-nav-shift" id="pytorch-left-menu">
@@ -260,22 +242,18 @@
 <div id="sphinxSearchBox" style="display: none;">
 <div role="search">
 <form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
-<input name="q" placeholder="Search Docs" type="text"/>
-<input name="check_keywords" type="hidden" value="yes"/>
-<input name="area" type="hidden" value="default"/>
+<input name="q" placeholder="Search Docs" type="text">
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default">
 </form>
 </div>
 </div>
 </div>
 <form id="searchForm">
 <label style="margin-bottom: 1rem">
-<input checked="" name="searchType" type="radio" value="google"/>
-      Google Search
-    </label>
+<input checked="" name="searchType" type="radio" value="google">谷歌搜索</label>
 <label style="margin-bottom: 1rem">
-<input name="searchType" type="radio" value="sphinx"/>
-      Classic Search
-    </label>
+<input name="searchType" type="radio" value="sphinx">经典搜索</label>
 </form>
 <script>
      document.addEventListener('DOMContentLoaded', function() {
@@ -317,181 +295,181 @@
     });
   </script>
 </div>
-<p class="caption" role="heading"><span class="caption-text">PyTorch Recipes</span></p>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 食谱</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../recipes/recipes_index.html">See All Recipes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../prototype/prototype_index.html">See All Prototype Recipes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/recipes_index.html">查看所有菜谱</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../prototype/prototype_index.html">查看所有原型食谱</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Introduction to PyTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 入门</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/basics/intro.html">Learn the Basics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/quickstart_tutorial.html">Quickstart</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/tensorqs_tutorial.html">Tensors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/data_tutorial.html">Datasets &amp; DataLoaders</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/transforms_tutorial.html">Transforms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/buildmodel_tutorial.html">Build the Neural Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/autogradqs_tutorial.html">Automatic Differentiation with <code class="docutils literal "><span class="pre">torch.autograd</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/optimization_tutorial.html">Optimizing Model Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/saveloadrun_tutorial.html">Save and Load the Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/basics/intro.html">学习基础知识</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/quickstart_tutorial.html">快速入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/tensorqs_tutorial.html">张量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/data_tutorial.html">数据集与数据加载器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/transforms_tutorial.html">变换</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/buildmodel_tutorial.html">构建神经网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/autogradqs_tutorial.html">使用 <code class="docutils literal "><span class="pre">torch.autograd</span></code> 进行自动微分</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/optimization_tutorial.html">优化模型参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/basics/saveloadrun_tutorial.html">保存和加载模型</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/introyt/introyt_index.html">Introduction to PyTorch - YouTube Series</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/introyt1_tutorial.html">Introduction to PyTorch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensors_deeper_tutorial.html">Introduction to PyTorch Tensors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/autogradyt_tutorial.html">The Fundamentals of Autograd</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/modelsyt_tutorial.html">Building Models with PyTorch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensorboardyt_tutorial.html">PyTorch TensorBoard Support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/trainingyt.html">Training with PyTorch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/captumyt.html">Model Understanding with Captum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/introyt/introyt_index.html">PyTorch 入门 - YouTube 系列</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/introyt1_tutorial.html">PyTorch 入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensors_deeper_tutorial.html">PyTorch 张量入门</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/autogradyt_tutorial.html">Autograd 的基础</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/modelsyt_tutorial.html">使用 PyTorch 构建模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/tensorboardyt_tutorial.html">PyTorch TensorBoard 支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/trainingyt.html">使用 PyTorch 进行训练</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beginner/introyt/captumyt.html">使用 Captum 理解模型</a></li>
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Learning PyTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">学习 PyTorch</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/deep_learning_60min_blitz.html">Deep Learning with PyTorch: A 60 Minute Blitz</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/pytorch_with_examples.html">Learning PyTorch with Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/nn_tutorial.html">What is <cite>torch.nn</cite> <em>really</em>?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nlp_from_scratch_index.html">NLP from Scratch</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tensorboard_tutorial.html">Visualizing Models, Data, and Training with TensorBoard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pinmem_nonblock.html">A guide on good usage of <code class="docutils literal "><span class="pre">non_blocking</span></code> and <code class="docutils literal "><span class="pre">pin_memory()</span></code> in PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/deep_learning_60min_blitz.html">使用 PyTorch 进行深度学习：60 分钟速成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/pytorch_with_examples.html">通过示例学习 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/nn_tutorial.html">火炬.nn 究竟是什么？</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlp_from_scratch_index.html">从零开始的自然语言处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tensorboard_tutorial.html">使用 TensorBoard 可视化模型、数据和训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pinmem_nonblock.html">PyTorch 中 <code class="docutils literal "><span class="pre">non_blocking</span></code> 和 <code class="docutils literal "><span class="pre">pin_memory()</span></code> 的良好使用指南</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Image and Video</span></p>
+<p class="caption" role="heading"><span class="caption-text">图像和视频</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="torchvision_tutorial.html">TorchVision Object Detection Finetuning Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/transfer_learning_tutorial.html">Transfer Learning for Computer Vision Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/fgsm_tutorial.html">Adversarial Example Generation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/dcgan_faces_tutorial.html">DCGAN Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="spatial_transformer_tutorial.html">Spatial Transformer Networks Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">Optimizing Vision Transformer Model for Deployment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tiatoolbox_tutorial.html">Whole Slide Image Classification Using PyTorch and TIAToolbox</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchvision_tutorial.html">TorchVision 目标检测微调教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/transfer_learning_tutorial.html">计算机视觉迁移学习教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/fgsm_tutorial.html">对抗样本生成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dcgan_faces_tutorial.html">DCGAN 教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial_transformer_tutorial.html">空间变换网络教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">针对部署优化视觉 Transformer 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tiatoolbox_tutorial.html">使用 PyTorch 和 TIAToolbox 进行全切片图像分类</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Audio</span></p>
+<p class="caption" role="heading"><span class="caption-text">音频</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_io_tutorial.html">Audio I/O</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_resampling_tutorial.html">Audio Resampling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_data_augmentation_tutorial.html">Audio Data Augmentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_extractions_tutorial.html">Audio Feature Extractions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_augmentation_tutorial.html">Audio Feature Augmentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_datasets_tutorial.html">Audio Datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="speech_recognition_pipeline_tutorial.html">Speech Recognition with Wav2Vec2</a></li>
-<li class="toctree-l1"><a class="reference internal" href="text_to_speech_with_torchaudio.html">Text-to-speech with Tacotron2</a></li>
-<li class="toctree-l1"><a class="reference internal" href="forced_alignment_with_torchaudio_tutorial.html">Forced Alignment with Wav2Vec2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_io_tutorial.html">音频输入/输出</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_resampling_tutorial.html">音频重采样</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_data_augmentation_tutorial.html">音频数据增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_extractions_tutorial.html">音频特征提取</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_feature_augmentation_tutorial.html">音频特征增强</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/audio_datasets_tutorial.html">音频数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="speech_recognition_pipeline_tutorial.html">使用 Wav2Vec2 的语音识别</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text_to_speech_with_torchaudio.html">使用 Tacotron2 的文本转语音</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forced_alignment_with_torchaudio_tutorial.html">使用 Wav2Vec2 的强制对齐</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Backends</span></p>
+<p class="caption" role="heading"><span class="caption-text">后端</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">Introduction to ONNX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Reinforcement Learning</span></p>
+<p class="caption" role="heading"><span class="caption-text">强化学习</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="reinforcement_q_learning.html">Reinforcement Learning (DQN) Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reinforcement_ppo.html">Reinforcement Learning (PPO) with TorchRL Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mario_rl_tutorial.html">Train a Mario-playing RL Agent</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/pendulum.html">Pendulum: Writing your environment and transforms with TorchRL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_q_learning.html">强化学习（DQN）教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reinforcement_ppo.html">强化学习（PPO）与 TorchRL 教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mario_rl_tutorial.html">训练玩马里奥的强化学习智能体</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/pendulum.html">摆锤：使用 TorchRL 编写你的环境和转换</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Deploying PyTorch Models in Production</span></p>
+<p class="caption" role="heading"><span class="caption-text">在生产中部署 PyTorch 模型</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">Introduction to ONNX</a></li>
-<li class="toctree-l1"><a class="reference internal" href="flask_rest_api_tutorial.html">Deploying PyTorch in Python via a REST API with Flask</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/Intro_to_TorchScript_tutorial.html">Introduction to TorchScript</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_export.html">Loading a TorchScript Model in C++</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/super_resolution_with_onnxruntime.html">(optional) Exporting a Model from PyTorch to ONNX and Running it using ONNX Runtime</a></li>
-<li class="toctree-l1"><a class="reference internal" href="realtime_rpi.html">Real Time Inference on Raspberry Pi 4 (30 fps!)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/onnx/intro_onnx.html">ONNX 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flask_rest_api_tutorial.html">使用 Flask 通过 REST API 部署 Python 中的 PyTorch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/Intro_to_TorchScript_tutorial.html">火炬脚本入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_export.html">在 C++中加载 TorchScript 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/super_resolution_with_onnxruntime.html">（可选）将 PyTorch 模型导出为 ONNX 并使用 ONNX 运行时运行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="realtime_rpi.html">Raspberry Pi 4 实时推理（30 fps！）</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Profiling PyTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">PyTorch 性能分析</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">Profiling your PyTorch Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_intro_tutorial.html">Introduction to Holistic Trace Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_trace_diff_tutorial.html">Trace Diff using Holistic Trace Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">分析你的 PyTorch 模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_intro_tutorial.html">全景式跟踪分析简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hta_trace_diff_tutorial.html">使用全景式跟踪分析进行跟踪差异</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Code Transforms with FX</span></p>
+<p class="caption" role="heading"><span class="caption-text">使用 FX 进行代码转换</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="fx_conv_bn_fuser.html">(beta) Building a Convolution/Batch Norm fuser in FX</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fx_profiling_tutorial.html">(beta) Building a Simple CPU Performance Profiler with FX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fx_conv_bn_fuser.html">(beta) 在 FX 中构建卷积/批量归一化融合器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fx_profiling_tutorial.html">(beta) 使用 FX 构建简单的 CPU 性能分析器</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Frontend APIs</span></p>
+<p class="caption" role="heading"><span class="caption-text">前端 API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="memory_format_tutorial.html">(beta) Channels Last Memory Format in PyTorch</a></li>
-<li class="toctree-l1"><a class="reference internal" href="forward_ad_usage.html">Forward-mode Automatic Differentiation (Beta)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="jacobians_hessians.html">Jacobians, Hessians, hvp, vhp, and more: composing function transforms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ensembling.html">Model ensembling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="per_sample_grads.html">Per-sample-gradients</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_frontend.html">Using the PyTorch C++ Frontend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/torch-script-parallelism.html">Dynamic Parallelism in TorchScript</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_autograd.html">Autograd in C++ Frontend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="memory_format_tutorial.html">PyTorch 中的（beta）通道最后记忆格式</a></li>
+<li class="toctree-l1"><a class="reference internal" href="forward_ad_usage.html">前向模式自动微分（Beta）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="jacobians_hessians.html">雅可比矩阵、海森矩阵、hvp、vhp 以及更多：函数变换的组成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ensembling.html">模型集成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="per_sample_grads.html">每样本梯度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_frontend.html">使用 PyTorch C++前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch-script-parallelism.html">TorchScript 中的动态并行</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_autograd.html">C++前端中的 Autograd</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Extending PyTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">扩展 PyTorch</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/custom_ops_landing_page.html">PyTorch Custom Operators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/python_custom_ops.html">Custom Python Operators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_custom_ops.html">Custom C++ and CUDA Operators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="custom_function_double_backward_tutorial.html">Double Backward with Custom Functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="custom_function_conv_bn_tutorial.html">Fusing Convolution and Batch Norm using Custom Function</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_extension.html">Custom C++ and CUDA Extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_ops.html">Extending TorchScript with Custom C++ Operators</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_classes.html">Extending TorchScript with Custom C++ Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/dispatcher.html">Registering a Dispatched Operator in C++</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/extend_dispatcher.html">Extending dispatcher for a new backend in C++</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/privateuseone.html">Facilitating New Backend Integration by PrivateUse1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/custom_ops_landing_page.html">PyTorch 自定义算子</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/python_custom_ops.html">自定义 Python 算子</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_custom_ops.html">自定义 C++和 CUDA 运算符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_function_double_backward_tutorial.html">使用自定义函数的双向传播</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_function_conv_bn_tutorial.html">使用自定义函数融合卷积和批量归一化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/cpp_extension.html">自定义 C++ 和 CUDA 扩展</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_ops.html">使用自定义 C++ 操作符扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/torch_script_custom_classes.html">使用自定义 C++ 类扩展 TorchScript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dispatcher.html">在 C++ 中注册分派操作符</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/extend_dispatcher.html">C++中扩展后端调度器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/privateuseone.html">通过 PrivateUse1 促进新后端集成</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Model Optimization</span></p>
+<p class="caption" role="heading"><span class="caption-text">模型优化</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">Profiling your PyTorch Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tensorboard_profiler_tutorial.html">PyTorch Profiler With TensorBoard</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/hyperparameter_tuning_tutorial.html">Hyperparameter tuning with Ray Tune</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">Optimizing Vision Transformer Model for Deployment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parametrizations.html">Parametrizations Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pruning_tutorial.html">Pruning Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/dynamic_quantization_tutorial.html">(beta) Dynamic Quantization on an LSTM Word Language Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dynamic_quantization_bert_tutorial.html">(beta) Dynamic Quantization on BERT</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quantized_transfer_learning_tutorial.html">(beta) Quantized Transfer Learning for Computer Vision Tutorial</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/static_quantization_tutorial.html">(beta) Static Quantization with Eager Mode in PyTorch</a></li>
-<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex.html">Grokking PyTorch Intel CPU performance from first principles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex_2.html">Grokking PyTorch Intel CPU performance from first principles (Part 2)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nvfuser_intro_tutorial.html">Getting Started - Accelerate Your Scripts with nvFuser</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ax_multiobjective_nas_tutorial.html">Multi-Objective NAS with Ax</a></li>
-<li class="toctree-l1"><a class="reference internal" href="torch_compile_tutorial.html">Introduction to <code class="docutils literal "><span class="pre">torch.compile</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="compiled_autograd_tutorial.html">Compiled Autograd: Capturing a larger backward graph for <code class="docutils literal "><span class="pre">torch.compile</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="inductor_debug_cpu.html">Inductor CPU backend debugging and profiling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="scaled_dot_product_attention_tutorial.html">(Beta) Implementing High-Performance Transformers with Scaled Dot Product Attention (SDPA)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/knowledge_distillation_tutorial.html">Knowledge Distillation Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/profiler.html">分析你的 PyTorch 模块</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tensorboard_profiler_tutorial.html">使用 TensorBoard 的 PyTorch 分析器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/hyperparameter_tuning_tutorial.html">使用 Ray Tune 进行超参数调整</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/vt_tutorial.html">针对部署优化视觉 Transformer 模型</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametrizations.html">参数化教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pruning_tutorial.html">剪枝教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/dynamic_quantization_tutorial.html">(beta) 在 LSTM 词语言模型上的动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_quantization_bert_tutorial.html">(beta) BERT 动态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quantized_transfer_learning_tutorial.html">(beta) 计算机视觉教程：量化迁移学习</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/static_quantization_tutorial.html">(beta) PyTorch 情急模式下的静态量化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex.html">从原理出发掌握 PyTorch Intel CPU 性能</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchserve_with_ipex_2.html">从第一性原理深入理解 PyTorch Intel CPU 性能（第二部分）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nvfuser_intro_tutorial.html">入门指南 - 使用 nvFuser 加速您的脚本</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ax_multiobjective_nas_tutorial.html">基于 Ax 的多目标 NAS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torch_compile_tutorial.html"> <code class="docutils literal "><span class="pre">torch.compile</span></code> 简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compiled_autograd_tutorial.html">编译自动微分：捕获更大的反向图 <code class="docutils literal "><span class="pre">torch.compile</span></code> </a></li>
+<li class="toctree-l1"><a class="reference internal" href="inductor_debug_cpu.html">电感 CPU 后端调试和性能分析</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scaled_dot_product_attention_tutorial.html">（Beta）使用缩放点积注意力（SDPA）实现高性能 Transformer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/knowledge_distillation_tutorial.html">知识蒸馏教程</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Parallel and Distributed Training</span></p>
+<p class="caption" role="heading"><span class="caption-text">并行与分布式训练</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../distributed/home.html">Distributed and Parallel Training Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/dist_overview.html">PyTorch Distributed Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/ddp_series_intro.html">Distributed Data Parallel in PyTorch - Video Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="model_parallel_tutorial.html">Single-Machine Model Parallel Best Practices</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ddp_tutorial.html">Getting Started with Distributed Data Parallel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dist_tuto.html">Writing Distributed Applications with PyTorch</a></li>
-<li class="toctree-l1"><a class="reference internal" href="FSDP_tutorial.html">Getting Started with Fully Sharded Data Parallel(FSDP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="FSDP_advanced_tutorial.html">Advanced Model Training with Fully Sharded Data Parallel (FSDP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="TCPStore_libuv_backend.html">Introduction to Libuv TCPStore Backend</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Large Scale Transformer model training with Tensor Parallel (TP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pipelining_tutorial.html">Introduction to Distributed Pipeline Parallelism</a></li>
-<li class="toctree-l1"><a class="reference internal" href="process_group_cpp_extension_tutorial.html">Customize Process Group Backends Using Cpp Extensions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rpc_tutorial.html">Getting Started with Distributed RPC Framework</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rpc_param_server_tutorial.html">Implementing a Parameter Server Using Distributed RPC Framework</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rpc_async_execution.html">Implementing Batch RPC Processing Using Asynchronous Executions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/rpc_ddp_tutorial.html">Combining Distributed DataParallel with Distributed RPC Framework</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/generic_join.html">Distributed Training with Uneven Inputs Using the Join Context Manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../distributed/home.html">分布式与并行训练教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/dist_overview.html">PyTorch 分布式概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/ddp_series_intro.html">PyTorch 分布式数据并行 - 视频教程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_parallel_tutorial.html">单机模型并行最佳实践</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ddp_tutorial.html">分布式数据并行入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dist_tuto.html">使用 PyTorch 编写分布式应用程序</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FSDP_tutorial.html">完全分片数据并行（FSDP）入门</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FSDP_advanced_tutorial.html">使用完全分片数据并行（FSDP）的高级模型训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TCPStore_libuv_backend.html">Libuv TCPStore 后端简介</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">使用张量并行（TP）进行大规模 Transformer 模型训练</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipelining_tutorial.html">分布式管道并行简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="process_group_cpp_extension_tutorial.html">使用 Cpp 扩展自定义进程组后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_tutorial.html">分布式 RPC 框架入门指南</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_param_server_tutorial.html">实现使用分布式 RPC 框架的参数服务器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rpc_async_execution.html">使用异步执行实现批处理 RPC 处理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/rpc_ddp_tutorial.html">结合 Distributed DataParallel 与分布式 RPC 框架</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/generic_join.html">使用 Join Context Manager 进行不均匀输入的分布式训练</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Edge with ExecuTorch</span></p>
+<p class="caption" role="heading"><span class="caption-text">基于 ExecuTorch 的边缘计算</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html">Exporting to ExecuTorch Tutorial</a></li>
-<li class="toctree-l1"><a class="reference external" href=" https://pytorch.org/executorch/stable/running-a-model-cpp-tutorial.html">Running an ExecuTorch Model in C++ Tutorial</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/sdk-integration-tutorial.html">Using the ExecuTorch SDK to Profile a Model</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-ios.html">Building an ExecuTorch iOS Demo App</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-android.html">Building an ExecuTorch Android Demo App</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/examples-end-to-end-to-lower-model-to-delegate.html">Lowering a Model as a Delegate</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/export-to-executorch-tutorial.html">导出至 ExecuTorch 教程</a></li>
+<li class="toctree-l1"><a class="reference external" href=" https://pytorch.org/executorch/stable/running-a-model-cpp-tutorial.html">在 C++中运行 ExecuTorch 模型教程</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/tutorials/sdk-integration-tutorial.html">使用 ExecuTorch SDK 对模型进行性能分析</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-ios.html">构建 ExecuTorch iOS 演示应用程序</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/demo-apps-android.html">构建 ExecuTorch Android 演示应用程序</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pytorch.org/executorch/stable/examples-end-to-end-to-lower-model-to-delegate.html">模型作为代理降低</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Recommendation Systems</span></p>
+<p class="caption" role="heading"><span class="caption-text">推荐系统</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="torchrec_intro_tutorial.html">Introduction to TorchRec</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/sharding.html">Exploring TorchRec sharding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="torchrec_intro_tutorial.html">《TorchRec 简介》</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/sharding.html">探索 TorchRec 分片</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Multimodality</span></p>
+<p class="caption" role="heading"><span class="caption-text">多模态</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../beginner/flava_finetuning_tutorial.html">TorchMultimodal Tutorial: Finetuning FLAVA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beginner/flava_finetuning_tutorial.html">Torch 多模态教程：微调 FLAVA</a></li>
 </ul>
 </div>
 </div>
@@ -502,40 +480,33 @@
 <div aria-label="breadcrumbs navigation" role="navigation">
 <ul class="pytorch-breadcrumbs">
 <li>
-<a href="../index.html">
-          
-            Tutorials
-          
-        </a> &gt;
-      </li>
-<li>Large Scale Transformer model training with Tensor Parallel (TP)</li>
+教程 &gt;</li>
+<li>大规模 Transformer 模型训练与 Tensor Parallel（TP）</li>
 <li class="pytorch-breadcrumbs-aside">
-<a href="../_sources/intermediate/TP_tutorial.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg"/></a>
+<a href="../_sources/intermediate/TP_tutorial.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg" width="16" height="16"></a>
 </li>
 </ul>
 </div>
 </div>
-<div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">
-          Shortcuts
-        </div>
+<div class="pytorch-shortcuts-wrapper" id="pytorch-shortcuts-wrapper">快捷键</div>
 </div>
 <section class="pytorch-content-wrap" data-toggle="wy-nav-shift" id="pytorch-content-wrap">
 <div class="pytorch-content-left">
 <div class="pytorch-call-to-action-links">
 <div id="tutorial-type">intermediate/TP_tutorial</div>
 <div id="google-colab-link">
-<img class="call-to-action-img" src="../_static/images/pytorch-colab.svg">
-<div class="call-to-action-desktop-view">Run in Google Colab</div>
+<img class="call-to-action-img" src="../_static/images/pytorch-colab.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 Google Colab 中运行</div>
 <div class="call-to-action-mobile-view">Colab</div>
-</img></div>
+</div>
 <div id="download-notebook-link">
-<img class="call-to-action-notebook-img" src="../_static/images/pytorch-download.svg"/>
-<div class="call-to-action-desktop-view">Download Notebook</div>
-<div class="call-to-action-mobile-view">Notebook</div>
+<img class="call-to-action-notebook-img" src="../_static/images/pytorch-download.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">下载笔记本</div>
+<div class="call-to-action-mobile-view">笔记本</div>
 </div>
 <div id="github-view-link">
-<img class="call-to-action-img" src="../_static/images/pytorch-github.svg"/>
-<div class="call-to-action-desktop-view">View on GitHub</div>
+<img class="call-to-action-img" src="../_static/images/pytorch-github.svg" width="16" height="16">
+<div class="call-to-action-desktop-view">在 GitHub 上查看</div>
 <div class="call-to-action-mobile-view">GitHub</div>
 </div>
 </div>
@@ -546,93 +517,76 @@
 <div class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
 <article class="pytorch-article" id="pytorch-article" itemprop="articleBody">
 <div class="section" id="large-scale-transformer-model-training-with-tensor-parallel-tp">
-<h1>Large Scale Transformer model training with Tensor Parallel (TP)<a class="headerlink" href="#large-scale-transformer-model-training-with-tensor-parallel-tp" title="Permalink to this heading">¶</a></h1><p class="date-info-last-verified" style="color: #6c6c6d; font-size: small;">Created On: Apr 01, 2025 | Last Updated: Apr 01, 2025 | Last Verified: Nov 05, 2024</p>
-<p><strong>Author</strong>: <a class="reference external" href="https://github.com/wanchaol">Wanchao Liang</a>, <a class="reference external" href="https://github.com/tianyu-l">Tianyu Liu</a></p>
+<h1>大规模 Transformer 模型使用 Tensor Parallel（TP）训练</font></font></font></h1><p class="date-info-last-verified" style="color: #6c6c6d; font-size: small;"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">创建于：2025 年 4 月 1 日 | 最后更新：2025 年 4 月 1 日 | 最后验证：2024 年 11 月 5 日</p>
+<p>作者：梁万超，刘天宇</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="../_images/pencil-16.png"><img alt="edit" src="../_images/pencil-16.png" style="width: 16px; height: 16px;"/></a> View and edit this tutorial in <a class="reference external" href="https://github.com/pytorch/tutorials/blob/main/intermediate_source/TP_tutorial.rst">github</a>.</p>
+<p class="admonition-title">备注</p>
+<p>在 github 上查看和编辑此教程。</p>
 </div>
-<p>This tutorial demonstrates how to train a large Transformer-like model across hundreds to thousands of GPUs using Tensor Parallel and Fully Sharded Data Parallel.</p>
-<p>Prerequisites:</p>
+<p>本教程演示了如何使用张量并行和完全分片数据并行在数百到数千个 GPU 上训练大型类似 Transformer 的模型。</p>
+<p>前提条件：</p>
 <ul class="simple">
-<li><p>PyTorch 2.3.0 or later installed with CUDA/Linux</p></li>
-<li><p><a class="reference external" href="https://pytorch.org/docs/stable/distributed.tensor.parallel.html">Tensor Parallel APIs</a></p></li>
-<li><p><a class="reference external" href="https://maskerprc.github.io/tutorials/recipes/distributed_device_mesh.html">Getting Started with DeviceMesh</a></p></li>
-<li><p><a class="reference external" href="https://maskerprc.github.io/tutorials/intermediate/FSDP_tutorial.html">Getting Started with Fully Sharded Data Parallel</a></p></li>
+<li><p>已安装 PyTorch 2.3.0 或更高版本，并支持 CUDA/Linux</p></li>
+<li><p><a class="reference external" href="https://pytorch.org/docs/stable/distributed.tensor.parallel.html">张量并行 API</a></p></li>
+<li><p><a class="reference external" href="https://maskerprc.github.io/tutorials/recipes/distributed_device_mesh.html">DeviceMesh 入门指南</a></p></li>
+<li><p><a class="reference external" href="https://maskerprc.github.io/tutorials/intermediate/FSDP_tutorial.html">全分片数据并行入门</a></p></li>
 </ul>
 <div class="section" id="how-tensor-parallel-works">
-<h2>How Tensor Parallel works?<a class="headerlink" href="#how-tensor-parallel-works" title="Permalink to this heading">¶</a></h2>
-<p>Tensor Parallel (TP) was originally proposed in the <a class="reference external" href="https://arxiv.org/abs/1909.08053">Megatron-LM</a> paper,
-and it is an efficient model parallelism technique to train large scale Transformer models.
-<a class="reference external" href="https://arxiv.org/abs/2205.05198">Sequence Parallel</a> (SP) we mention in this tutorial is a variant of Tensor
-Parallel that shards on the sequence dimension for <code class="docutils literal "><span class="pre">nn.LayerNorm</span></code> or <code class="docutils literal "><span class="pre">RMSNorm</span></code> to further save activation memory
-during training. As the model becomes larger, the activation memory becomes the bottleneck, so in Tensor
-Parallel training it usually applies Sequence Parallel to <code class="docutils literal "><span class="pre">LayerNorm</span></code> or <code class="docutils literal "><span class="pre">RMSNorm</span></code> layers.</p>
+<h2>Tensor Parallel 是如何工作的？</h2>
+<p>张量并行（TP）最初在 Megatron-LM 论文中提出，是一种高效的模型并行技术，用于训练大规模 Transformer 模型。本教程中提到的序列并行（SP）是张量并行的一种变体，它在序列维度上进行分片，以进一步节省训练过程中的激活内存。随着模型变得越来越大，激活内存成为瓶颈，因此在张量并行训练中，通常将序列并行应用于第②③层。</p>
 <div class="figure align-center" id="id1">
-<a class="reference internal image-reference" href="../_images/megatron_lm.png"><img alt="Megatron-LM TP" src="../_images/megatron_lm.png" style="width: 100%;"/></a>
-<p class="caption"><span class="caption-text">Figure 1. represents the sharding in Tensor Parallel style on a Transformer model’s MLP and Self-Attention layer, where the matrix multiplications in both attention/MLP happens through sharded computations (<a class="reference external" href="https://arxiv.org/abs/1909.08053">image source</a>)</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<a class="reference internal image-reference" href="../_images/megatron_lm.png"><img alt="Megatron-LM TP" src="../_images/megatron_lm.png" style="width: 100%;"></a>
+<p class="caption">图 1 展示了 Transformer 模型 MLP 和 Self-Attention 层在 Tensor Parallel 风格下的分片，其中注意力/MLP 中的矩阵乘法都通过分片计算完成（图片来源）</p>
 </div>
-<p>At a high level, PyTorch Tensor Parallel works as follows:</p>
-<p><strong>Sharding initialization</strong></p>
+<p>从宏观上看，PyTorch Tensor Parallel 的工作原理如下：</p>
+<p><strong>分片初始化</strong></p>
 <ul class="simple">
-<li><p>Determine which <code class="docutils literal "><span class="pre">ParallelStyle</span></code> to apply to each layer and shard the initialized module by calling <code class="docutils literal "><span class="pre">parallelize_module</span></code>.</p></li>
-<li><p>The parallelized modules would have their model parameters be swapped to DTensors, and DTensor would be responsible to run the parallelized module using sharded computation.</p></li>
+<li><p>确定要应用于每个层的 <code class="docutils literal "><span class="pre">ParallelStyle</span></code> ，并通过调用 <code class="docutils literal "><span class="pre">parallelize_module</span></code> 对初始化的模块进行分片。</p></li>
+<li><p>并行模块的模型参数将被转换为 DTensor，DTensor 将负责使用分片计算运行并行模块。</p></li>
 </ul>
-<p><strong>Runtime foward/backward</strong></p>
+<p><strong>运行时正向/反向传播</strong></p>
 <ul class="simple">
-<li><p>Depending on the input/outputs DTensor layouts user specified for each <code class="docutils literal "><span class="pre">ParallelStyle</span></code>, it would run proper communication operation to transform the DTensor layouts for inputs/outputs (such as <code class="docutils literal "><span class="pre">allreduce</span></code>, <code class="docutils literal "><span class="pre">allgather</span></code> and <code class="docutils literal "><span class="pre">reduce_scatter</span></code>).</p></li>
-<li><p>Run sharded computation for the parallelized layers to save compute/memory (for example, <code class="docutils literal "><span class="pre">nn.Linear</span></code>, <code class="docutils literal "><span class="pre">nn.Embedding</span></code>).</p></li>
+<li><p>根据用户为每个 <code class="docutils literal "><span class="pre">ParallelStyle</span></code> 指定的输入/输出 DTensor 布局，将运行适当的通信操作以转换输入/输出的 DTensor 布局（例如 <code class="docutils literal "><span class="pre">allreduce</span></code> 、 <code class="docutils literal "><span class="pre">allgather</span></code> 和 <code class="docutils literal "><span class="pre">reduce_scatter</span></code> ）。</p></li>
+<li><p>为并行层运行分片计算以节省计算/内存（例如， <code class="docutils literal "><span class="pre">nn.Linear</span></code> 、 <code class="docutils literal "><span class="pre">nn.Embedding</span></code> ）。</p></li>
 </ul>
 </div>
 <div class="section" id="when-and-why-you-should-apply-tensor-parallel">
-<h2>When and Why you should apply Tensor Parallel<a class="headerlink" href="#when-and-why-you-should-apply-tensor-parallel" title="Permalink to this heading">¶</a></h2>
-<p>The PyTorch Fully Sharded Data Parallel (FSDP) already has the capability to scale model training to a specific
-number of GPUs. However, when it comes to further scale the model training in terms of model size and GPU quantity,
-many additional challenges arise that may require combining Tensor Parallel with FSDP.:</p>
+<h2>何时以及为何应用张量并行</h2>
+<p>PyTorch 完全分片数据并行（FSDP）已经具备了将模型训练扩展到特定数量 GPU 的能力。然而，当涉及到进一步扩展模型训练的规模，无论是模型大小还是 GPU 数量时，许多额外的挑战就会出现，这可能会需要结合张量并行与 FSDP。</p>
 <ol class="arabic simple">
-<li><p>As the world size (number of GPUs) is becoming excessively large (exceeding 128/256 GPUs), the FSDP collectives (such as <code class="docutils literal "><span class="pre">allgather</span></code>) are being dominated by ring latency.
-By implementing TP/SP on top of FSDP, the FSDP world size could be reduced by 8 by applying FSDP to be inter-host only, consequently decreasing the latency costs by the same amount.</p></li>
-<li><p>Hit data parallelism limit where you can not raise the global batch size to be above the number of GPUs due to both convergence and GPU memory limitations, Tensor/Sequence Parallel
-is the only known way to “ballpark” the global batch size and continue scaling with more GPUs. This means both model size and number of GPUs could continue to scale.</p></li>
-<li><p>For certain types of models, when local batch size becomes smaller, TP/SP can yield matrix multiplication shapes that are more optimized for floating point operations (FLOPS).</p></li>
+<li><p>随着世界大小（GPU 数量）变得过大（超过 128/256 GPU），FSDP 集体操作（如 <code class="docutils literal "><span class="pre">allgather</span></code> ）正被环延迟所主导。通过在 FSDP 之上实现 TP/SP，可以将 FSDP 的世界大小减少 8 倍，通过仅将 FSDP 应用于跨主机通信，从而减少相同的延迟成本。</p></li>
+<li><p>达到数据并行的极限，由于收敛性和 GPU 内存限制，无法将全局批次大小提升到超过 GPU 数量的水平，张量/序列并行是唯一已知的“估算”全局批次大小并继续使用更多 GPU 进行扩展的方法。这意味着模型大小和 GPU 数量可以继续扩展。</p></li>
+<li><p>对于某些类型的模型，当本地批量大小变小时，TP/SP 可以产生更优化于浮点运算（FLOPS）的矩阵乘法形状。</p></li>
 </ol>
-<p>So, when pre-training, how easy is it to hit those limits? As of now, pre-training a Large Language Model (LLM) with billions or trillions of tokens could take months, even when using thousands of GPUs.</p>
+<p>那么，在预训练时，达到这些限制有多容易？截至目前，使用数千个 GPU 进行预训练大型语言模型（LLM）包含数十亿或数千亿个标记可能需要数月时间。</p>
 <ul class="simple">
-<li><p>It will always hit limitation 1 when training LLM on a large scale. For example, Llama 2 70B trained with 2k GPUs for 35 days, multi-dimensional parallelisms are needed at 2k scale.</p></li>
-<li><p>When the Transformer model becomes larger (such as Llama2 70B), it will also quickly hit the limitation 2. One could not use FSDP alone with even local <code class="docutils literal "><span class="pre">batch_size=1</span></code> due to memory
-and convergence constraints. For example, Llama 2 global batch size is 1K, so data parallelism alone can not be used at 2K GPUs.</p></li>
+<li><p>在大规模训练LLM时，总会遇到限制 1。例如，使用 2k 个 GPU 训练了 35 天的 Llama 2 70B，需要在 2k 规模上进行多维并行。</p></li>
+<li><p>当 Transformer 模型变得更大（如 Llama2 70B）时，它也会迅速遇到限制 2。由于内存和收敛限制，即使使用本地 <code class="docutils literal "><span class="pre">batch_size=1</span></code> 也无法单独使用 FSDP。例如，Llama 2 的全局批量大小为 1K，因此在 2K 个 GPU 上仅使用数据并行是不够的。</p></li>
 </ul>
 </div>
 <div class="section" id="how-to-apply-tensor-parallel">
-<h2>How to apply Tensor Parallel<a class="headerlink" href="#how-to-apply-tensor-parallel" title="Permalink to this heading">¶</a></h2>
-<p>PyTorch Tensor Parallel APIs offers a set of module level primitives (<code class="docutils literal "><span class="pre">ParallelStyle</span></code>) to configure the sharding for each individual layers of the model, including:</p>
+<h2>如何应用张量并行</h2>
+<p>PyTorch 张量并行 API 提供了一套模块级别的原语（ <code class="docutils literal "><span class="pre">ParallelStyle</span></code> ），用于配置模型中每个单独层的分片，包括：</p>
 <ul class="simple">
-<li><p><code class="docutils literal "><span class="pre">ColwiseParallel</span></code> and <code class="docutils literal "><span class="pre">RowwiseParallel</span></code>: Shard the <code class="docutils literal "><span class="pre">nn.Linear</span></code> and <code class="docutils literal "><span class="pre">nn.Embedding</span></code> in the column or row fashion.</p></li>
-<li><p><code class="docutils literal "><span class="pre">SequenceParallel</span></code>: Perform sharded computations on <code class="docutils literal "><span class="pre">nn.LayerNorm</span></code>, <code class="docutils literal "><span class="pre">nn.Dropout</span></code>, <code class="docutils literal "><span class="pre">RMSNormPython</span></code>, etc.</p></li>
-<li><p><code class="docutils literal "><span class="pre">PrepareModuleInput</span></code> and <code class="docutils literal "><span class="pre">PrepareModuleOutput</span></code>: Configure the module inputs/outputs sharding layouts with proper communication operations.</p></li>
+<li><p> <code class="docutils literal "><span class="pre">ColwiseParallel</span></code> 和 <code class="docutils literal "><span class="pre">RowwiseParallel</span></code> ：以列或行的方式分片 <code class="docutils literal "><span class="pre">nn.Linear</span></code> 和 <code class="docutils literal "><span class="pre">nn.Embedding</span></code> 。</p></li>
+<li><p> <code class="docutils literal "><span class="pre">SequenceParallel</span></code> ：在 <code class="docutils literal "><span class="pre">nn.LayerNorm</span></code> 、 <code class="docutils literal "><span class="pre">nn.Dropout</span></code> 、 <code class="docutils literal "><span class="pre">RMSNormPython</span></code> 等上执行分片计算。</p></li>
+<li><p>使用 <code class="docutils literal "><span class="pre">PrepareModuleInput</span></code> 和 <code class="docutils literal "><span class="pre">PrepareModuleOutput</span></code> 配置模块输入/输出分片布局以及适当的通信操作。</p></li>
 </ul>
-<p>To demonstrate how to use the PyTorch native Tensor Parallel APIs, let us look at a common Transformer model. In this tutorial, we use the most recent <a class="reference external" href="https://github.com/pytorch/examples/blob/main/distributed/tensor_parallelism/llama2_model.py">Llama2 model</a> as a reference Transformer model implementation, as it is also widely used in the community.</p>
-<p>Since Tensor Parallel shard individual tensors over a set of devices, we would need to set up the distributed environment (such as NCCL communicators) first.
-Tensor Parallelism is a Single-Program Multiple-Data (SPMD) sharding algorithm similar to PyTorch DDP/FSDP, and it under the hood leverages the PyTorch DTensor
-to perform sharding. It also utilizes the DeviceMesh abstraction (which under the hood manages ProcessGroups) for device management and sharding.
-To see how to utilize DeviceMesh to set up multi-dimensional parallelisms, please refer to <a class="reference external" href="https://maskerprc.github.io/tutorials/recipes/distributed_device_mesh.html">this tutorial</a>. Tensor Parallel usually works within each host, so let us first initialize a DeviceMesh that connects 8 GPUs within a host.</p>
+<p>为了演示如何使用 PyTorch 原生的 Tensor Parallel API，让我们来看一个常见的 Transformer 模型。在本教程中，我们以最新的 Llama2 模型作为参考 Transformer 模型实现，因为它在社区中也得到了广泛的应用。</p>
+<p>由于 Tensor Parallel 将单个张量分片到一组设备上，我们首先需要设置分布式环境（如 NCCL 通信器）。Tensor Parallelism 是一种类似于 PyTorch DDP/FSDP 的单程序多数据（SPMD）分片算法，它底层利用 PyTorch DTensor 进行分片。它还利用 DeviceMesh 抽象（底层管理 ProcessGroups）进行设备管理和分片。要了解如何利用 DeviceMesh 设置多维并行性，请参阅本教程。Tensor Parallel 通常在单个主机内部工作，因此我们首先初始化一个连接主机内 8 个 GPU 的 DeviceMesh。</p>
 <div class="highlight-python "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributed.device_mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">init_device_mesh</span>
 
 <span class="n">tp_mesh</span> <span class="o">=</span> <span class="n">init_device_mesh</span><span class="p">(</span><span class="s2">"cuda"</span><span class="p">,</span> <span class="p">(</span><span class="mi">8</span><span class="p">,))</span>
 </pre></div>
 </div>
-<p>Now that we have initialized DeviceMesh, let us take a detailed look at the Llama 2 model architecture and see how we should perform the Tensor Parallel sharding.
-Here we focus on the core <code class="docutils literal "><span class="pre">TransformerBlock</span></code>, where the Transformer model stacks the identical <code class="docutils literal "><span class="pre">TransformerBlock</span></code> s to scale up the model.</p>
-<p>The core <code class="docutils literal "><span class="pre">TransformerBlock</span></code> consists of an <code class="docutils literal "><span class="pre">Attention</span></code> layer and a <code class="docutils literal "><span class="pre">FeedForward</span></code> layer. Let us first look at the simpler <code class="docutils literal "><span class="pre">FeedForward</span></code> layer.
-For the <code class="docutils literal "><span class="pre">FeedForward</span></code> Layer it consists of three Linear layers, where it performs a SwiGLU style MLP, looking at its forward function:</p>
+<p>现在我们已经初始化了 DeviceMesh，让我们详细了解一下 Llama 2 模型架构，并看看我们应该如何执行 Tensor Parallel 分片。在这里，我们关注核心 <code class="docutils literal "><span class="pre">TransformerBlock</span></code> ，其中 Transformer 模型堆叠相同的 <code class="docutils literal "><span class="pre">TransformerBlock</span></code> 来扩展模型。</p>
+<p>核心的 <code class="docutils literal "><span class="pre">TransformerBlock</span></code> 由一个 <code class="docutils literal "><span class="pre">Attention</span></code> 层和一个 <code class="docutils literal "><span class="pre">FeedForward</span></code> 层组成。让我们首先看看更简单的 <code class="docutils literal "><span class="pre">FeedForward</span></code> 层。对于 <code class="docutils literal "><span class="pre">FeedForward</span></code> 层，它由三个线性层组成，执行 SwiGLU 风格的 MLP，看看它的前向函数：</p>
 <div class="highlight-python "><div class="highlight"><pre><span></span><span class="c1"># forward in the FeedForward layer</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">silu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">w3</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>It performs <code class="docutils literal "><span class="pre">w1</span></code> and <code class="docutils literal "><span class="pre">w3</span></code> matmuls concurrently and followed by a <code class="docutils literal "><span class="pre">w2</span></code> matmul with the result of the combined w1/w3 linear projection results. This means we could
-use the idea from the Tensor Parallelism paper to shard the w1/w3 Linear layers in the colwise fashion and shard the <code class="docutils literal "><span class="pre">w2</span></code> Linear layer in the rowwise fashion, so that
-there is only one <code class="docutils literal "><span class="pre">allreduce</span></code> communication happening at the end of all the three layers. With the PyTorch native Tensor Parallel, we can simply create a <code class="docutils literal "><span class="pre">parallelize_plan</span></code> for the <code class="docutils literal "><span class="pre">FeedForward</span></code> layer like below:</p>
+<p>它同时执行 <code class="docutils literal "><span class="pre">w1</span></code> 和 <code class="docutils literal "><span class="pre">w3</span></code> 矩阵乘法，然后是 <code class="docutils literal "><span class="pre">w2</span></code> 矩阵乘法，将 w1/w3 线性投影结果的组合结果。这意味着我们可以使用 Tensor Parallelism 论文中的想法，以列向量的方式分片 w1/w3 线性层，以行向量的方式分片 <code class="docutils literal "><span class="pre">w2</span></code> 线性层，这样在所有三个层结束时，只有一个 <code class="docutils literal "><span class="pre">allreduce</span></code> 通信发生。使用 PyTorch 原生的 Tensor Parallel，我们可以简单地像下面这样为 <code class="docutils literal "><span class="pre">FeedForward</span></code> 层创建一个 <code class="docutils literal "><span class="pre">parallelize_plan</span></code> ：</p>
 <div class="highlight-python "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributed.tensor.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">ColwiseParallel</span><span class="p">,</span> <span class="n">RowwiseParallel</span><span class="p">,</span> <span class="n">parallelize_module</span>
 
 <span class="n">layer_tp_plan</span> <span class="o">=</span> <span class="p">{</span>
@@ -644,9 +598,8 @@ there is only one <code class="docutils literal "><span class="pre">allreduce</s
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>That’s simply how we configure the shardings for the <code class="docutils literal "><span class="pre">FeedForward</span></code> layer using the PyTorch Tensor Parallel APIs. Note that users would only need to specify how to shard the individual layers and the communications (for example, <code class="docutils literal "><span class="pre">allreduce</span></code>) will happen under the hood.</p>
-<p>Moving on to the <code class="docutils literal "><span class="pre">Attention</span></code> Layer. It consists of <code class="docutils literal "><span class="pre">wq</span></code>, <code class="docutils literal "><span class="pre">wk</span></code>, <code class="docutils literal "><span class="pre">wv</span></code> Linear layers to project input to <code class="docutils literal "><span class="pre">q</span></code>/ <code class="docutils literal "><span class="pre">k</span></code> / <code class="docutils literal "><span class="pre">v</span></code>, and then it performs attention and output projection with the <code class="docutils literal "><span class="pre">wo</span></code> Linear layer. Tensor Parallelism here intends to perform column-wise sharding for the
-q/k/v projection and row-wise sharding for the <code class="docutils literal "><span class="pre">wo</span></code> linear projection. So we can add the Attention plan to the <code class="docutils literal "><span class="pre">tp_plan</span></code> that we just drafted up:</p>
+<p>这就是使用 PyTorch Tensor Parallel API 配置 <code class="docutils literal "><span class="pre">FeedForward</span></code> 层分片的方法。请注意，用户只需指定如何分片单个层和通信（例如， <code class="docutils literal "><span class="pre">allreduce</span></code> ），而通信将在底层自动完成。</p>
+<p>接下来是 <code class="docutils literal "><span class="pre">Attention</span></code> 层。它由 <code class="docutils literal "><span class="pre">wq</span></code> 、 <code class="docutils literal "><span class="pre">wk</span></code> 、 <code class="docutils literal "><span class="pre">wv</span></code> 线性层组成，用于将输入投影到 <code class="docutils literal "><span class="pre">q</span></code> / <code class="docutils literal "><span class="pre">k</span></code> / <code class="docutils literal "><span class="pre">v</span></code> ，然后使用 <code class="docutils literal "><span class="pre">wo</span></code> 线性层执行注意力和输出投影。在这里，Tensor Parallelism 旨在对 q/k/v 投影进行列分片，对 <code class="docutils literal "><span class="pre">wo</span></code> 线性投影进行行分片。因此，我们可以将注意力计划添加到我们刚刚起草的 <code class="docutils literal "><span class="pre">tp_plan</span></code> 中：</p>
 <div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">layer_tp_plan</span> <span class="o">=</span> <span class="p">{</span>
     <span class="c1"># by default ColwiseParallel input layouts is replicated</span>
     <span class="c1"># and RowwiseParallel output layouts is replicated</span>
@@ -660,10 +613,9 @@ q/k/v projection and row-wise sharding for the <code class="docutils literal "><
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>This is almost the <code class="docutils literal "><span class="pre">layer_tp_plan</span></code> we need to apply Tensor Parallelism to the <code class="docutils literal "><span class="pre">TransformerBlock</span></code>. However, one thing we should be aware is that when sharding the linear layer column-wise, the output of the linear layers would become sharded on the last tensor dimension, and the row-wise sharding linear layer directly accepts an input that shards on the last dimension.
-If there are any more tensor operations (such as view operations) between the column-wise linear and the row-wise linear, we would need to adjust the relevant shape related ops to sharded shape.</p>
-<p>For the Llama model, in the attention layer there are couple of view operations that are shape related. In particular, column-wise parallel for <code class="docutils literal "><span class="pre">wq</span></code>/ <code class="docutils literal "><span class="pre">wk</span></code>/ <code class="docutils literal "><span class="pre">wv</span></code> linear layers, the activation tensor is sharded on the <code class="docutils literal "><span class="pre">num_heads</span></code> dimension, so we would need to adjust the <code class="docutils literal "><span class="pre">num_heads</span></code> to local <code class="docutils literal "><span class="pre">num_heads</span></code>.</p>
-<p>Finally, we need to call <code class="docutils literal "><span class="pre">parallelize_module</span></code> API to make the plan for each <code class="docutils literal "><span class="pre">TransformerBlock</span></code> effective. Under the hood, it distributes the model parameters inside <code class="docutils literal "><span class="pre">Attention</span></code> and <code class="docutils literal "><span class="pre">FeedForward</span></code> layers to DTensors, and registers communication hooks for model inputs and outputs (before and after each module respectively), if necessary:</p>
+<p>这几乎是我们需要应用 Tensor Parallelism 到 <code class="docutils literal "><span class="pre">TransformerBlock</span></code> 的 <code class="docutils literal "><span class="pre">layer_tp_plan</span></code> 。然而，我们应该注意的一点是，当对线性层进行列分片时，线性层的输出将分片在最后一个张量维度上，而行分片的线性层直接接受最后一个维度分片的输入。如果在列线性层和行线性层之间有任何更多的张量操作（例如视图操作），我们需要调整相关的形状相关操作以匹配分片形状。</p>
+<p>对于 Llama 模型，在注意力层中存在一些与形状相关的视图操作。特别是，对于 <code class="docutils literal "><span class="pre">wq</span></code> / <code class="docutils literal "><span class="pre">wk</span></code> / <code class="docutils literal "><span class="pre">wv</span></code> 线性层的列并行，激活张量在 <code class="docutils literal "><span class="pre">num_heads</span></code> 维度上进行分片，因此我们需要调整 <code class="docutils literal "><span class="pre">num_heads</span></code> 到本地 <code class="docutils literal "><span class="pre">num_heads</span></code> 。</p>
+<p>最后，我们需要调用 <code class="docutils literal "><span class="pre">parallelize_module</span></code> API 来为每个 <code class="docutils literal "><span class="pre">TransformerBlock</span></code> 制定计划。在底层，它将模型参数分布到 <code class="docutils literal "><span class="pre">Attention</span></code> 和 <code class="docutils literal "><span class="pre">FeedForward</span></code> 层中的 DTensors，并在必要时为模型输入和输出（在每个模块前后分别）注册通信钩子：</p>
 <div class="highlight-python "><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">layer_id</span><span class="p">,</span> <span class="n">transformer_block</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">):</span>
     <span class="n">layer_tp_plan</span> <span class="o">=</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>  <span class="c1"># i.e. the plan we just generated</span>
 
@@ -679,8 +631,7 @@ If there are any more tensor operations (such as view operations) between the co
     <span class="p">)</span>
 </pre></div>
 </div>
-<p>Now that we have elaborated the sharding plan for each <code class="docutils literal "><span class="pre">TransformerBlock</span></code>, there is usually a <code class="docutils literal "><span class="pre">nn.Embedding</span></code> in the first layer and a final <code class="docutils literal "><span class="pre">nn.Linear</span></code> projection layer, where user could choose row-wise or column-wise sharding to the first <code class="docutils literal "><span class="pre">nn.Embedding</span></code> and column-wise sharding to the last <code class="docutils literal "><span class="pre">nn.Linear</span></code> projection layer with proper input and output layouts specified.
-Here is an example:</p>
+<p>现在我们已经详细阐述了每个 <code class="docutils literal "><span class="pre">TransformerBlock</span></code> 的分片计划，通常在第一层有一个 <code class="docutils literal "><span class="pre">nn.Embedding</span></code> ，以及一个最终的 <code class="docutils literal "><span class="pre">nn.Linear</span></code> 投影层，用户可以选择将第一 <code class="docutils literal "><span class="pre">nn.Embedding</span></code> 的行或列分片，以及将最后的 <code class="docutils literal "><span class="pre">nn.Linear</span></code> 投影层进行列分片，并指定适当的输入和输出布局。以下是一个示例：</p>
 <div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">parallelize_module</span><span class="p">(</span>
     <span class="n">model</span><span class="p">,</span>
     <span class="n">tp_mesh</span><span class="p">,</span>
@@ -696,14 +647,14 @@ Here is an example:</p>
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If the model to be partitioned is too large to fit into CPU memory, one could either use <code class="docutils literal "><span class="pre">meta</span></code> device initialization (for example, initialize the model on meta device first, shard the layers, and the materialize the model), or parallelize the <code class="docutils literal "><span class="pre">TransformerBlock</span></code> layer by layer during the Transformer model initialization.</p>
+<p class="admonition-title">备注</p>
+<p>如果要划分的模型太大而无法适应 CPU 内存，可以选择使用 <code class="docutils literal "><span class="pre">meta</span></code> 设备初始化（例如，首先在元设备上初始化模型，划分层，然后实例化模型），或者在 Transformer 模型初始化过程中逐层并行化 <code class="docutils literal "><span class="pre">TransformerBlock</span></code> 层。</p>
 </div>
 </div>
 <div class="section" id="apply-sequence-parallel-to-layernorm-rmsnorm-layers">
-<h2>Apply Sequence Parallel to <code class="docutils literal "><span class="pre">LayerNorm/RMSNorm</span></code> layers<a class="headerlink" href="#apply-sequence-parallel-to-layernorm-rmsnorm-layers" title="Permalink to this heading">¶</a></h2>
-<p>Sequence Parallel works on top of the Tensor Parallel illustrated above. Compared with basic Tensor Parallel, which only shards tensors within the <code class="docutils literal "><span class="pre">Attention</span></code> modules and <code class="docutils literal "><span class="pre">FeedForward</span></code> modules and keep their module inputs and outputs (namely activations in the forward pass and gradients in the backward pass) replicated, Sequence Parallel keeps them sharded on the sequence dimension.</p>
-<p>In a typical <code class="docutils literal "><span class="pre">TransformerBlock</span></code>, the forward function combines norm layers (<code class="docutils literal "><span class="pre">LayerNorm</span></code> or <code class="docutils literal "><span class="pre">RMSNorm</span></code>), an attention layer, a feed forward layer, and residual connections. For example:</p>
+<h2>应用序列并行到 <code class="docutils literal "><span class="pre">LayerNorm/RMSNorm</span></code> 层</h2>
+<p>序列并行建立在上述张量并行之上。与基本的张量并行相比，后者仅在 <code class="docutils literal "><span class="pre">Attention</span></code> 模块和 <code class="docutils literal "><span class="pre">FeedForward</span></code> 模块内划分张量，并保持它们的模块输入和输出（即在正向传递中的激活和在反向传递中的梯度）复制，序列并行则保持它们在序列维度上划分。</p>
+<p>在典型的 <code class="docutils literal "><span class="pre">TransformerBlock</span></code> 中，正向函数结合了归一化层（ <code class="docutils literal "><span class="pre">LayerNorm</span></code> 或 <code class="docutils literal "><span class="pre">RMSNorm</span></code> ）、注意力层、前馈层和残差连接。例如：</p>
 <div class="highlight-python "><div class="highlight"><pre><span></span><span class="c1"># forward in a TransformerBlock</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">attention</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attention_norm</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
@@ -711,16 +662,15 @@ Here is an example:</p>
     <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </div>
-<p>In most use cases, the activations (and gradients) are of the shape <code class="docutils literal "><span class="pre">[batch</span> <span class="pre">size,</span> <span class="pre">sequence</span> <span class="pre">length,</span> <span class="pre">hidden</span> <span class="pre">dimension]</span></code> outside the <code class="docutils literal "><span class="pre">Attention</span></code> and <code class="docutils literal "><span class="pre">FeedForward</span></code> modules. In the DTensor’s language, Sequence Parallel performs activation computation using the <code class="docutils literal "><span class="pre">Shard(1)</span></code> layout for both forward/backward of the module.
-Following the code example earlier, the code below demonstrates how we apply Sequence Parallel to the norm layers within a <code class="docutils literal "><span class="pre">TransformerBlock</span></code>:</p>
-<p>First let’s import the required dependencies for Sequence Parallel:</p>
+<p>在大多数使用场景中，激活（以及梯度）的形状是 <code class="docutils literal "><span class="pre">[batch</span> <span class="pre">size,</span> <span class="pre">sequence</span> <span class="pre">length,</span> <span class="pre">hidden</span> <span class="pre">dimension]</span></code> 在 <code class="docutils literal "><span class="pre">Attention</span></code> 和 <code class="docutils literal "><span class="pre">FeedForward</span></code> 模块之外。在 DTensor 的语言中，序列并行使用 <code class="docutils literal "><span class="pre">Shard(1)</span></code> 布局对模块的前向/反向进行激活计算。根据前面的代码示例，下面的代码演示了如何将序列并行应用于 <code class="docutils literal "><span class="pre">TransformerBlock</span></code> 中的归一化层。</p>
+<p>首先，让我们导入序列并行所需的依赖项：</p>
 <div class="highlight-python "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributed.tensor.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">PrepareModuleInput</span><span class="p">,</span>
     <span class="n">SequenceParallel</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Next let’s adjust the <code class="docutils literal "><span class="pre">layer_tp_plan</span></code> to enable sequence parallel on the <code class="docutils literal "><span class="pre">RMSNorm</span></code> layers:</p>
+<p>接下来，让我们调整 <code class="docutils literal "><span class="pre">layer_tp_plan</span></code> 以启用 <code class="docutils literal "><span class="pre">RMSNorm</span></code> 层的序列并行：</p>
 <div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">layer_tp_plan</span> <span class="o">=</span> <span class="p">{</span>
     <span class="c1"># Now the input and output of SequenceParallel has Shard(1) layouts,</span>
     <span class="c1"># to represent the input/output tensors sharded on the sequence dimension</span>
@@ -744,10 +694,8 @@ Following the code example earlier, the code below demonstrates how we apply Seq
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>One can see we now use <code class="docutils literal "><span class="pre">PrepareModuleInput</span></code> to modify the module input layouts to the Attention and FeedForward layers from <code class="docutils literal "><span class="pre">Shard(1)</span></code> to <code class="docutils literal "><span class="pre">Replicate()</span></code>, and mark their output layouts as <code class="docutils literal "><span class="pre">Shard(1)</span></code>.
-Just like what happens to Tensor Parallelism, one only needs to specify the tensor sharding layouts of the inputs and outputs, and the communication between layers will happen automatically.</p>
-<p>Note that with Sequence Parallel, we assume the inputs and outputs of a <code class="docutils literal "><span class="pre">TransformerBlock</span></code> are always sharded on the sequence dimension, so that multiple <code class="docutils literal "><span class="pre">TransformerBlocks</span></code> can be concatenated seamlessly.
-This can be facilitated by explicitly specifying the output of the beginning <code class="docutils literal "><span class="pre">nn.Embedding</span></code> layer and the input of the final <code class="docutils literal "><span class="pre">nn.Linear</span></code> projection layer to be <code class="docutils literal "><span class="pre">Shard(1)</span></code>:</p>
+<p>现在我们可以看到，我们使用 <code class="docutils literal "><span class="pre">PrepareModuleInput</span></code> 来修改模块输入布局，将注意力层和前馈层的 <code class="docutils literal "><span class="pre">Shard(1)</span></code> 到 <code class="docutils literal "><span class="pre">Replicate()</span></code> 的布局修改为 <code class="docutils literal "><span class="pre">Shard(1)</span></code> 。就像张量并行一样，只需要指定输入和输出的张量划分布局，层之间的通信将自动发生。</p>
+<p>注意，在序列并行中，我们假设 <code class="docutils literal "><span class="pre">TransformerBlock</span></code> 的输入和输出总是在序列维度上分片，以便多个 <code class="docutils literal "><span class="pre">TransformerBlocks</span></code> 可以无缝连接。这可以通过显式指定起始 <code class="docutils literal "><span class="pre">nn.Embedding</span></code> 层的输出和最终 <code class="docutils literal "><span class="pre">nn.Linear</span></code> 投影层的输入为 <code class="docutils literal "><span class="pre">Shard(1)</span></code> 来实现：</p>
 <div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">parallelize_module</span><span class="p">(</span>
     <span class="n">model</span><span class="p">,</span>
     <span class="n">tp_mesh</span><span class="p">,</span>
@@ -767,14 +715,14 @@ This can be facilitated by explicitly specifying the output of the beginning <co
 </div>
 </div>
 <div class="section" id="apply-loss-parallel">
-<h2>Apply Loss Parallel<a class="headerlink" href="#apply-loss-parallel" title="Permalink to this heading">¶</a></h2>
-<p>Loss Parallel is a related technique to save memory and communication when the loss function is computed, as model outputs are usually very large. In Loss Parallel, when the model outputs are sharded on the (often huge) vocabulary dimension, the cross-entropy loss can be computed efficiently, without gathering all the model outputs to every single GPU. This not only significantly reduces the memory consumption, but also improves training speed by reducing communication overhead and doing sharded computation in parallel. The picture below briefly illustrates how Loss Parallel avoids gathering all model outputs to every GPU by doing sharded computation.</p>
+<h2>应用损失并行</h2>
+<p>损失并行是一种相关技术，可以在计算损失函数时节省内存和通信，因为模型输出通常非常大。在损失并行中，当模型输出在（通常是巨大的）词汇维度上分片时，交叉熵损失可以有效地计算，而无需将所有模型输出收集到每个 GPU 上。这不仅显著降低了内存消耗，还通过减少通信开销和在并行中进行分片计算来提高训练速度。下面的图片简要说明了损失并行如何通过进行分片计算来避免将所有模型输出收集到每个 GPU 上。</p>
 <div class="figure align-center" id="id2">
-<a class="reference internal image-reference" href="../_images/loss_parallel.png"><img alt="loss parallel" src="../_images/loss_parallel.png" style="width: 100%;"/></a>
-<p class="caption"><span class="caption-text">Figure 2. Cross-entropy loss forward computation with loss parallel on one GPU. Blue represents sharded tensors; green represents replicated tensors; yellow represents tensors with partial values (to be all-reduced). Black arrows are local computations; red arrows are functional collectives among GPUs.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<a class="reference internal image-reference" href="../_images/loss_parallel.png"><img alt="loss parallel" src="../_images/loss_parallel.png" style="width: 100%;"></a>
+<p class="caption">图 2. 在单个 GPU 上并行计算交叉熵损失，蓝色代表分片张量；绿色代表复制张量；黄色代表部分值张量（待全归约）。黑色箭头表示本地计算；红色箭头表示 GPU 之间的功能集体操作。¶</p>
 </div>
-<p>In the PyTorch Tensor Parallel API, Loss Parallel can be enabled via a context manager <code class="docutils literal "><span class="pre">loss_parallel</span></code>, with which one can directly use <code class="docutils literal "><span class="pre">torch.nn.functional.cross_entropy</span></code> or <code class="docutils literal "><span class="pre">torch.nn.CrossEntropyLoss</span></code> without modifying other parts of their code.</p>
-<p>To apply Loss Parallel, the model predictions, usually of the shape <code class="docutils literal "><span class="pre">[batch</span> <span class="pre">size,</span> <span class="pre">sequence</span> <span class="pre">length,</span> <span class="pre">vocabulary</span> <span class="pre">size]</span></code>, should be sharded on the vocabulary dimension. This can be easily done via marking the output layouts of the last linear projection layer output:</p>
+<p>在 PyTorch Tensor Parallel API 中，可以通过上下文管理器 <code class="docutils literal "><span class="pre">loss_parallel</span></code> 启用损失并行，使用户可以直接使用 <code class="docutils literal "><span class="pre">torch.nn.functional.cross_entropy</span></code> 或 <code class="docutils literal "><span class="pre">torch.nn.CrossEntropyLoss</span></code> ，而无需修改代码的其他部分。</p>
+<p>要应用损失并行，模型预测，通常形状为 <code class="docutils literal "><span class="pre">[batch</span> <span class="pre">size,</span> <span class="pre">sequence</span> <span class="pre">length,</span> <span class="pre">vocabulary</span> <span class="pre">size]</span></code> ，应在词汇维度上进行分片。这可以通过标记最后一个线性投影层输出的输出布局轻松完成：</p>
 <div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">parallelize_module</span><span class="p">(</span>
     <span class="n">model</span><span class="p">,</span>
     <span class="n">tp_mesh</span><span class="p">,</span>
@@ -793,7 +741,7 @@ This can be facilitated by explicitly specifying the output of the beginning <co
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>In the code above, we also apply Sequence Parallel to the norm layer before output. We apply <code class="docutils literal "><span class="pre">use_local_output=False</span></code> to let the output stay as a DTensor, to work with the <code class="docutils literal "><span class="pre">loss_parallel</span></code> context manager. After that, one can simply call the cross_entropy loss function as is shown below. Note that the backward computation also needs to happen within the context.</p>
+<p>在上述代码中，我们还在输出之前的归一化层上应用了序列并行。我们应用 <code class="docutils literal "><span class="pre">use_local_output=False</span></code> 以使输出保持为 DTensor，以便与 <code class="docutils literal "><span class="pre">loss_parallel</span></code> 上下文管理器一起工作。之后，可以简单地调用交叉熵损失函数，如下所示。请注意，反向计算也需要在上下文中发生。</p>
 <div class="highlight-python "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributed.tensor.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">loss_parallel</span>
 
@@ -806,15 +754,13 @@ This can be facilitated by explicitly specifying the output of the beginning <co
 </div>
 </div>
 <div class="section" id="combine-tensor-parallel-with-fully-sharded-data-parallel-together">
-<h2>Combine Tensor Parallel with Fully Sharded Data Parallel together<a class="headerlink" href="#combine-tensor-parallel-with-fully-sharded-data-parallel-together" title="Permalink to this heading">¶</a></h2>
-<p>Now that we have shown how to apply Tensor/Sequence Parallel to the model, let us also take a look at how Tensor Parallel and Fully Sharded Data Parallel could work together.
-Since Tensor Parallelism incurs communications that block the computation, we want to make sure it runs within a fast communication channel, such as NVLink.
-In practice, we usually apply Tensor Parallel within each host, and apply Fully Sharded Data Parallel across the hosts.</p>
+<h2>将张量并行与全分片数据并行结合使用 ¶</h2>
+<p>现在我们已经展示了如何将 Tensor/Sequence Parallel 应用于模型，让我们也来看看 Tensor Parallel 和完全分片数据并行如何协同工作。由于 Tensor Parallelism 会引入阻塞计算的通信，我们想要确保它在快速通信通道中运行，例如 NVLink。在实践中，我们通常在每个主机内部应用 Tensor Parallel，并在主机之间应用完全分片数据并行。</p>
 <div class="figure align-center" id="id3">
-<a class="reference internal image-reference" href="../_images/fsdp_tp.png"><img alt="fsdp + tp" src="../_images/fsdp_tp.png" style="width: 100%;"/></a>
-<p class="caption"><span class="caption-text">Figure 3. FSDP and TP work on separate device dimensions, FSDP communication happens inter-host and TP communication happens intra-host.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+<a class="reference internal image-reference" href="../_images/fsdp_tp.png"><img alt="fsdp + tp" src="../_images/fsdp_tp.png" style="width: 100%;"></a>
+<p class="caption">图 3. FSDP 和 TP 在独立的设备维度上工作，FSDP 通信发生在主机间，TP 通信发生在主机内。¶</p>
 </div>
-<p>This 2-D parallelism pattern can be easily expressed via a 2-D DeviceMesh, and we just need pass each “sub” DeviceMesh to each individual parallelism APIs:</p>
+<p>这种二维并行模式可以通过二维 DeviceMesh 轻松表达，我们只需要将每个“子”DeviceMesh 传递给每个单独的并行 API：</p>
 <div class="highlight-python "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributed.device_mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">init_device_mesh</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributed.tensor.parallel</span><span class="w"> </span><span class="kn">import</span> <span class="n">ColwiseParallel</span><span class="p">,</span> <span class="n">RowwiseParallel</span><span class="p">,</span> <span class="n">parallelize_module</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch.distributed.fsdp</span><span class="w"> </span><span class="kn">import</span> <span class="n">FullyShardedDataParallel</span> <span class="k">as</span> <span class="n">FSDP</span>
@@ -834,26 +780,23 @@ In practice, we usually apply Tensor Parallel within each host, and apply Fully 
 <span class="n">model_2d</span> <span class="o">=</span> <span class="n">FSDP</span><span class="p">(</span><span class="n">model_tp</span><span class="p">,</span> <span class="n">device_mesh</span><span class="o">=</span><span class="n">dp_mesh</span><span class="p">,</span> <span class="n">use_orig_params</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This would allow us to easily apply Tensor Parallel within each host (intra-host) and apply FSDP across hosts (inter-hosts), with <strong>0-code changes</strong> to the Llama model.
-The Tensor(Model) Parallel and Data Parallel techniques combined together provides the ability to continue increasing model size and training efficiently using a large number of GPUs.</p>
+<p>这将使我们能够轻松地在每个主机（主机内）应用张量并行，并在主机之间（主机间）应用 FSDP，而对 Llama 模型无需进行任何代码更改。张量（模型）并行和数据并行技术的结合提供了使用大量 GPU 继续增加模型大小和高效训练的能力。</p>
 </div>
 <div class="section" id="conclusion">
-<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading">¶</a></h2>
-<p>This tutorial demonstrates how to train a large Transformer-like model across hundreds to thousands of GPUs using Tensor Parallel in combination with Fully Sharded Data Parallel.
-It explains how to apply Tensor Parallel to different parts of the model, with <strong>no code changes</strong> to the model itself. Tensor Parallel is a efficient model parallelism technique for large scale training.</p>
-<p>To see the complete end-to-end code example explained in this tutorial, please refer to the <a class="reference external" href="https://github.com/pytorch/examples/blob/main/distributed/tensor_parallelism/fsdp_tp_example.py">Tensor Parallel examples</a> in the pytorch/examples repository.</p>
+<h2>结论 ¶</h2>
+<p>本教程演示了如何使用张量并行和完全分片数据并行在数百到数千个 GPU 上训练大型类似 Transformer 的模型。它解释了如何将张量并行应用于模型的各个部分，而无需对模型本身进行任何代码更改。张量并行是一种高效的大规模训练模型并行技术。</p>
+<p>要查看本教程中完整端到端代码示例的说明，请参阅 pytorch/examples 存储库中的张量并行示例。</p>
 </div>
 </div>
 </article>
 </div>
 <footer>
 <div aria-label="footer navigation" class="rst-footer-buttons" role="navigation">
-<a accesskey="n" class="btn btn-neutral float-right" href="pipelining_tutorial.html" rel="next" title="Introduction to Distributed Pipeline Parallelism">Next <img class="next-page" src="../_static/images/chevron-right-orange.svg"/></a>
-<a accesskey="p" class="btn btn-neutral" href="TCPStore_libuv_backend.html" rel="prev" title="Introduction to Libuv TCPStore Backend"><img class="previous-page" src="../_static/images/chevron-right-orange.svg"/> Previous</a>
+下一页 <img height="16" width="16" src="../_static/images/chevron-right-orange.svg" class="next-page"> <img height="16" width="16" src="../_static/images/chevron-right-orange.svg" class="previous-page"> 上一页
 </div>
-<hr class="rating-hr hr-top"/>
+<hr class="rating-hr hr-top">
 <div class="rating-container">
-<div class="rating-prompt">Rate this Tutorial</div>
+<div class="rating-prompt">评分这个教程</div>
 <div class="stars-outer">
 <i class="far fa-star" data-behavior="tutorial-rating" data-count="1" title="1 Star"></i>
 <i class="far fa-star" data-behavior="tutorial-rating" data-count="2" title="2 Stars"></i>
@@ -864,15 +807,10 @@ It explains how to apply Tensor Parallel to different parts of the model, with <
 </div>
 <hr class="rating-hr hr-bottom">
 <div role="contentinfo">
-<p>
-        © Copyright 2024, PyTorch.
-
-    </p>
+<p>© 版权所有 2024，PyTorch。</p>
 </div>
-<div>
-        Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-      </div>
-</hr></footer>
+<div>使用 Sphinx 构建，主题由 Read the Docs 提供。</div>
+</footer>
 </div>
 <script>
 if((window.location.href.indexOf("/prototype/")!= -1) && (window.location.href.indexOf("/prototype/prototype_index")< 1))
@@ -886,14 +824,14 @@ if((window.location.href.indexOf("/prototype/")!= -1) && (window.location.href.i
 <div class="pytorch-right-menu" id="pytorch-right-menu">
 <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
 <ul>
-<li><a class="reference internal" href="#">Large Scale Transformer model training with Tensor Parallel (TP)</a><ul>
-<li><a class="reference internal" href="#how-tensor-parallel-works">How Tensor Parallel works?</a></li>
-<li><a class="reference internal" href="#when-and-why-you-should-apply-tensor-parallel">When and Why you should apply Tensor Parallel</a></li>
-<li><a class="reference internal" href="#how-to-apply-tensor-parallel">How to apply Tensor Parallel</a></li>
-<li><a class="reference internal" href="#apply-sequence-parallel-to-layernorm-rmsnorm-layers">Apply Sequence Parallel to <code class="docutils literal "><span class="pre">LayerNorm/RMSNorm</span></code> layers</a></li>
-<li><a class="reference internal" href="#apply-loss-parallel">Apply Loss Parallel</a></li>
-<li><a class="reference internal" href="#combine-tensor-parallel-with-fully-sharded-data-parallel-together">Combine Tensor Parallel with Fully Sharded Data Parallel together</a></li>
-<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
+<li><a class="reference internal" href="#">张量并行（TP）大规模 Transformer 模型训练</a><ul>
+<li><a class="reference internal" href="#how-tensor-parallel-works">张量并行是如何工作的？</a></li>
+<li><a class="reference internal" href="#when-and-why-you-should-apply-tensor-parallel">何时以及为什么应该应用张量并行</a></li>
+<li><a class="reference internal" href="#how-to-apply-tensor-parallel">如何应用张量并行</a></li>
+<li><a class="reference internal" href="#apply-sequence-parallel-to-layernorm-rmsnorm-layers">将序列并行应用于 <code class="docutils literal "><span class="pre">LayerNorm/RMSNorm</span></code> 层</a></li>
+<li><a class="reference internal" href="#apply-loss-parallel">应用损失并行</a></li>
+<li><a class="reference internal" href="#combine-tensor-parallel-with-fully-sharded-data-parallel-together">将张量并行与全分片数据并行结合在一起</a></li>
+<li><a class="reference internal" href="#conclusion">结论</a></li>
 </ul>
 </li>
 </ul>
@@ -1013,14 +951,11 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <noscript>
 <img height="1" src="https://www.facebook.com/tr?id=243028289693773&amp;ev=PageView
   &amp;noscript=1" width="1">
-</img></noscript>
+</noscript>
 <script type="text/javascript">
   var collapsedSections = ['PyTorch Recipes', 'Learning PyTorch', 'Image and Video', 'Audio', 'Text', 'Backends', 'Reinforcement Learning', 'Deploying PyTorch Models in Production', 'Profiling PyTorch', 'Code Transforms with FX', 'Frontend APIs', 'Extending PyTorch', 'Model Optimization', 'Parallel and Distributed Training', 'Edge with ExecuTorch', 'Recommendation Systems', 'Multimodality'];
 </script>
-<img alt="" height="1" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0" style="border-style:none;" width="1">
-
-//temporarily add a link to survey
-<script>
+ <img width="1" style="border-style:none;" src="https://www.googleadservices.com/pagead/conversion/795629140/?label=txkmCPmdtosBENSssfsC&amp;guid=ON&amp;script=0" height="1" alt=""> //暂时添加调查链接<script>
     var survey = '<div class="survey-banner"><p><i class="fas fa-poll" aria-hidden="true">&nbsp </i> Take the <a href="https://forms.gle/KZ4xGL65VRMYNbbG6">PyTorch Docs/Tutorials survey</a>.</p></div>'
     if ($(".pytorch-call-to-action-links").length) {
         $(".pytorch-call-to-action-links").before(survey);
@@ -1033,19 +968,19 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <div class="container">
 <div class="row">
 <div class="col-md-4 text-center">
-<h2>Docs</h2>
-<p>Access comprehensive developer documentation for PyTorch</p>
-<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">View Docs</a>
+<h2>文档</h2>
+<p>访问 PyTorch 的全面开发者文档</p>
+<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
 </div>
 <div class="col-md-4 text-center">
-<h2>Tutorials</h2>
-<p>Get in-depth tutorials for beginners and advanced developers</p>
-<a class="with-right-arrow" href="https://maskerprc.github.io/tutorials">View Tutorials</a>
+<h2>教程</h2>
+<p>获取初学者和高级开发者的深入教程</p>
+<a class="with-right-arrow" href="https://maskerprc.github.io/tutorials">查看教程</a>
 </div>
 <div class="col-md-4 text-center">
-<h2>Resources</h2>
-<p>Find development resources and get your questions answered</p>
-<a class="with-right-arrow" href="https://pytorch.org/resources">View Resources</a>
+<h2>资源</h2>
+<p>查找开发资源并获得您的疑问解答</p>
+<a class="with-right-arrow" href="https://pytorch.org/resources">查看资源</a>
 </div>
 </div>
 </div>
@@ -1059,62 +994,59 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <div class="footer-links-col">
 <ul>
 <li class="list-title"><a href="https://pytorch.org/">PyTorch</a></li>
-<li><a href="https://pytorch.org/get-started">Get Started</a></li>
-<li><a href="https://pytorch.org/features">Features</a></li>
-<li><a href="https://pytorch.org/ecosystem">Ecosystem</a></li>
-<li><a href="https://pytorch.org/blog/">Blog</a></li>
-<li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">Contributing</a></li>
+<li><a href="https://pytorch.org/get-started">开始使用</a></li>
+<li><a href="https://pytorch.org/features">功能</a></li>
+<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://pytorch.org/blog/">博客</a></li>
+<li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
 </ul>
 </div>
 <div class="footer-links-col">
 <ul>
-<li class="list-title"><a href="https://pytorch.org/resources">Resources</a></li>
-<li><a href="https://maskerprc.github.io/tutorials">Tutorials</a></li>
-<li><a href="https://pytorch.org/docs/stable/index.html">Docs</a></li>
-<li><a href="https://discuss.pytorch.org" target="_blank">Discuss</a></li>
-<li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">Github Issues</a></li>
-<li><a href="https://pytorch.org/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">Brand Guidelines</a></li>
+<li class="list-title"><a href="https://pytorch.org/resources">资源</a></li>
+<li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
+<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
+<li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
+<li><a href="https://pytorch.org/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
 </ul>
 </div>
 <div class="footer-links-col">
 <ul>
-<li class="list-title">Stay up to date</li>
+<li class="list-title">保持更新</li>
 <li><a href="https://www.facebook.com/pytorch" target="_blank">Facebook</a></li>
 <li><a href="https://twitter.com/pytorch" target="_blank">Twitter</a></li>
-<li><a href="https://www.youtube.com/pytorch" target="_blank">YouTube</a></li>
-<li><a href="https://www.linkedin.com/company/pytorch" target="_blank">LinkedIn</a></li>
+<li><a href="https://www.youtube.com/pytorch" target="_blank"><font class=" " lang="zh-CN"><br hidden=""><font class="   "><font class="  ">YouTube
+油管</font></font></font></a></li>
+<li><a href="https://www.linkedin.com/company/pytorch" target="_blank">领英</a></li>
 </ul>
 </div>
 <div class="footer-links-col">
 <ul>
-<li class="list-title">PyTorch Podcasts</li>
+<li class="list-title">PyTorch 播客</li>
 <li><a href="https://open.spotify.com/show/6UzHKeiy368jKfQMKKvJY5" target="_blank">Spotify</a></li>
-<li><a href="https://podcasts.apple.com/us/podcast/pytorch-developer-podcast/id1566080008" target="_blank">Apple</a></li>
+<li><a href="https://podcasts.apple.com/us/podcast/pytorch-developer-podcast/id1566080008" target="_blank">苹果</a></li>
 <li><a href="https://www.google.com/podcasts?feed=aHR0cHM6Ly9mZWVkcy5zaW1wbGVjYXN0LmNvbS9PQjVGa0lsOA%3D%3D" target="_blank">Google</a></li>
-<li><a href="https://music.amazon.com/podcasts/7a4e6f0e-26c2-49e9-a478-41bd244197d0/PyTorch-Developer-Podcast?" target="_blank">Amazon</a></li>
+<li><a href="https://music.amazon.com/podcasts/7a4e6f0e-26c2-49e9-a478-41bd244197d0/PyTorch-Developer-Podcast?" target="_blank">亚马逊</a></li>
 </ul>
 </div>
 </div>
 <div class="privacy-policy">
 <ul>
-<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/terms/" target="_blank">Terms</a></li>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/terms/" target="_blank">条款</a></li>
 <li class="privacy-policy-links">|</li>
-<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/privacy-policy/" target="_blank">Privacy</a></li>
+<li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/privacy-policy/" target="_blank">隐私</a></li>
 </ul>
 </div>
 <div class="copyright">
-<p>© Copyright The Linux Foundation. The PyTorch Foundation is a project of The Linux Foundation.
-          For web site terms of use, trademark policy and other policies applicable to The PyTorch Foundation please see
-          <a href="https://www.linuxfoundation.org/policies/">www.linuxfoundation.org/policies/</a>. The PyTorch Foundation supports the PyTorch open source
-          project, which has been established as PyTorch Project a Series of LF Projects, LLC. For policies applicable to the PyTorch Project a Series of LF Projects, LLC,
-          please see <a href="https://www.lfprojects.org/policies/">www.lfprojects.org/policies/</a>.</p>
+<p>© 版权所有 Linux 基金会。PyTorch 基金会是 Linux 基金会的一个项目。有关 PyTorch 基金会的网站使用条款、商标政策以及其他适用政策，请参阅 www.linuxfoundation.org/policies/。PyTorch 基金会支持 PyTorch 开源项目，该项目已被确立为 LF Projects, LLC 的 PyTorch 项目系列。有关适用于 PyTorch 项目系列 LF Projects, LLC 的政策，请参阅 www.lfprojects.org/policies/。</p>
 </div>
 </div>
 </footer>
 <div class="cookie-banner-wrapper">
 <div class="container">
-<p class="gdpr-notice">To analyze traffic and optimize your experience, we serve cookies on this site. By clicking or navigating, you agree to allow our usage of cookies. As the current maintainers of this site, Facebook’s Cookies Policy applies. Learn more, including about available controls: <a href="https://www.facebook.com/policies/cookies/">Cookies Policy</a>.</p>
-<img class="close-button" src="../_static/images/pytorch-x.svg"/>
+<p class="gdpr-notice">为了分析流量并优化您的体验，我们在本网站上提供 cookies。通过点击或导航，您同意允许我们使用 cookies。作为本站点的当前维护者，适用 Facebook 的 Cookies 政策。了解更多信息，包括可用的控制选项：Cookies 政策。</p>
+<img class="close-button" src="../_static/images/pytorch-x.svg" width="16" height="16">
 </div>
 </div>
 <!-- End Footer -->
@@ -1132,114 +1064,114 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <div class="main-menu">
 <ul>
 <li class="resources-mobile-menu-title">
-<a>Learn</a>
+<a>学习</a>
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/get-started">Get Started</a>
+<a href="https://pytorch.org/get-started">开始使用</a>
 </li>
 <li>
-<a href="https://maskerprc.github.io/tutorials">Tutorials</a>
+<a href="https://maskerprc.github.io/tutorials">教程</a>
 </li>
 <li>
-<a href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">Learn the Basics</a>
+<a href="https://maskerprc.github.io/tutorials/beginner/basics/intro.html">学习基础知识</a>
 </li>
 <li>
-<a href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">PyTorch Recipes</a>
+<a href="https://maskerprc.github.io/tutorials/recipes/recipes_index.html">PyTorch 食谱</a>
 </li>
 <li>
-<a href="https://maskerprc.github.io/tutorials/beginner/introyt.html">Introduction to PyTorch - YouTube Series</a>
+<a href="https://maskerprc.github.io/tutorials/beginner/introyt.html">PyTorch 入门 - YouTube 系列</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
-<a>Ecosystem</a>
+<a>生态系统</a>
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/ecosystem">Tools</a>
+<a href="https://pytorch.org/ecosystem">工具</a>
 </li>
 <li>
-<a href="https://pytorch.org/#community-module">Community</a>
+<a href="https://pytorch.org/#community-module">社区</a>
 </li>
 <li>
-<a href="https://discuss.pytorch.org/">Forums</a>
+<a href="https://discuss.pytorch.org/">论坛</a>
 </li>
 <li>
-<a href="https://pytorch.org/resources">Developer Resources</a>
+<a href="https://pytorch.org/resources">开发者资源</a>
 </li>
 <li>
-<a href="https://pytorch.org/ecosystem/contributor-awards-2023">Contributor Awards - 2024</a>
+<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
-<a>Edge</a>
+<a>边缘</a>
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/edge">About PyTorch Edge</a>
+<a href="https://pytorch.org/edge">关于 PyTorch Edge</a>
 </li>
 <li>
 <a href="https://pytorch.org/executorch-overview">ExecuTorch</a>
 </li>
 <li>
-<a href="https://pytorch.org/executorch/stable/index.html">ExecuTorch Documentation</a>
+<a href="https://pytorch.org/executorch/stable/index.html">ExecuTorch 文档</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
-<a>Docs</a>
+<a>文档</a>
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
 <a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
 </li>
 <li>
-<a href="https://pytorch.org/pytorch-domains">PyTorch Domains</a>
+<a href="https://pytorch.org/pytorch-domains">PyTorch 领域</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
-<a>Blog &amp; News</a>
+<a>博客 &amp; 新闻</a>
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/blog/">PyTorch Blog</a>
+<a href="https://pytorch.org/blog/">PyTorch 博客</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-blog">Community Blog</a>
+<a href="https://pytorch.org/community-blog">社区博客</a>
 </li>
 <li>
-<a href="https://pytorch.org/videos">Videos</a>
+<a href="https://pytorch.org/videos">视频</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-stories">Community Stories</a>
+<a href="https://pytorch.org/community-stories">社区故事</a>
 </li>
 <li>
-<a href="https://pytorch.org/events">Events</a>
+<a href="https://pytorch.org/events">活动</a>
 </li>
 <li>
-<a href="https://pytorch.org/newsletter">Newsletter</a>
+<a href="https://pytorch.org/newsletter">通讯简报</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
-<a>About</a>
+<a>关于</a>
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/foundation">PyTorch Foundation</a>
+<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
 </li>
 <li>
-<a href="https://pytorch.org/governing-board">Governing Board</a>
+<a href="https://pytorch.org/governing-board">管理委员会</a>
 </li>
 <li>
-<a href="https://pytorch.org/credits">Cloud Credit Program</a>
+<a href="https://pytorch.org/credits">云积分计划</a>
 </li>
 <li>
-<a href="https://pytorch.org/tac">Technical Advisory Council</a>
+<a href="https://pytorch.org/tac">技术顾问委员会</a>
 </li>
 <li>
-<a href="https://pytorch.org/staff">Staff</a>
+<a href="https://pytorch.org/staff">员工</a>
 </li>
 <li>
-<a href="https://pytorch.org/contact-us">Contact Us</a>
+<a href="https://pytorch.org/contact-us">联系我们</a>
 </li>
 </ul>
 </ul>
@@ -1265,5 +1197,5 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
       });
     })
   </script>
-</img></body>
-</html>
+
+</body></html>
