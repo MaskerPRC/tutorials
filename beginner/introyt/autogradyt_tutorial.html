@@ -85,7 +85,7 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">生态系统</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/ecosystem">
 <span class="dropdown-title">工具</span><p></p>
 <p>了解 PyTorch 生态系统中的工具和框架</p>
 </a>
@@ -101,7 +101,7 @@
 <span class="dropdown-title">开发者资源</span><p></p>
 <p>查找资源并解答问题</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/ecosystem/contributor-awards-2024">
 <span class="dropdown-title">2024 年度贡献者奖项</span><p></p>
 <p>本年度 PyTorch 大会获奖者揭晓</p>
 </a>
@@ -130,7 +130,7 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">文档</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/docs/stable/index.html">
 <span class="dropdown-title">PyTorch</span><p></p>
 <p>探索文档以获取全面指导，了解如何使用 PyTorch</p>
 </a>
@@ -149,14 +149,14 @@
 <span class="dropdown-title">PyTorch Blog</span><p></p>
 <p>Catch up on the latest technical news and happenings</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/community-blog">
 <span class="dropdown-title">社区博客</span><p></p>
 <p>PyTorch 生态系统故事</p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/videos">
 <span class="dropdown-title">视频</span><p></p>
 <p>了解最新的 PyTorch 教程、新内容等</p>
-</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+</a><a class="nav-dropdown-item" href="https://maskerprc.github.io/community-stories">
 <span class="dropdown-title">社区故事</span><p></p>
 <p>了解我们的社区如何使用 PyTorch 解决真实、日常的机器学习问题</p>
 </a>
@@ -164,7 +164,7 @@
 <span class="dropdown-title">活动</span><p></p>
 <p>查找活动、网络研讨会和播客</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/newsletter">
 <span class="dropdown-title">通讯</span><p></p>
 <p>跟踪最新更新</p>
 </a>
@@ -174,23 +174,23 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">关于</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/foundation">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/foundation">
 <span class="dropdown-title">PyTorch 基金会</span><p></p>
 <p>了解更多关于 PyTorch 基金会</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/governing-board">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/governing-board">
 <span class="dropdown-title">管理委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/credits">
 <span class="dropdown-title">云信用计划</span><p></p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/tac">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tac">
 <span class="dropdown-title">技术顾问委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/staff">
 <span class="dropdown-title">员工</span><p></p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/contact-us">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/contact-us">
 <span class="dropdown-title">联系我们</span><p></p>
 </a>
 </div>
@@ -198,7 +198,7 @@
 </li>
 <li class="main-menu-item">
 <div class="no-dropdown">
-<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
+<a data-cta="join" href="https://maskerprc.github.io/join">成为会员</a>
 </div>
 </li>
 <li>
@@ -554,12 +554,12 @@
 </pre></div>
 </div>
 <p>接下来，我们将创建一个在区间 \([0, 2{\pi}]\) 上均匀分布的输入张量，并指定 <code class="docutils literal "><span class="pre">requires_grad=True</span></code> 。（像大多数创建张量的函数一样， <code class="docutils literal "><span class="pre">torch.linspace()</span></code> 接受一个可选的 <code class="docutils literal "><span class="pre">requires_grad</span></code> 选项。）设置此标志意味着在随后的每次计算中，autograd 都会累积该计算的历史记录在输出张量中。</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.linspace.html#torch.linspace" title="torch.linspace"><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.linspace.html#torch.linspace" title="torch.linspace"><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>接下来，我们将执行一个计算，并绘制其输出与输入之间的关系：</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.sin.html#torch.sin" title="torch.sin"><span class="n">torch</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.sin.html#torch.sin" title="torch.sin"><span class="n">torch</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">b</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
 </pre></div>
 </div>
@@ -603,8 +603,8 @@
 </pre></div>
 </div>
 <p>回顾我们到达这里的计算步骤：</p>
-<div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.linspace.html#torch.linspace" title="torch.linspace"><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.sin.html#torch.sin" title="torch.sin"><span class="n">torch</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.linspace.html#torch.linspace" title="torch.linspace"><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.sin.html#torch.sin" title="torch.sin"><span class="n">torch</span><span class="o">.</span><span class="n">sin</span></a><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 <span class="n">c</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">b</span>
 <span class="n">d</span> <span class="o">=</span> <span class="n">c</span> <span class="o">+</span> <span class="mi">1</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -621,14 +621,14 @@
 <span class="n">HIDDEN_SIZE</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">DIM_OUT</span> <span class="o">=</span> <span class="mi">10</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">TinyModel</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span></a><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TinyModel</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span></a><span class="p">):</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">TinyModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">layer1</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="n">DIM_IN</span><span class="p">,</span> <span class="n">HIDDEN_SIZE</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html#torch.nn.ReLU" title="torch.nn.ReLU"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span></a><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">layer2</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="n">HIDDEN_SIZE</span><span class="p">,</span> <span class="n">DIM_OUT</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer1</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="n">DIM_IN</span><span class="p">,</span> <span class="n">HIDDEN_SIZE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relu</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.ReLU.html#torch.nn.ReLU" title="torch.nn.ReLU"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span></a><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer2</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="n">HIDDEN_SIZE</span><span class="p">,</span> <span class="n">DIM_OUT</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -636,8 +636,8 @@
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">x</span>
 
-<span class="n">some_input</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">DIM_IN</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">ideal_output</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">DIM_OUT</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">some_input</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">DIM_IN</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ideal_output</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">DIM_OUT</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">TinyModel</span><span class="p">()</span>
 </pre></div>
@@ -649,7 +649,7 @@
 </pre></div>
 </div>
 <p>让我们看看在运行一个训练批次时这会有什么变化。对于损失函数，我们将只使用我们的 <code class="docutils literal "><span class="pre">prediction</span></code> 和 <code class="docutils literal "><span class="pre">ideal_output</span></code> 之间的欧几里得距离的平方，并使用基本的随机梯度下降优化器。</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">optimizer</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-optim sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.optim.SGD.html#torch.optim.SGD" title="torch.optim.SGD"><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span></a><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">optimizer</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-optim sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.optim.SGD.html#torch.optim.SGD" title="torch.optim.SGD"><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span></a><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
 
 <span class="n">prediction</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">some_input</span><span class="p">)</span>
 
@@ -691,7 +691,7 @@
 <h2>关闭和开启自动微分</h2>
 <p>有时候你需要对是否启用 autograd 有更精细的控制。根据具体情况，有多种方法可以实现这一点。</p>
 <p>最简单的方法是直接在张量上更改 <code class="docutils literal "><span class="pre">requires_grad</span></code> 标志：</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.ones.html#torch.ones" title="torch.ones"><span class="n">torch</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.ones.html#torch.ones" title="torch.ones"><span class="n">torch</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 
 <span class="n">b1</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">a</span>
@@ -704,13 +704,13 @@
 </div>
 <p>在上面的单元格中，我们看到 <code class="docutils literal "><span class="pre">b1</span></code> 有一个 <code class="docutils literal "><span class="pre">grad_fn</span></code> （即，一个追踪的计算历史），这正是我们所期望的，因为它是由一个开启了 autograd 的 tensor <code class="docutils literal "><span class="pre">a</span></code> 派生出来的。当我们显式地关闭 autograd <code class="docutils literal "><span class="pre">a.requires_grad</span> <span class="pre">=</span> <span class="pre">False</span></code> 时，计算历史不再被追踪，正如我们在计算 <code class="docutils literal "><span class="pre">b2</span></code> 时所见。</p>
 <p>如果你只需要临时关闭 autograd，更好的方法是使用 <code class="docutils literal "><span class="pre">torch.no_grad()</span></code> ：</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.ones.html#torch.ones" title="torch.ones"><span class="n">torch</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
-<span class="n">b</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.ones.html#torch.ones" title="torch.ones"><span class="n">torch</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.ones.html#torch.ones" title="torch.ones"><span class="n">torch</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="n">b</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.ones.html#torch.ones" title="torch.ones"><span class="n">torch</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span>
 
 <span class="n">c1</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
 
-<span class="k">with</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.no_grad.html#torch.no_grad" title="torch.no_grad"><span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span></a><span class="p">():</span>
+<span class="k">with</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.no_grad.html#torch.no_grad" title="torch.no_grad"><span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span></a><span class="p">():</span>
     <span class="n">c2</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
@@ -728,8 +728,8 @@
     <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
 
 
-<span class="n">a</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.ones.html#torch.ones" title="torch.ones"><span class="n">torch</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
-<span class="n">b</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.ones.html#torch.ones" title="torch.ones"><span class="n">torch</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span>
+<span class="n">a</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.ones.html#torch.ones" title="torch.ones"><span class="n">torch</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="n">b</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.ones.html#torch.ones" title="torch.ones"><span class="n">torch</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span>
 
 <span class="n">c1</span> <span class="o">=</span> <span class="n">add_tensors1</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
@@ -740,7 +740,7 @@
 </div>
 <p>对于在不需要时开启 autograd，有一个相应的上下文管理器 <code class="docutils literal "><span class="pre">torch.enable_grad()</span></code> ，它也可以用作装饰器。</p>
 <p>最后，你可能有一个需要梯度跟踪的张量，但你想要一个不需要的副本。为此，我们有 <code class="docutils literal "><span class="pre">Tensor</span></code> 对象的 <code class="docutils literal "><span class="pre">detach()</span></code> 方法——它创建了一个从计算历史中分离的张量副本：</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -756,7 +756,7 @@
 <blockquote>
 <div><p>以下代码单元格会抛出运行时错误。这是预期的。</p>
 </div></blockquote>
-<div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.linspace.html#torch.linspace" title="torch.linspace"><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-python "><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.linspace.html#torch.linspace" title="torch.linspace"><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">torch</span><span class="o">.</span><span class="n">sin_</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -766,17 +766,17 @@
 <div class="section" id="autograd-profiler">
 <h2>自动微分分析器</h2>
 <p>自动微分详细跟踪您的计算的每一步。这样的计算历史，结合时间信息，将是一个方便的分析器 - 而自动微分已经内置了这个功能。以下是一个快速示例用法：</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">device</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s1">'cpu'</span><span class="p">)</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">device</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s1">'cpu'</span><span class="p">)</span>
 <span class="n">run_on_gpu</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="k">if</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">():</span>
-    <span class="n">device</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s1">'cuda'</span><span class="p">)</span>
+<span class="k">if</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">():</span>
+    <span class="n">device</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s1">'cuda'</span><span class="p">)</span>
     <span class="n">run_on_gpu</span> <span class="o">=</span> <span class="kc">True</span>
 
-<span class="n">x</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">z</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.ones.html#torch.ones" title="torch.ones"><span class="n">torch</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.ones.html#torch.ones" title="torch.ones"><span class="n">torch</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="k">with</span> <a class="sphx-glr-backref-module-torch-autograd-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/autograd.html#torch.autograd.profiler.profile" title="torch.autograd.profiler.profile"><span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">profile</span></a><span class="p">(</span><span class="n">use_cuda</span><span class="o">=</span><span class="n">run_on_gpu</span><span class="p">)</span> <span class="k">as</span> <span class="n">prf</span><span class="p">:</span>
+<span class="k">with</span> <a class="sphx-glr-backref-module-torch-autograd-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/autograd.html#torch.autograd.profiler.profile" title="torch.autograd.profiler.profile"><span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">profile</span></a><span class="p">(</span><span class="n">use_cuda</span><span class="o">=</span><span class="n">run_on_gpu</span><span class="p">)</span> <span class="k">as</span> <span class="n">prf</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
         <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span> <span class="o">/</span> <span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span>
 
@@ -817,7 +817,7 @@
 <p>结果列向量是第二个函数相对于第一个函数输入的梯度——或者在我们的模型和损失函数的情况下，是损失相对于模型输入的梯度。</p>
 <p>`torch.autograd` 是一个计算这些乘积的引擎。这就是我们在反向传播过程中累积学习权重梯度的方法。</p>
 <p>因此， <code class="docutils literal "><span class="pre">backward()</span></code> 调用也可以接受一个可选的向量输入。这个向量代表张量上的一组梯度，这些梯度将被乘以前面跟随的 autograd 跟踪张量的雅可比矩阵。让我们用一个具体的例子来尝试一个小向量：</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span>
 <span class="k">while</span> <span class="n">y</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">:</span>
@@ -827,7 +827,7 @@
 </pre></div>
 </div>
 <p>如果我们现在调用 <code class="docutils literal "><span class="pre">y.backward()</span></code> ，我们会得到一个运行时错误，并显示梯度只能隐式计算标量输出。对于多维输出，autograd 预期我们提供梯度，以便它可以将其乘入雅可比矩阵中的三个输出：</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">v</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span> <span class="c1"># stand-in for gradients</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">v</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span> <span class="c1"># stand-in for gradients</span>
 <span class="n">y</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">grad</span><span class="p">)</span>
@@ -841,16 +841,16 @@
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">exp_adder</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="o">.</span><span class="n">exp</span><span class="p">()</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y</span>
 
-<span class="n">inputs</span> <span class="o">=</span> <span class="p">(</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="c1"># arguments for the function</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="p">(</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="c1"># arguments for the function</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
-<a class="sphx-glr-backref-module-torch-autograd-functional sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.autograd.functional.jacobian.html#torch.autograd.functional.jacobian" title="torch.autograd.functional.jacobian"><span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">jacobian</span></a><span class="p">(</span><span class="n">exp_adder</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-torch-autograd-functional sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.autograd.functional.jacobian.html#torch.autograd.functional.jacobian" title="torch.autograd.functional.jacobian"><span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">jacobian</span></a><span class="p">(</span><span class="n">exp_adder</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>如果你仔细观察，第一个输出应该等于 \(2e^x\)（因为 \(e^x\) 的导数是 \(e^x\)），第二个值应该是 3。</p>
 <p>当然，你也可以用高阶张量来做这件事：</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">inputs</span> <span class="o">=</span> <span class="p">(</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="c1"># arguments for the function</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">inputs</span> <span class="o">=</span> <span class="p">(</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="c1"># arguments for the function</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
-<a class="sphx-glr-backref-module-torch-autograd-functional sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.autograd.functional.jacobian.html#torch.autograd.functional.jacobian" title="torch.autograd.functional.jacobian"><span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">jacobian</span></a><span class="p">(</span><span class="n">exp_adder</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-torch-autograd-functional sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.autograd.functional.jacobian.html#torch.autograd.functional.jacobian" title="torch.autograd.functional.jacobian"><span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">jacobian</span></a><span class="p">(</span><span class="n">exp_adder</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
 </pre></div>
 </div>
 <p> <code class="docutils literal "><span class="pre">torch.autograd.functional.hessian()</span></code> 方法在假设你的函数是二阶可微的情况下工作相同，但返回所有二阶导数的矩阵。</p>
@@ -861,9 +861,9 @@
         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">2</span>
     <span class="k">return</span> <span class="n">y</span>
 
-<span class="n">inputs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">my_gradients</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">])</span>
-<a class="sphx-glr-backref-module-torch-autograd-functional sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.autograd.functional.vjp.html#torch.autograd.functional.vjp" title="torch.autograd.functional.vjp"><span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">vjp</span></a><span class="p">(</span><span class="n">do_some_doubling</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="n">my_gradients</span><span class="p">)</span>
+<span class="n">inputs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">my_gradients</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">])</span>
+<a class="sphx-glr-backref-module-torch-autograd-functional sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.autograd.functional.vjp.html#torch.autograd.functional.vjp" title="torch.autograd.functional.vjp"><span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">vjp</span></a><span class="p">(</span><span class="n">do_some_doubling</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="n">my_gradients</span><span class="p">)</span>
 </pre></div>
 </div>
 <p> <code class="docutils literal "><span class="pre">torch.autograd.functional.jvp()</span></code> 方法执行与 <code class="docutils literal "><span class="pre">vjp()</span></code> 相同的矩阵乘法，但操作数顺序相反。 <code class="docutils literal "><span class="pre">vhp()</span></code> 和 <code class="docutils literal "><span class="pre">hvp()</span></code> 方法对向量-海森矩阵乘法执行相同的操作。</p>
@@ -1068,7 +1068,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <div class="col-md-4 text-center">
 <h2>文档</h2>
 <p>访问 PyTorch 的全面开发者文档</p>
-<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
+<a class="with-right-arrow" href="https://maskerprc.github.io/docs/stable/index.html">查看文档</a>
 </div>
 <div class="col-md-4 text-center">
 <h2>教程</h2>
@@ -1094,7 +1094,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <li class="list-title"><a href="https://maskerprc.github.io/">PyTorch</a></li>
 <li><a href="https://maskerprc.github.io/get-started">开始使用</a></li>
 <li><a href="https://maskerprc.github.io/features">功能</a></li>
-<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://maskerprc.github.io/ecosystem">生态系统</a></li>
 <li><a href="https://maskerprc.github.io/blog/">博客</a></li>
 <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
 </ul>
@@ -1103,7 +1103,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <ul>
 <li class="list-title"><a href="https://maskerprc.github.io/resources">资源</a></li>
 <li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
-<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://maskerprc.github.io/docs/stable/index.html">文档</a></li>
 <li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
 <li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
 <li><a href="https://maskerprc.github.io/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
@@ -1186,7 +1186,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/ecosystem">工具</a>
+<a href="https://maskerprc.github.io/ecosystem">工具</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/#community-module">社区</a>
@@ -1198,7 +1198,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <a href="https://maskerprc.github.io/resources">开发者资源</a>
 </li>
 <li>
-<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
+<a href="https://maskerprc.github.io/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
@@ -1220,7 +1220,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
+<a href="https://maskerprc.github.io/docs/stable/index.html">PyTorch</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/pytorch-domains">PyTorch 领域</a>
@@ -1234,19 +1234,19 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <a href="https://maskerprc.github.io/blog/">PyTorch 博客</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-blog">社区博客</a>
+<a href="https://maskerprc.github.io/community-blog">社区博客</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/videos">视频</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-stories">社区故事</a>
+<a href="https://maskerprc.github.io/community-stories">社区故事</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/events">活动</a>
 </li>
 <li>
-<a href="https://pytorch.org/newsletter">通讯简报</a>
+<a href="https://maskerprc.github.io/newsletter">通讯简报</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
@@ -1254,22 +1254,22 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
+<a href="https://maskerprc.github.io/foundation">PyTorch 基金会</a>
 </li>
 <li>
-<a href="https://pytorch.org/governing-board">管理委员会</a>
+<a href="https://maskerprc.github.io/governing-board">管理委员会</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/credits">云积分计划</a>
 </li>
 <li>
-<a href="https://pytorch.org/tac">技术顾问委员会</a>
+<a href="https://maskerprc.github.io/tac">技术顾问委员会</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/staff">员工</a>
 </li>
 <li>
-<a href="https://pytorch.org/contact-us">联系我们</a>
+<a href="https://maskerprc.github.io/contact-us">联系我们</a>
 </li>
 </ul>
 </ul>

@@ -85,7 +85,7 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">生态系统</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/ecosystem">
 <span class="dropdown-title">工具</span><p></p>
 <p>了解 PyTorch 生态系统中的工具和框架</p>
 </a>
@@ -101,7 +101,7 @@
 <span class="dropdown-title">开发者资源</span><p></p>
 <p>查找资源并解答问题</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/ecosystem/contributor-awards-2024">
 <span class="dropdown-title">2024 年度贡献者奖项</span><p></p>
 <p>本年度 PyTorch 大会获奖者揭晓</p>
 </a>
@@ -130,7 +130,7 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">文档</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/docs/stable/index.html">
 <span class="dropdown-title">PyTorch</span><p></p>
 <p>探索文档以获取全面指导，了解如何使用 PyTorch</p>
 </a>
@@ -149,14 +149,14 @@
 <span class="dropdown-title">PyTorch Blog</span><p></p>
 <p>Catch up on the latest technical news and happenings</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/community-blog">
 <span class="dropdown-title">社区博客</span><p></p>
 <p>PyTorch 生态系统故事</p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/videos">
 <span class="dropdown-title">视频</span><p></p>
 <p>了解最新的 PyTorch 教程、新内容等</p>
-</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+</a><a class="nav-dropdown-item" href="https://maskerprc.github.io/community-stories">
 <span class="dropdown-title">社区故事</span><p></p>
 <p>了解我们的社区如何使用 PyTorch 解决真实、日常的机器学习问题</p>
 </a>
@@ -164,7 +164,7 @@
 <span class="dropdown-title">活动</span><p></p>
 <p>查找活动、网络研讨会和播客</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/newsletter">
 <span class="dropdown-title">通讯</span><p></p>
 <p>跟踪最新更新</p>
 </a>
@@ -174,23 +174,23 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">关于</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/foundation">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/foundation">
 <span class="dropdown-title">PyTorch 基金会</span><p></p>
 <p>了解更多关于 PyTorch 基金会</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/governing-board">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/governing-board">
 <span class="dropdown-title">管理委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/credits">
 <span class="dropdown-title">云信用计划</span><p></p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/tac">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tac">
 <span class="dropdown-title">技术顾问委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/staff">
 <span class="dropdown-title">员工</span><p></p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/contact-us">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/contact-us">
 <span class="dropdown-title">联系我们</span><p></p>
 </a>
 </div>
@@ -198,7 +198,7 @@
 </li>
 <li class="main-menu-item">
 <div class="no-dropdown">
-<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
+<a data-cta="join" href="https://maskerprc.github.io/join">成为会员</a>
 </div>
 </li>
 <li>
@@ -624,7 +624,7 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">torch
     <span class="k">def</span><span class="w"> </span><span class="nf">permute_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation</span><span class="p">):</span>
         <span class="c1"># permute [H, W, C] array to [C, H, W] tensor</span>
         <span class="n">observation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">observation</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="n">observation</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">(</span><span class="n">observation</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+        <span class="n">observation</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">(</span><span class="n">observation</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">observation</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">observation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observation</span><span class="p">):</span>
@@ -709,7 +709,7 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">torch
         <span class="bp">self</span><span class="o">.</span><span class="n">action_dim</span> <span class="o">=</span> <span class="n">action_dim</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_dir</span> <span class="o">=</span> <span class="n">save_dir</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">"cuda"</span> <span class="k">if</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">()</span> <span class="k">else</span> <span class="s2">"cpu"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">"cuda"</span> <span class="k">if</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">()</span> <span class="k">else</span> <span class="s2">"cpu"</span>
 
         <span class="c1"># Mario's DNN to predict the most optimal action - we implement this in the Learn section</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">MarioNet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_dim</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
@@ -738,9 +738,9 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">torch
         <span class="c1"># EXPLOIT</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">state</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">__array__</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="k">else</span> <span class="n">state</span><span class="o">.</span><span class="n">__array__</span><span class="p">()</span>
-            <span class="n">state</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">state</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="n">action_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">"online"</span><span class="p">)</span>
-            <span class="n">action_idx</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.argmax.html#torch.argmax" title="torch.argmax"><span class="n">torch</span><span class="o">.</span><span class="n">argmax</span></a><span class="p">(</span><span class="n">action_values</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="n">action_idx</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.argmax.html#torch.argmax" title="torch.argmax"><span class="n">torch</span><span class="o">.</span><span class="n">argmax</span></a><span class="p">(</span><span class="n">action_values</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 
         <span class="c1"># decrease exploration_rate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exploration_rate</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exploration_rate_decay</span>
@@ -760,7 +760,7 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">torch
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Mario</span><span class="p">(</span><span class="n">Mario</span><span class="p">):</span>  <span class="c1"># subclassing for continuity</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_dim</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">state_dim</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">TensorDictReplayBuffer</span><span class="p">(</span><span class="n">storage</span><span class="o">=</span><span class="n">LazyMemmapStorage</span><span class="p">(</span><span class="mi">100000</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s2">"cpu"</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">TensorDictReplayBuffer</span><span class="p">(</span><span class="n">storage</span><span class="o">=</span><span class="n">LazyMemmapStorage</span><span class="p">(</span><span class="mi">100000</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s2">"cpu"</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">32</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">next_state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">):</span>
@@ -779,11 +779,11 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">torch
         <span class="n">state</span> <span class="o">=</span> <span class="n">first_if_tuple</span><span class="p">(</span><span class="n">state</span><span class="p">)</span><span class="o">.</span><span class="n">__array__</span><span class="p">()</span>
         <span class="n">next_state</span> <span class="o">=</span> <span class="n">first_if_tuple</span><span class="p">(</span><span class="n">next_state</span><span class="p">)</span><span class="o">.</span><span class="n">__array__</span><span class="p">()</span>
 
-        <span class="n">state</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-        <span class="n">next_state</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">(</span><span class="n">next_state</span><span class="p">)</span>
-        <span class="n">action</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">([</span><span class="n">action</span><span class="p">])</span>
-        <span class="n">reward</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">([</span><span class="n">reward</span><span class="p">])</span>
-        <span class="n">done</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">([</span><span class="n">done</span><span class="p">])</span>
+        <span class="n">state</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">next_state</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">(</span><span class="n">next_state</span><span class="p">)</span>
+        <span class="n">action</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">([</span><span class="n">action</span><span class="p">])</span>
+        <span class="n">reward</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">([</span><span class="n">reward</span><span class="p">])</span>
+        <span class="n">done</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.tensor.html#torch.tensor" title="torch.tensor"><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span></a><span class="p">([</span><span class="n">done</span><span class="p">])</span>
 
         <span class="c1"># self.memory.append((state, next_state, action, reward, done,))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">TensorDict</span><span class="p">({</span><span class="s2">"state"</span><span class="p">:</span> <span class="n">state</span><span class="p">,</span> <span class="s2">"next_state"</span><span class="p">:</span> <span class="n">next_state</span><span class="p">,</span> <span class="s2">"action"</span><span class="p">:</span> <span class="n">action</span><span class="p">,</span> <span class="s2">"reward"</span><span class="p">:</span> <span class="n">reward</span><span class="p">,</span> <span class="s2">"done"</span><span class="p">:</span> <span class="n">done</span><span class="p">},</span> <span class="n">batch_size</span><span class="o">=</span><span class="p">[]))</span>
@@ -804,7 +804,7 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">torch
 <p>在我们的实现中，我们将特征生成器 <code class="docutils literal "><span class="pre">features</span></code> 在\(Q_{online}\)和\(Q_{target}\)之间共享，但为每个分别维护独立的全连接分类器。\(\theta_{target}\)（\(Q_{target}\)的参数）被冻结以防止通过反向传播进行更新。相反，它定期与\(\theta_{online}\)（稍后详述）同步。</p>
 <div class="section" id="neural-network">
 <h4>神经网络 ¶</h4>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MarioNet</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module"><span class="n">nn</span><span class="o">.</span><span class="n">Module</span></a><span class="p">):</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MarioNet</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module"><span class="n">nn</span><span class="o">.</span><span class="n">Module</span></a><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""mini CNN structure</span>
 <span class="sd">  input -&gt; (conv2d + relu) x 3 -&gt; flatten -&gt; (dense + relu) x 2 -&gt; output</span>
 <span class="sd">  """</span>
@@ -834,17 +834,17 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">torch
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__build_cnn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">):</span>
-        <span class="k">return</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Sequential.html#torch.nn.Sequential" title="torch.nn.Sequential"><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span></a><span class="p">(</span>
-            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d" title="torch.nn.Conv2d"><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span></a><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
-            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html#torch.nn.ReLU" title="torch.nn.ReLU"><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span></a><span class="p">(),</span>
-            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d" title="torch.nn.Conv2d"><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span></a><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
-            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html#torch.nn.ReLU" title="torch.nn.ReLU"><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span></a><span class="p">(),</span>
-            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d" title="torch.nn.Conv2d"><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span></a><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
-            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html#torch.nn.ReLU" title="torch.nn.ReLU"><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span></a><span class="p">(),</span>
-            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Flatten.html#torch.nn.Flatten" title="torch.nn.Flatten"><span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span></a><span class="p">(),</span>
-            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">3136</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html#torch.nn.ReLU" title="torch.nn.ReLU"><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span></a><span class="p">(),</span>
-            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">),</span>
+        <span class="k">return</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Sequential.html#torch.nn.Sequential" title="torch.nn.Sequential"><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span></a><span class="p">(</span>
+            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d" title="torch.nn.Conv2d"><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span></a><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.ReLU.html#torch.nn.ReLU" title="torch.nn.ReLU"><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span></a><span class="p">(),</span>
+            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d" title="torch.nn.Conv2d"><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span></a><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.ReLU.html#torch.nn.ReLU" title="torch.nn.ReLU"><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span></a><span class="p">(),</span>
+            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d" title="torch.nn.Conv2d"><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span></a><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.ReLU.html#torch.nn.ReLU" title="torch.nn.ReLU"><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span></a><span class="p">(),</span>
+            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Flatten.html#torch.nn.Flatten" title="torch.nn.Flatten"><span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span></a><span class="p">(),</span>
+            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">3136</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
+            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.ReLU.html#torch.nn.ReLU" title="torch.nn.ReLU"><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span></a><span class="p">(),</span>
+            <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">),</span>
         <span class="p">)</span>
 </pre></div>
 </div>
@@ -876,7 +876,7 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">torch
     <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">td_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">next_state</span><span class="p">,</span> <span class="n">done</span><span class="p">):</span>
         <span class="n">next_state_Q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">next_state</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">"online"</span><span class="p">)</span>
-        <span class="n">best_action</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.argmax.html#torch.argmax" title="torch.argmax"><span class="n">torch</span><span class="o">.</span><span class="n">argmax</span></a><span class="p">(</span><span class="n">next_state_Q</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">best_action</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.argmax.html#torch.argmax" title="torch.argmax"><span class="n">torch</span><span class="o">.</span><span class="n">argmax</span></a><span class="p">(</span><span class="n">next_state_Q</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">next_Q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">next_state</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">"target"</span><span class="p">)[</span>
             <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">),</span> <span class="n">best_action</span>
         <span class="p">]</span>
@@ -895,8 +895,8 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">torch
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Mario</span><span class="p">(</span><span class="n">Mario</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_dim</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">state_dim</span><span class="p">,</span> <span class="n">action_dim</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-optim sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.optim.Adam.html#torch.optim.Adam" title="torch.optim.Adam"><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span></a><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.00025</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.SmoothL1Loss.html#torch.nn.SmoothL1Loss" title="torch.nn.SmoothL1Loss"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">SmoothL1Loss</span></a><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-optim sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.optim.Adam.html#torch.optim.Adam" title="torch.optim.Adam"><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span></a><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.00025</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.SmoothL1Loss.html#torch.nn.SmoothL1Loss" title="torch.nn.SmoothL1Loss"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">SmoothL1Loss</span></a><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">update_Q_online</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">td_estimate</span><span class="p">,</span> <span class="n">td_target</span><span class="p">):</span>
         <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_fn</span><span class="p">(</span><span class="n">td_estimate</span><span class="p">,</span> <span class="n">td_target</span><span class="p">)</span>
@@ -917,7 +917,7 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">torch
         <span class="n">save_path</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">save_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"mario_net_</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">curr_step</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">save_every</span><span class="p">)</span><span class="si">}</span><span class="s2">.chkpt"</span>
         <span class="p">)</span>
-        <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.save.html#torch.save" title="torch.save"><span class="n">torch</span><span class="o">.</span><span class="n">save</span></a><span class="p">(</span>
+        <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.save.html#torch.save" title="torch.save"><span class="n">torch</span><span class="o">.</span><span class="n">save</span></a><span class="p">(</span>
             <span class="nb">dict</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">exploration_rate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">exploration_rate</span><span class="p">),</span>
             <span class="n">save_path</span><span class="p">,</span>
         <span class="p">)</span>
@@ -1079,7 +1079,7 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="nv">torch
 <div class="section" id="lets-play">
 <h2>让我们开始吧！</h2>
 <p>在这个例子中，我们运行了 40 个训练周期，但为了让马里奥真正学会他世界的规则，我们建议至少运行 40,000 个周期！</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">use_cuda</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">()</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">use_cuda</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Using CUDA: </span><span class="si">{</span><span class="n">use_cuda</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
 
@@ -1339,7 +1339,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <div class="col-md-4 text-center">
 <h2>文档</h2>
 <p>访问 PyTorch 的全面开发者文档</p>
-<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
+<a class="with-right-arrow" href="https://maskerprc.github.io/docs/stable/index.html">查看文档</a>
 </div>
 <div class="col-md-4 text-center">
 <h2>教程</h2>
@@ -1365,7 +1365,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <li class="list-title"><a href="https://maskerprc.github.io/">PyTorch</a></li>
 <li><a href="https://maskerprc.github.io/get-started">开始使用</a></li>
 <li><a href="https://maskerprc.github.io/features">功能</a></li>
-<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://maskerprc.github.io/ecosystem">生态系统</a></li>
 <li><a href="https://maskerprc.github.io/blog/">博客</a></li>
 <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
 </ul>
@@ -1374,7 +1374,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <ul>
 <li class="list-title"><a href="https://maskerprc.github.io/resources">资源</a></li>
 <li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
-<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://maskerprc.github.io/docs/stable/index.html">文档</a></li>
 <li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
 <li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
 <li><a href="https://maskerprc.github.io/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
@@ -1457,7 +1457,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/ecosystem">工具</a>
+<a href="https://maskerprc.github.io/ecosystem">工具</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/#community-module">社区</a>
@@ -1469,7 +1469,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <a href="https://maskerprc.github.io/resources">开发者资源</a>
 </li>
 <li>
-<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
+<a href="https://maskerprc.github.io/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
@@ -1491,7 +1491,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
+<a href="https://maskerprc.github.io/docs/stable/index.html">PyTorch</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/pytorch-domains">PyTorch 领域</a>
@@ -1505,19 +1505,19 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <a href="https://maskerprc.github.io/blog/">PyTorch 博客</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-blog">社区博客</a>
+<a href="https://maskerprc.github.io/community-blog">社区博客</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/videos">视频</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-stories">社区故事</a>
+<a href="https://maskerprc.github.io/community-stories">社区故事</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/events">活动</a>
 </li>
 <li>
-<a href="https://pytorch.org/newsletter">通讯简报</a>
+<a href="https://maskerprc.github.io/newsletter">通讯简报</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
@@ -1525,22 +1525,22 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
+<a href="https://maskerprc.github.io/foundation">PyTorch 基金会</a>
 </li>
 <li>
-<a href="https://pytorch.org/governing-board">管理委员会</a>
+<a href="https://maskerprc.github.io/governing-board">管理委员会</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/credits">云积分计划</a>
 </li>
 <li>
-<a href="https://pytorch.org/tac">技术顾问委员会</a>
+<a href="https://maskerprc.github.io/tac">技术顾问委员会</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/staff">员工</a>
 </li>
 <li>
-<a href="https://pytorch.org/contact-us">联系我们</a>
+<a href="https://maskerprc.github.io/contact-us">联系我们</a>
 </li>
 </ul>
 </ul>

@@ -83,7 +83,7 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">生态系统</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/ecosystem">
 <span class="dropdown-title">工具</span><p></p>
 <p>了解 PyTorch 生态系统中的工具和框架</p>
 </a>
@@ -99,7 +99,7 @@
 <span class="dropdown-title">开发者资源</span><p></p>
 <p>查找资源并解答问题</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/ecosystem/contributor-awards-2024">
 <span class="dropdown-title">2024 年度贡献者奖项</span><p></p>
 <p>本年度 PyTorch 大会获奖者揭晓</p>
 </a>
@@ -128,7 +128,7 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">文档</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/docs/stable/index.html">
 <span class="dropdown-title">PyTorch</span><p></p>
 <p>探索文档以获取全面指导，了解如何使用 PyTorch</p>
 </a>
@@ -147,14 +147,14 @@
 <span class="dropdown-title">PyTorch Blog</span><p></p>
 <p>Catch up on the latest technical news and happenings</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/community-blog">
 <span class="dropdown-title">社区博客</span><p></p>
 <p>PyTorch 生态系统故事</p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/videos">
 <span class="dropdown-title">视频</span><p></p>
 <p>了解最新的 PyTorch 教程、新内容等</p>
-</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+</a><a class="nav-dropdown-item" href="https://maskerprc.github.io/community-stories">
 <span class="dropdown-title">社区故事</span><p></p>
 <p>了解我们的社区如何使用 PyTorch 解决真实、日常的机器学习问题</p>
 </a>
@@ -162,7 +162,7 @@
 <span class="dropdown-title">活动</span><p></p>
 <p>查找活动、网络研讨会和播客</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/newsletter">
 <span class="dropdown-title">通讯</span><p></p>
 <p>跟踪最新更新</p>
 </a>
@@ -172,23 +172,23 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">关于</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/foundation">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/foundation">
 <span class="dropdown-title">PyTorch 基金会</span><p></p>
 <p>了解更多关于 PyTorch 基金会</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/governing-board">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/governing-board">
 <span class="dropdown-title">管理委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/credits">
 <span class="dropdown-title">云信用计划</span><p></p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/tac">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tac">
 <span class="dropdown-title">技术顾问委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/staff">
 <span class="dropdown-title">员工</span><p></p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/contact-us">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/contact-us">
 <span class="dropdown-title">联系我们</span><p></p>
 </a>
 </div>
@@ -196,7 +196,7 @@
 </li>
 <li class="main-menu-item">
 <div class="no-dropdown">
-<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
+<a data-cta="join" href="https://maskerprc.github.io/join">成为会员</a>
 </div>
 </li>
 <li>
@@ -535,10 +535,10 @@
 <p> <code class="docutils literal "><span class="pre">torch.utils.swap_tensors</span></code> （以下简称 <code class="docutils literal "><span class="pre">swap_tensors</span></code> ）是一个工具函数，它接受两个 Python 张量并交换它们。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
-<span class="n">t1</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.arange.html#torch.arange" title="torch.arange"><span class="n">torch</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">t2</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.arange.html#torch.arange" title="torch.arange"><span class="n">torch</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">t1</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.arange.html#torch.arange" title="torch.arange"><span class="n">torch</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.arange.html#torch.arange" title="torch.arange"><span class="n">torch</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Before swapping, t1: </span><span class="si">{</span><span class="n">t1</span><span class="si">}</span><span class="s2">, t2: </span><span class="si">{</span><span class="n">t2</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<a class="sphx-glr-backref-module-torch-utils sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.utils.swap_tensors.html#torch.utils.swap_tensors" title="torch.utils.swap_tensors"><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">swap_tensors</span></a><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-torch-utils sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.utils.swap_tensors.html#torch.utils.swap_tensors" title="torch.utils.swap_tensors"><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">swap_tensors</span></a><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"After swapping, t1: </span><span class="si">{</span><span class="n">t1</span><span class="si">}</span><span class="s2">, t2: </span><span class="si">{</span><span class="n">t2</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -547,8 +547,8 @@
 <div class="section" id="application-to-nn-module">
 <h2>应用程序到 <code class="docutils literal "><span class="pre">nn.Module</span></code> ¶</h2>
 <p>当模块外部的 Python 对象持有模块参数的引用时，此实用程序相关。如果 <code class="docutils literal "><span class="pre">nn.Module</span></code> 修改了其参数中的任何一个，持有参数引用的对象将不会看到更改。一个经典的例子是优化器，它持有 <code class="docutils literal "><span class="pre">nn.Module</span></code> 的参数引用。这会导致一个静默的正确性问题，其中 <code class="docutils literal "><span class="pre">optimizer.step()</span></code> 将会正常运行而不会出错，但 <code class="docutils literal "><span class="pre">nn.Module</span></code> 的权重将不会更新。</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">mod</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">optimizer</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-optim sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.optim.SGD.html#torch.optim.SGD" title="torch.optim.SGD"><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span></a><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">mod</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-optim sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.optim.SGD.html#torch.optim.SGD" title="torch.optim.SGD"><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span></a><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"weight in mod: </span><span class="si">{</span><span class="n">mod</span><span class="o">.</span><span class="n">weight</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"weight in optimizer: </span><span class="si">{</span><span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'params'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">mod</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">mod</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
@@ -570,10 +570,10 @@
 <p>在本菜谱的以下部分，我们将定义一个玩具 <code class="docutils literal "><span class="pre">__torch_dispatch__</span></code> 子类 <code class="docutils literal "><span class="pre">MyQuantizedLinearWeight</span></code> ，该子类表示量化线性权重。这个子类将在整个教程的其余部分用于说明目的。为了简洁，我们省略了大部分 <code class="docutils literal "><span class="pre">__torch_dispatch__</span></code> 实现。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">aten</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">aten</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">MyQuantizedLinearWeight</span><span class="p">(</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></a><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyQuantizedLinearWeight</span><span class="p">(</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></a><span class="p">):</span>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">elem</span><span class="p">,</span> <span class="n">scale</span><span class="p">):</span>
-        <span class="k">return</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></a><span class="o">.</span><span class="n">_make_wrapper_subclass</span><span class="p">(</span>
+        <span class="k">return</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></a><span class="o">.</span><span class="n">_make_wrapper_subclass</span><span class="p">(</span>
             <span class="bp">cls</span><span class="p">,</span>
             <span class="n">elem</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
             <span class="n">dtype</span><span class="o">=</span><span class="n">elem</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
@@ -582,7 +582,7 @@
             <span class="n">strides</span><span class="o">=</span><span class="n">elem</span><span class="o">.</span><span class="n">stride</span><span class="p">(),</span>
             <span class="n">storage_offset</span><span class="o">=</span><span class="n">elem</span><span class="o">.</span><span class="n">storage_offset</span><span class="p">())</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elem</span><span class="p">:</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></a><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elem</span><span class="p">:</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></a><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elem</span> <span class="o">=</span> <span class="n">elem</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span>
 
@@ -603,7 +603,7 @@
 </pre></div>
 </div>
 <p>让我们创建一个 <code class="docutils literal "><span class="pre">nn.Linear</span></code> 层，其中权重是 <code class="docutils literal "><span class="pre">dtype</span></code> ，并尝试将其转换为 <code class="docutils literal "><span class="pre">torch.bfloat16</span></code> 。观察权重 <code class="docutils literal "><span class="pre">dtype</span></code> 的变化符合预期。然而，子类的有效载荷（ <code class="docutils literal "><span class="pre">elem</span></code> ）的 <code class="docutils literal "><span class="pre">dtype</span></code> 没有变化。</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="n">m</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">MyQuantizedLinearWeight</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Before: id(m.weight)=</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span><span class="si">}</span><span class="s2">, id(m.bias)=</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">m</span><span class="o">.</span><span class="n">bfloat16</span><span class="p">()</span>
@@ -614,8 +614,8 @@
 </pre></div>
 </div>
 <p>为此，我们引入了一个全局配置 <code class="docutils literal "><span class="pre">torch.__future__.set_swap_module_params_on_conversion</span></code> ，它将使用 <code class="docutils literal "><span class="pre">swap_tensors</span></code> 来交换模块的参数，同时保留 <code class="docutils literal "><span class="pre">.data</span></code> 设置中的引用。当设置此配置时， <code class="docutils literal "><span class="pre">swap_tensors</span></code> 将在转换期间使用，这确保了有效载荷的 <code class="docutils literal "><span class="pre">dtype</span></code> 被正确转换。</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><a class="sphx-glr-backref-module-torch-__future__ sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/future_mod.html#torch.__future__.set_swap_module_params_on_conversion" title="torch.__future__.set_swap_module_params_on_conversion"><span class="n">torch</span><span class="o">.</span><span class="n">__future__</span><span class="o">.</span><span class="n">set_swap_module_params_on_conversion</span></a><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">m</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><a class="sphx-glr-backref-module-torch-__future__ sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/future_mod.html#torch.__future__.set_swap_module_params_on_conversion" title="torch.__future__.set_swap_module_params_on_conversion"><span class="n">torch</span><span class="o">.</span><span class="n">__future__</span><span class="o">.</span><span class="n">set_swap_module_params_on_conversion</span></a><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="n">m</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">MyQuantizedLinearWeight</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Before: id(m.weight)=</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span><span class="si">}</span><span class="s2">, id(m.bias)=</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">m</span><span class="o">.</span><span class="n">bfloat16</span><span class="p">()</span>
@@ -623,7 +623,7 @@
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"m.weight.dtype: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"m.weight.elem.dtype: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">elem</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"m.bias.dtype: </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">bias</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<a class="sphx-glr-backref-module-torch-__future__ sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/future_mod.html#torch.__future__.set_swap_module_params_on_conversion" title="torch.__future__.set_swap_module_params_on_conversion"><span class="n">torch</span><span class="o">.</span><span class="n">__future__</span><span class="o">.</span><span class="n">set_swap_module_params_on_conversion</span></a><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-torch-__future__ sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/future_mod.html#torch.__future__.set_swap_module_params_on_conversion" title="torch.__future__.set_swap_module_params_on_conversion"><span class="n">torch</span><span class="o">.</span><span class="n">__future__</span><span class="o">.</span><span class="n">set_swap_module_params_on_conversion</span></a><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -643,9 +643,9 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">custom_torch_function</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(),</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">kwargs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">kwargs</span>
 
-    <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <a class="sphx-glr-backref-module-torch-Tensor sphx-glr-backref-type-py-method" href="https://pytorch.org/docs/stable/generated/torch.Tensor.module_load.html#torch.Tensor.module_load" title="torch.Tensor.module_load"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">module_load</span></a><span class="p">:</span>
+    <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <a class="sphx-glr-backref-module-torch-Tensor sphx-glr-backref-type-py-method" href="https://maskerprc.github.io/docs/stable/generated/torch.Tensor.module_load.html#torch.Tensor.module_load" title="torch.Tensor.module_load"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="o">.</span><span class="n">module_load</span></a><span class="p">:</span>
         <span class="n">dest</span><span class="p">,</span> <span class="n">src</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span> <span class="o">==</span> <span class="bp">cls</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">src</span><span class="p">)</span> <span class="o">==</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></a>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span> <span class="o">==</span> <span class="bp">cls</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">src</span><span class="p">)</span> <span class="o">==</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></a>
         <span class="k">return</span> <span class="n">MyQuantizedLinearWeight</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">_C</span><span class="o">.</span><span class="n">DisableTorchFunctionSubclass</span><span class="p">():</span>
@@ -656,22 +656,22 @@
 </div>
 <p>首先，让我们在元设备上创建一个模型的骨架，以避免实例化存储。我们将模块中的所有权重转换为 <code class="docutils literal "><span class="pre">MyQuantizedLinearWeight</span></code> 子类，同时保留偏差不变。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fn</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">):</span>
         <span class="n">requires_grad</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">requires_grad</span>
         <span class="n">m</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span>
                     <span class="n">MyQuantizedLinearWeight</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="n">requires_grad</span>
                    <span class="p">)</span>
 
-<span class="k">with</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s2">"meta"</span><span class="p">):</span>
-    <span class="n">m</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="k">with</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/tensor_attributes.html#torch.device" title="torch.device"><span class="n">torch</span><span class="o">.</span><span class="n">device</span></a><span class="p">(</span><span class="s2">"meta"</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
     <span class="n">m</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>然后，我们可以加载 <code class="docutils literal "><span class="pre">state_dict</span></code> 。注意，我们使用 <code class="docutils literal "><span class="pre">assign=True</span></code> ，因为对于偏差，我们希望保留张量在 <code class="docutils literal "><span class="pre">state_dict</span></code> （例如，我们不想在加载后偏差位于 <code class="docutils literal "><span class="pre">meta</span></code> 设备上）中的属性。</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><a class="sphx-glr-backref-module-torch-__future__ sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/future_mod.html#torch.__future__.set_swap_module_params_on_conversion" title="torch.__future__.set_swap_module_params_on_conversion"><span class="n">torch</span><span class="o">.</span><span class="n">__future__</span><span class="o">.</span><span class="n">set_swap_module_params_on_conversion</span></a><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><a class="sphx-glr-backref-module-torch-__future__ sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/future_mod.html#torch.__future__.set_swap_module_params_on_conversion" title="torch.__future__.set_swap_module_params_on_conversion"><span class="n">torch</span><span class="o">.</span><span class="n">__future__</span><span class="o">.</span><span class="n">set_swap_module_params_on_conversion</span></a><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Before: id(weight)=</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span><span class="si">}</span><span class="s2">, id(bias)=</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"m.state_dict() before load_state_dict():</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="n">state_dict</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
+<span class="n">state_dict</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"state_dict:</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">state_dict</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">m</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">,</span> <span class="n">assign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"After: id(weight)=</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span><span class="si">}</span><span class="s2">, id(bias)=</span><span class="si">{</span><span class="nb">id</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -872,7 +872,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <div class="col-md-4 text-center">
 <h2>文档</h2>
 <p>访问 PyTorch 的全面开发者文档</p>
-<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
+<a class="with-right-arrow" href="https://maskerprc.github.io/docs/stable/index.html">查看文档</a>
 </div>
 <div class="col-md-4 text-center">
 <h2>教程</h2>
@@ -898,7 +898,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <li class="list-title"><a href="https://maskerprc.github.io/">PyTorch</a></li>
 <li><a href="https://maskerprc.github.io/get-started">开始使用</a></li>
 <li><a href="https://maskerprc.github.io/features">功能</a></li>
-<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://maskerprc.github.io/ecosystem">生态系统</a></li>
 <li><a href="https://maskerprc.github.io/blog/">博客</a></li>
 <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
 </ul>
@@ -907,7 +907,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <ul>
 <li class="list-title"><a href="https://maskerprc.github.io/resources">资源</a></li>
 <li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
-<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://maskerprc.github.io/docs/stable/index.html">文档</a></li>
 <li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
 <li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
 <li><a href="https://maskerprc.github.io/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
@@ -990,7 +990,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/ecosystem">工具</a>
+<a href="https://maskerprc.github.io/ecosystem">工具</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/#community-module">社区</a>
@@ -1002,7 +1002,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <a href="https://maskerprc.github.io/resources">开发者资源</a>
 </li>
 <li>
-<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
+<a href="https://maskerprc.github.io/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
@@ -1024,7 +1024,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
+<a href="https://maskerprc.github.io/docs/stable/index.html">PyTorch</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/pytorch-domains">PyTorch 领域</a>
@@ -1038,19 +1038,19 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <a href="https://maskerprc.github.io/blog/">PyTorch 博客</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-blog">社区博客</a>
+<a href="https://maskerprc.github.io/community-blog">社区博客</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/videos">视频</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-stories">社区故事</a>
+<a href="https://maskerprc.github.io/community-stories">社区故事</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/events">活动</a>
 </li>
 <li>
-<a href="https://pytorch.org/newsletter">通讯简报</a>
+<a href="https://maskerprc.github.io/newsletter">通讯简报</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
@@ -1058,22 +1058,22 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
+<a href="https://maskerprc.github.io/foundation">PyTorch 基金会</a>
 </li>
 <li>
-<a href="https://pytorch.org/governing-board">管理委员会</a>
+<a href="https://maskerprc.github.io/governing-board">管理委员会</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/credits">云积分计划</a>
 </li>
 <li>
-<a href="https://pytorch.org/tac">技术顾问委员会</a>
+<a href="https://maskerprc.github.io/tac">技术顾问委员会</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/staff">员工</a>
 </li>
 <li>
-<a href="https://pytorch.org/contact-us">联系我们</a>
+<a href="https://maskerprc.github.io/contact-us">联系我们</a>
 </li>
 </ul>
 </ul>

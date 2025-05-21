@@ -85,7 +85,7 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">生态系统</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/ecosystem">
 <span class="dropdown-title">工具</span><p></p>
 <p>了解 PyTorch 生态系统中的工具和框架</p>
 </a>
@@ -101,7 +101,7 @@
 <span class="dropdown-title">开发者资源</span><p></p>
 <p>查找资源并解答问题</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/ecosystem/contributor-awards-2024">
 <span class="dropdown-title">2024 年度贡献者奖项</span><p></p>
 <p>本年度 PyTorch 大会获奖者揭晓</p>
 </a>
@@ -130,7 +130,7 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">文档</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/docs/stable/index.html">
 <span class="dropdown-title">PyTorch</span><p></p>
 <p>探索文档以获取全面指导，了解如何使用 PyTorch</p>
 </a>
@@ -149,14 +149,14 @@
 <span class="dropdown-title">PyTorch Blog</span><p></p>
 <p>Catch up on the latest technical news and happenings</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/community-blog">
 <span class="dropdown-title">社区博客</span><p></p>
 <p>PyTorch 生态系统故事</p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/videos">
 <span class="dropdown-title">视频</span><p></p>
 <p>了解最新的 PyTorch 教程、新内容等</p>
-</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+</a><a class="nav-dropdown-item" href="https://maskerprc.github.io/community-stories">
 <span class="dropdown-title">社区故事</span><p></p>
 <p>了解我们的社区如何使用 PyTorch 解决真实、日常的机器学习问题</p>
 </a>
@@ -164,7 +164,7 @@
 <span class="dropdown-title">活动</span><p></p>
 <p>查找活动、网络研讨会和播客</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/newsletter">
 <span class="dropdown-title">通讯</span><p></p>
 <p>跟踪最新更新</p>
 </a>
@@ -174,23 +174,23 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">关于</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/foundation">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/foundation">
 <span class="dropdown-title">PyTorch 基金会</span><p></p>
 <p>了解更多关于 PyTorch 基金会</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/governing-board">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/governing-board">
 <span class="dropdown-title">管理委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/credits">
 <span class="dropdown-title">云信用计划</span><p></p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/tac">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tac">
 <span class="dropdown-title">技术顾问委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/staff">
 <span class="dropdown-title">员工</span><p></p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/contact-us">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/contact-us">
 <span class="dropdown-title">联系我们</span><p></p>
 </a>
 </div>
@@ -198,7 +198,7 @@
 </li>
 <li class="main-menu-item">
 <div class="no-dropdown">
-<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
+<a data-cta="join" href="https://maskerprc.github.io/join">成为会员</a>
 </div>
 </li>
 <li>
@@ -552,7 +552,7 @@
 <p>在本菜谱中，我们将使用 <code class="docutils literal "><span class="pre">torch</span></code> ， <code class="docutils literal "><span class="pre">torchvision.models</span></code> 和 <code class="docutils literal "><span class="pre">profiler</span></code> 模块：</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torchvision.models</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">models</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">torch.profiler</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">,</span> <span class="n">record_function</span><span class="p">,</span> <span class="n">ProfilerActivity</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.profiler</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">,</span> <span class="n">record_function</span><span class="p">,</span> <span class="n">ProfilerActivity</span>
 </pre></div>
 </div>
 </div>
@@ -560,7 +560,7 @@
 <h3>2. 实例化一个简单的 Resnet 模型 ¶</h3>
 <p>让我们创建一个 Resnet 模型的实例并为它准备输入：</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torchvision-models sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/vision/stable/models/generated/torchvision.models.resnet18.html#torchvision.models.resnet18" title="torchvision.models.resnet18"><span class="n">models</span><span class="o">.</span><span class="n">resnet18</span></a><span class="p">()</span>
-<span class="n">inputs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+<span class="n">inputs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -582,7 +582,7 @@
 </ul>
 <p>注意：当使用 CUDA 时，性能分析器也会显示在主机上发生的 CUDA 事件。</p>
 <p>让我们看看如何使用性能分析器来分析执行时间：</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="p">[</span><span class="n">ProfilerActivity</span><span class="o">.</span><span class="n">CPU</span><span class="p">],</span> <span class="n">record_shapes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="p">[</span><span class="n">ProfilerActivity</span><span class="o">.</span><span class="n">CPU</span><span class="p">],</span> <span class="n">record_shapes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
     <span class="k">with</span> <span class="n">record_function</span><span class="p">(</span><span class="s2">"model_inference"</span><span class="p">):</span>
         <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
 </pre></div>
@@ -637,9 +637,9 @@ Self<span class="w"> </span>CPU<span class="w"> </span><span class="nb">time</sp
 </div>
 <p>注意 <code class="docutils literal "><span class="pre">aten::convolution</span></code> 两次出现，但输入形状不同。</p>
 <p>分析器还可以用于分析在 GPU 和 XPU 上执行模型的性能：用户可以在 cpu、cuda 和 xpu 之间切换</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">if</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">():</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">if</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">():</span>
     <span class="n">device</span> <span class="o">=</span> <span class="s1">'cuda'</span>
-<span class="k">elif</span> <a class="sphx-glr-backref-module-torch-xpu sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.xpu.is_available.html#torch.xpu.is_available" title="torch.xpu.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">xpu</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">():</span>
+<span class="k">elif</span> <a class="sphx-glr-backref-module-torch-xpu sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.xpu.is_available.html#torch.xpu.is_available" title="torch.xpu.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">xpu</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">():</span>
     <span class="n">device</span> <span class="o">=</span> <span class="s1">'xpu'</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">'Neither CUDA nor XPU devices are available to demonstrate profiling on acceleration devices'</span><span class="p">)</span>
@@ -650,9 +650,9 @@ Self<span class="w"> </span>CPU<span class="w"> </span><span class="nb">time</sp
 <span class="n">sort_by_keyword</span> <span class="o">=</span> <span class="n">device</span> <span class="o">+</span> <span class="s2">"_time_total"</span>
 
 <span class="n">model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torchvision-models sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/vision/stable/models/generated/torchvision.models.resnet18.html#torchvision.models.resnet18" title="torchvision.models.resnet18"><span class="n">models</span><span class="o">.</span><span class="n">resnet18</span></a><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-<span class="n">inputs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">inputs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
-<span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="n">activities</span><span class="p">,</span> <span class="n">record_shapes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
+<span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="n">activities</span><span class="p">,</span> <span class="n">record_shapes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
     <span class="k">with</span> <span class="n">record_function</span><span class="p">(</span><span class="s2">"model_inference"</span><span class="p">):</span>
         <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
 
@@ -736,9 +736,9 @@ Self<span class="w"> </span>CUDA<span class="w"> </span><span class="nb">time</s
 <h3>4. 使用分析器分析内存消耗</h3>
 <p>PyTorch 分析器还可以显示模型操作执行过程中分配（或释放）的内存量（由模型的张量使用）。在下面的输出中，'self'内存对应于操作符分配（释放）的内存，不包括对其他操作符的子调用。要启用内存分析功能，请传递 <code class="docutils literal "><span class="pre">profile_memory=True</span></code> 。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torchvision-models sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/vision/stable/models/generated/torchvision.models.resnet18.html#torchvision.models.resnet18" title="torchvision.models.resnet18"><span class="n">models</span><span class="o">.</span><span class="n">resnet18</span></a><span class="p">()</span>
-<span class="n">inputs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+<span class="n">inputs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
 
-<span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="p">[</span><span class="n">ProfilerActivity</span><span class="o">.</span><span class="n">CPU</span><span class="p">],</span>
+<span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="p">[</span><span class="n">ProfilerActivity</span><span class="o">.</span><span class="n">CPU</span><span class="p">],</span>
         <span class="n">profile_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">record_shapes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
     <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
 
@@ -791,9 +791,9 @@ Self<span class="w"> </span>CPU<span class="w"> </span><span class="nb">time</sp
 <span class="n">activities</span> <span class="o">=</span> <span class="p">[</span><span class="n">ProfilerActivity</span><span class="o">.</span><span class="n">CPU</span><span class="p">,</span> <span class="n">ProfilerActivity</span><span class="o">.</span><span class="n">CUDA</span><span class="p">,</span> <span class="n">ProfilerActivity</span><span class="o">.</span><span class="n">XPU</span><span class="p">]</span>
 
 <span class="n">model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torchvision-models sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/vision/stable/models/generated/torchvision.models.resnet18.html#torchvision.models.resnet18" title="torchvision.models.resnet18"><span class="n">models</span><span class="o">.</span><span class="n">resnet18</span></a><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-<span class="n">inputs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+<span class="n">inputs</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
-<span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="n">activities</span><span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
+<span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="n">activities</span><span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
     <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
 
 <span class="n">prof</span><span class="o">.</span><span class="n">export_chrome_trace</span><span class="p">(</span><span class="s2">"trace.json"</span><span class="p">)</span>
@@ -807,7 +807,7 @@ Self<span class="w"> </span>CPU<span class="w"> </span><span class="nb">time</sp
 <p>分析器可以用来分析 Python 和 TorchScript 堆栈跟踪：</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">sort_by_keyword</span> <span class="o">=</span> <span class="s2">"self_"</span> <span class="o">+</span> <span class="n">device</span> <span class="o">+</span> <span class="s2">"_time_total"</span>
 
-<span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span>
+<span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span>
     <span class="n">activities</span><span class="o">=</span><span class="n">activities</span><span class="p">,</span>
     <span class="n">with_stack</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
@@ -847,9 +847,9 @@ Self<span class="w"> </span>CUDA<span class="w"> </span><span class="nb">time</s
 <li><p>表示一个函数，该函数接受一个指向分析器的引用作为输入，并在分析器每次新跟踪准备好时被调用。</p></li>
 </ul>
 <p>为了说明 API 的工作原理，我们首先考虑以下带有 <code class="docutils literal "><span class="pre">torch.profiler.schedule</span></code> 辅助函数的示例：</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.profiler</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.schedule" title="torch.profiler.schedule"><span class="n">schedule</span></a>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.profiler</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/profiler.html#torch.profiler.schedule" title="torch.profiler.schedule"><span class="n">schedule</span></a>
 
-<span class="n">my_schedule</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.schedule" title="torch.profiler.schedule"><span class="n">schedule</span></a><span class="p">(</span>
+<span class="n">my_schedule</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/profiler.html#torch.profiler.schedule" title="torch.profiler.schedule"><span class="n">schedule</span></a><span class="p">(</span>
     <span class="n">skip_first</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">wait</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
     <span class="n">warmup</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -881,9 +881,9 @@ Self<span class="w"> </span>CUDA<span class="w"> </span><span class="nb">time</s
     <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
     <span class="n">p</span><span class="o">.</span><span class="n">export_chrome_trace</span><span class="p">(</span><span class="s2">"/tmp/trace_"</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">step_num</span><span class="p">)</span> <span class="o">+</span> <span class="s2">".json"</span><span class="p">)</span>
 
-<span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span>
+<span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span>
     <span class="n">activities</span><span class="o">=</span><span class="n">activities</span><span class="p">,</span>
-    <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.schedule" title="torch.profiler.schedule"><span class="n">schedule</span></a><span class="o">=</span><a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.schedule" title="torch.profiler.schedule"><span class="n">torch</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">schedule</span></a><span class="p">(</span>
+    <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/profiler.html#torch.profiler.schedule" title="torch.profiler.schedule"><span class="n">schedule</span></a><span class="o">=</span><a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/profiler.html#torch.profiler.schedule" title="torch.profiler.schedule"><span class="n">torch</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">schedule</span></a><span class="p">(</span>
         <span class="n">wait</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">warmup</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">active</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
@@ -1103,7 +1103,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <div class="col-md-4 text-center">
 <h2>文档</h2>
 <p>访问 PyTorch 的全面开发者文档</p>
-<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
+<a class="with-right-arrow" href="https://maskerprc.github.io/docs/stable/index.html">查看文档</a>
 </div>
 <div class="col-md-4 text-center">
 <h2>教程</h2>
@@ -1129,7 +1129,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <li class="list-title"><a href="https://maskerprc.github.io/">PyTorch</a></li>
 <li><a href="https://maskerprc.github.io/get-started">开始使用</a></li>
 <li><a href="https://maskerprc.github.io/features">功能</a></li>
-<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://maskerprc.github.io/ecosystem">生态系统</a></li>
 <li><a href="https://maskerprc.github.io/blog/">博客</a></li>
 <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
 </ul>
@@ -1138,7 +1138,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <ul>
 <li class="list-title"><a href="https://maskerprc.github.io/resources">资源</a></li>
 <li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
-<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://maskerprc.github.io/docs/stable/index.html">文档</a></li>
 <li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
 <li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
 <li><a href="https://maskerprc.github.io/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
@@ -1221,7 +1221,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/ecosystem">工具</a>
+<a href="https://maskerprc.github.io/ecosystem">工具</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/#community-module">社区</a>
@@ -1233,7 +1233,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <a href="https://maskerprc.github.io/resources">开发者资源</a>
 </li>
 <li>
-<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
+<a href="https://maskerprc.github.io/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
@@ -1255,7 +1255,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
+<a href="https://maskerprc.github.io/docs/stable/index.html">PyTorch</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/pytorch-domains">PyTorch 领域</a>
@@ -1269,19 +1269,19 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <a href="https://maskerprc.github.io/blog/">PyTorch 博客</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-blog">社区博客</a>
+<a href="https://maskerprc.github.io/community-blog">社区博客</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/videos">视频</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-stories">社区故事</a>
+<a href="https://maskerprc.github.io/community-stories">社区故事</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/events">活动</a>
 </li>
 <li>
-<a href="https://pytorch.org/newsletter">通讯简报</a>
+<a href="https://maskerprc.github.io/newsletter">通讯简报</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
@@ -1289,22 +1289,22 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
+<a href="https://maskerprc.github.io/foundation">PyTorch 基金会</a>
 </li>
 <li>
-<a href="https://pytorch.org/governing-board">管理委员会</a>
+<a href="https://maskerprc.github.io/governing-board">管理委员会</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/credits">云积分计划</a>
 </li>
 <li>
-<a href="https://pytorch.org/tac">技术顾问委员会</a>
+<a href="https://maskerprc.github.io/tac">技术顾问委员会</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/staff">员工</a>
 </li>
 <li>
-<a href="https://pytorch.org/contact-us">联系我们</a>
+<a href="https://maskerprc.github.io/contact-us">联系我们</a>
 </li>
 </ul>
 </ul>

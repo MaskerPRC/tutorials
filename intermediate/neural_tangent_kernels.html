@@ -83,7 +83,7 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">生态系统</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/ecosystem">
 <span class="dropdown-title">工具</span><p></p>
 <p>了解 PyTorch 生态系统中的工具和框架</p>
 </a>
@@ -99,7 +99,7 @@
 <span class="dropdown-title">开发者资源</span><p></p>
 <p>查找资源并解答问题</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/ecosystem/contributor-awards-2024">
 <span class="dropdown-title">2024 年度贡献者奖项</span><p></p>
 <p>本年度 PyTorch 大会获奖者揭晓</p>
 </a>
@@ -128,7 +128,7 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">文档</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/docs/stable/index.html">
 <span class="dropdown-title">PyTorch</span><p></p>
 <p>探索文档以获取全面指导，了解如何使用 PyTorch</p>
 </a>
@@ -147,14 +147,14 @@
 <span class="dropdown-title">PyTorch Blog</span><p></p>
 <p>Catch up on the latest technical news and happenings</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/community-blog">
 <span class="dropdown-title">社区博客</span><p></p>
 <p>PyTorch 生态系统故事</p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/videos">
 <span class="dropdown-title">视频</span><p></p>
 <p>了解最新的 PyTorch 教程、新内容等</p>
-</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+</a><a class="nav-dropdown-item" href="https://maskerprc.github.io/community-stories">
 <span class="dropdown-title">社区故事</span><p></p>
 <p>了解我们的社区如何使用 PyTorch 解决真实、日常的机器学习问题</p>
 </a>
@@ -162,7 +162,7 @@
 <span class="dropdown-title">活动</span><p></p>
 <p>查找活动、网络研讨会和播客</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/newsletter">
 <span class="dropdown-title">通讯</span><p></p>
 <p>跟踪最新更新</p>
 </a>
@@ -172,23 +172,23 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">关于</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/foundation">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/foundation">
 <span class="dropdown-title">PyTorch 基金会</span><p></p>
 <p>了解更多关于 PyTorch 基金会</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/governing-board">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/governing-board">
 <span class="dropdown-title">管理委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/credits">
 <span class="dropdown-title">云信用计划</span><p></p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/tac">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tac">
 <span class="dropdown-title">技术顾问委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/staff">
 <span class="dropdown-title">员工</span><p></p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/contact-us">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/contact-us">
 <span class="dropdown-title">联系我们</span><p></p>
 </a>
 </div>
@@ -196,7 +196,7 @@
 </li>
 <li class="main-menu-item">
 <div class="no-dropdown">
-<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
+<a data-cta="join" href="https://maskerprc.github.io/join">成为会员</a>
 </div>
 </li>
 <li>
@@ -530,16 +530,16 @@
 <p>首先，进行一些设置。让我们定义一个简单的 CNN，我们希望计算其 NTK。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">torch.func</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.func.functional_call.html#torch.func.functional_call" title="torch.func.functional_call"><span class="n">functional_call</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.func.vjp.html#torch.func.vjp" title="torch.func.vjp"><span class="n">vjp</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.func.jvp.html#torch.func.jvp" title="torch.func.jvp"><span class="n">jvp</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.func.jacrev.html#torch.func.jacrev" title="torch.func.jacrev"><span class="n">jacrev</span></a>
-<span class="n">device</span> <span class="o">=</span> <span class="s1">'cuda'</span> <span class="k">if</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.device_count.html#torch.cuda.device_count" title="torch.cuda.device_count"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">device_count</span></a><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">'cpu'</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.func</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.func.functional_call.html#torch.func.functional_call" title="torch.func.functional_call"><span class="n">functional_call</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.func.vjp.html#torch.func.vjp" title="torch.func.vjp"><span class="n">vjp</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.func.jvp.html#torch.func.jvp" title="torch.func.jvp"><span class="n">jvp</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.func.jacrev.html#torch.func.jacrev" title="torch.func.jacrev"><span class="n">jacrev</span></a>
+<span class="n">device</span> <span class="o">=</span> <span class="s1">'cuda'</span> <span class="k">if</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.cuda.device_count.html#torch.cuda.device_count" title="torch.cuda.device_count"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">device_count</span></a><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">'cpu'</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">CNN</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module"><span class="n">nn</span><span class="o">.</span><span class="n">Module</span></a><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CNN</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module"><span class="n">nn</span><span class="o">.</span><span class="n">Module</span></a><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CNN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d" title="torch.nn.Conv2d"><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d" title="torch.nn.Conv2d"><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span></a><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">conv3</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d" title="torch.nn.Conv2d"><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span></a><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">21632</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d" title="torch.nn.Conv2d"><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span></a><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d" title="torch.nn.Conv2d"><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span></a><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv3</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Conv2d.html#torch.nn.Conv2d" title="torch.nn.Conv2d"><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span></a><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="mi">21632</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -553,8 +553,8 @@
 </pre></div>
 </div>
 <p>生成一些随机数据吧</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">x_train</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
-<span class="n">x_test</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">x_train</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">x_test</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -569,7 +569,7 @@
 <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">()}</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">fnet_single</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.func.functional_call.html#torch.func.functional_call" title="torch.func.functional_call"><span class="n">functional_call</span></a><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">),))</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.func.functional_call.html#torch.func.functional_call" title="torch.func.functional_call"><span class="n">functional_call</span></a><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">),))</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -582,17 +582,17 @@
 <p>第一种方法就是这样做——计算两个雅可比矩阵，并将它们收缩。下面是如何在批处理情况下计算 NTK 的方法：</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">empirical_ntk_jacobian_contraction</span><span class="p">(</span><span class="n">fnet_single</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">):</span>
     <span class="c1"># Compute J(x1)</span>
-    <span class="n">jac1</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">(</span><a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.func.jacrev.html#torch.func.jacrev" title="torch.func.jacrev"><span class="n">jacrev</span></a><span class="p">(</span><span class="n">fnet_single</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))(</span><span class="n">params</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
+    <span class="n">jac1</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">(</span><a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.func.jacrev.html#torch.func.jacrev" title="torch.func.jacrev"><span class="n">jacrev</span></a><span class="p">(</span><span class="n">fnet_single</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))(</span><span class="n">params</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
     <span class="n">jac1</span> <span class="o">=</span> <span class="n">jac1</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
     <span class="n">jac1</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">jac1</span><span class="p">]</span>
 
     <span class="c1"># Compute J(x2)</span>
-    <span class="n">jac2</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">(</span><a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.func.jacrev.html#torch.func.jacrev" title="torch.func.jacrev"><span class="n">jacrev</span></a><span class="p">(</span><span class="n">fnet_single</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))(</span><span class="n">params</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+    <span class="n">jac2</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">(</span><a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.func.jacrev.html#torch.func.jacrev" title="torch.func.jacrev"><span class="n">jacrev</span></a><span class="p">(</span><span class="n">fnet_single</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))(</span><span class="n">params</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
     <span class="n">jac2</span> <span class="o">=</span> <span class="n">jac2</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
     <span class="n">jac2</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">jac2</span><span class="p">]</span>
 
     <span class="c1"># Compute J(x1) @ J(x2).T</span>
-    <span class="n">result</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.stack.html#torch.stack" title="torch.stack"><span class="n">torch</span><span class="o">.</span><span class="n">stack</span></a><span class="p">([</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.einsum.html#torch.einsum" title="torch.einsum"><span class="n">torch</span><span class="o">.</span><span class="n">einsum</span></a><span class="p">(</span><span class="s1">'Naf,Mbf-&gt;NMab'</span><span class="p">,</span> <span class="n">j1</span><span class="p">,</span> <span class="n">j2</span><span class="p">)</span> <span class="k">for</span> <span class="n">j1</span><span class="p">,</span> <span class="n">j2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">jac1</span><span class="p">,</span> <span class="n">jac2</span><span class="p">)])</span>
+    <span class="n">result</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.stack.html#torch.stack" title="torch.stack"><span class="n">torch</span><span class="o">.</span><span class="n">stack</span></a><span class="p">([</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.einsum.html#torch.einsum" title="torch.einsum"><span class="n">torch</span><span class="o">.</span><span class="n">einsum</span></a><span class="p">(</span><span class="s1">'Naf,Mbf-&gt;NMab'</span><span class="p">,</span> <span class="n">j1</span><span class="p">,</span> <span class="n">j2</span><span class="p">)</span> <span class="k">for</span> <span class="n">j1</span><span class="p">,</span> <span class="n">j2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">jac1</span><span class="p">,</span> <span class="n">jac2</span><span class="p">)])</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span>
 
@@ -603,12 +603,12 @@
 <p>在某些情况下，你可能只想得到这个量的对角线或迹，特别是如果你事先知道网络架构会导致非对角元素可以近似为零的 NTK。很容易调整上述函数来实现这一点：</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">empirical_ntk_jacobian_contraction</span><span class="p">(</span><span class="n">fnet_single</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">compute</span><span class="o">=</span><span class="s1">'full'</span><span class="p">):</span>
     <span class="c1"># Compute J(x1)</span>
-    <span class="n">jac1</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">(</span><a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.func.jacrev.html#torch.func.jacrev" title="torch.func.jacrev"><span class="n">jacrev</span></a><span class="p">(</span><span class="n">fnet_single</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))(</span><span class="n">params</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
+    <span class="n">jac1</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">(</span><a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.func.jacrev.html#torch.func.jacrev" title="torch.func.jacrev"><span class="n">jacrev</span></a><span class="p">(</span><span class="n">fnet_single</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))(</span><span class="n">params</span><span class="p">,</span> <span class="n">x1</span><span class="p">)</span>
     <span class="n">jac1</span> <span class="o">=</span> <span class="n">jac1</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
     <span class="n">jac1</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">jac1</span><span class="p">]</span>
 
     <span class="c1"># Compute J(x2)</span>
-    <span class="n">jac2</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">(</span><a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.func.jacrev.html#torch.func.jacrev" title="torch.func.jacrev"><span class="n">jacrev</span></a><span class="p">(</span><span class="n">fnet_single</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))(</span><span class="n">params</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+    <span class="n">jac2</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">(</span><a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.func.jacrev.html#torch.func.jacrev" title="torch.func.jacrev"><span class="n">jacrev</span></a><span class="p">(</span><span class="n">fnet_single</span><span class="p">),</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))(</span><span class="n">params</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
     <span class="n">jac2</span> <span class="o">=</span> <span class="n">jac2</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
     <span class="n">jac2</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">jac2</span><span class="p">]</span>
 
@@ -623,7 +623,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">assert</span> <span class="kc">False</span>
 
-    <span class="n">result</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.stack.html#torch.stack" title="torch.stack"><span class="n">torch</span><span class="o">.</span><span class="n">stack</span></a><span class="p">([</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.einsum.html#torch.einsum" title="torch.einsum"><span class="n">torch</span><span class="o">.</span><span class="n">einsum</span></a><span class="p">(</span><span class="n">einsum_expr</span><span class="p">,</span> <span class="n">j1</span><span class="p">,</span> <span class="n">j2</span><span class="p">)</span> <span class="k">for</span> <span class="n">j1</span><span class="p">,</span> <span class="n">j2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">jac1</span><span class="p">,</span> <span class="n">jac2</span><span class="p">)])</span>
+    <span class="n">result</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.stack.html#torch.stack" title="torch.stack"><span class="n">torch</span><span class="o">.</span><span class="n">stack</span></a><span class="p">([</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.einsum.html#torch.einsum" title="torch.einsum"><span class="n">torch</span><span class="o">.</span><span class="n">einsum</span></a><span class="p">(</span><span class="n">einsum_expr</span><span class="p">,</span> <span class="n">j1</span><span class="p">,</span> <span class="n">j2</span><span class="p">)</span> <span class="k">for</span> <span class="n">j1</span><span class="p">,</span> <span class="n">j2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">jac1</span><span class="p">,</span> <span class="n">jac2</span><span class="p">)])</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span>
 
@@ -655,39 +655,39 @@
         <span class="k">def</span><span class="w"> </span><span class="nf">func_x2</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
 
-        <span class="n">output</span><span class="p">,</span> <span class="n">vjp_fn</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.func.vjp.html#torch.func.vjp" title="torch.func.vjp"><span class="n">vjp</span></a><span class="p">(</span><span class="n">func_x1</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">output</span><span class="p">,</span> <span class="n">vjp_fn</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.func.vjp.html#torch.func.vjp" title="torch.func.vjp"><span class="n">vjp</span></a><span class="p">(</span><span class="n">func_x1</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">get_ntk_slice</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
             <span class="c1"># This computes ``vec @ J(x2).T``</span>
             <span class="c1"># `vec` is some unit vector (a single slice of the Identity matrix)</span>
             <span class="n">vjps</span> <span class="o">=</span> <span class="n">vjp_fn</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
             <span class="c1"># This computes ``J(X1) @ vjps``</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">jvps</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.func.jvp.html#torch.func.jvp" title="torch.func.jvp"><span class="n">jvp</span></a><span class="p">(</span><span class="n">func_x2</span><span class="p">,</span> <span class="p">(</span><span class="n">params</span><span class="p">,),</span> <span class="n">vjps</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">jvps</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-func sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.func.jvp.html#torch.func.jvp" title="torch.func.jvp"><span class="n">jvp</span></a><span class="p">(</span><span class="n">func_x2</span><span class="p">,</span> <span class="p">(</span><span class="n">params</span><span class="p">,),</span> <span class="n">vjps</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">jvps</span>
 
         <span class="c1"># Here's our identity matrix</span>
-        <span class="n">basis</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.eye.html#torch.eye" title="torch.eye"><span class="n">torch</span><span class="o">.</span><span class="n">eye</span></a><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">numel</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">numel</span><span class="p">(),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">return</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">(</span><span class="n">get_ntk_slice</span><span class="p">)(</span><span class="n">basis</span><span class="p">)</span>
+        <span class="n">basis</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.eye.html#torch.eye" title="torch.eye"><span class="n">torch</span><span class="o">.</span><span class="n">eye</span></a><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">numel</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">numel</span><span class="p">(),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">(</span><span class="n">get_ntk_slice</span><span class="p">)(</span><span class="n">basis</span><span class="p">)</span>
 
     <span class="c1"># ``get_ntk(x1, x2)`` computes the NTK for a single data point x1, x2</span>
     <span class="c1"># Since the x1, x2 inputs to ``empirical_ntk_ntk_vps`` are batched,</span>
     <span class="c1"># we actually wish to compute the NTK between every pair of data points</span>
     <span class="c1"># between {x1} and {x2}. That's what the ``vmaps`` here do.</span>
-    <span class="n">result</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">(</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">(</span><span class="n">get_ntk</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">))(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">(</span><a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.vmap.html#torch.vmap" title="torch.vmap"><span class="n">vmap</span></a><span class="p">(</span><span class="n">get_ntk</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">))(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">compute</span> <span class="o">==</span> <span class="s1">'full'</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">result</span>
     <span class="k">if</span> <span class="n">compute</span> <span class="o">==</span> <span class="s1">'trace'</span><span class="p">:</span>
-        <span class="k">return</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.einsum.html#torch.einsum" title="torch.einsum"><span class="n">torch</span><span class="o">.</span><span class="n">einsum</span></a><span class="p">(</span><span class="s1">'NMKK-&gt;NM'</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="k">return</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.einsum.html#torch.einsum" title="torch.einsum"><span class="n">torch</span><span class="o">.</span><span class="n">einsum</span></a><span class="p">(</span><span class="s1">'NMKK-&gt;NM'</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">compute</span> <span class="o">==</span> <span class="s1">'diagonal'</span><span class="p">:</span>
-        <span class="k">return</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.einsum.html#torch.einsum" title="torch.einsum"><span class="n">torch</span><span class="o">.</span><span class="n">einsum</span></a><span class="p">(</span><span class="s1">'NMKK-&gt;NMK'</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="k">return</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.einsum.html#torch.einsum" title="torch.einsum"><span class="n">torch</span><span class="o">.</span><span class="n">einsum</span></a><span class="p">(</span><span class="s1">'NMKK-&gt;NMK'</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
 
 <span class="c1"># Disable TensorFloat-32 for convolutions on Ampere+ GPUs to sacrifice performance in favor of accuracy</span>
 <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">cudnn</span><span class="o">.</span><span class="n">flags</span><span class="p">(</span><span class="n">allow_tf32</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">result_from_jacobian_contraction</span> <span class="o">=</span> <span class="n">empirical_ntk_jacobian_contraction</span><span class="p">(</span><span class="n">fnet_single</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">x_train</span><span class="p">)</span>
     <span class="n">result_from_ntk_vps</span> <span class="o">=</span> <span class="n">empirical_ntk_ntk_vps</span><span class="p">(</span><span class="n">fnet_single</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">x_train</span><span class="p">)</span>
 
-<span class="k">assert</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="torch.allclose"><span class="n">torch</span><span class="o">.</span><span class="n">allclose</span></a><span class="p">(</span><span class="n">result_from_jacobian_contraction</span><span class="p">,</span> <span class="n">result_from_ntk_vps</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+<span class="k">assert</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.allclose.html#torch.allclose" title="torch.allclose"><span class="n">torch</span><span class="o">.</span><span class="n">allclose</span></a><span class="p">(</span><span class="n">result_from_jacobian_contraction</span><span class="p">,</span> <span class="n">result_from_ntk_vps</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>我们对 <code class="docutils literal "><span class="pre">empirical_ntk_ntk_vps</span></code> 的代码看起来是直接从上面的数学公式翻译过来的！这展示了函数变换的强大功能：祝你好运，仅使用 <code class="docutils literal "><span class="pre">torch.autograd.grad</span></code> 来编写一个高效的版本吧。</p>
@@ -880,7 +880,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <div class="col-md-4 text-center">
 <h2>文档</h2>
 <p>访问 PyTorch 的全面开发者文档</p>
-<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
+<a class="with-right-arrow" href="https://maskerprc.github.io/docs/stable/index.html">查看文档</a>
 </div>
 <div class="col-md-4 text-center">
 <h2>教程</h2>
@@ -906,7 +906,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <li class="list-title"><a href="https://maskerprc.github.io/">PyTorch</a></li>
 <li><a href="https://maskerprc.github.io/get-started">开始使用</a></li>
 <li><a href="https://maskerprc.github.io/features">功能</a></li>
-<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://maskerprc.github.io/ecosystem">生态系统</a></li>
 <li><a href="https://maskerprc.github.io/blog/">博客</a></li>
 <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
 </ul>
@@ -915,7 +915,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <ul>
 <li class="list-title"><a href="https://maskerprc.github.io/resources">资源</a></li>
 <li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
-<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://maskerprc.github.io/docs/stable/index.html">文档</a></li>
 <li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
 <li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
 <li><a href="https://maskerprc.github.io/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
@@ -998,7 +998,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/ecosystem">工具</a>
+<a href="https://maskerprc.github.io/ecosystem">工具</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/#community-module">社区</a>
@@ -1010,7 +1010,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <a href="https://maskerprc.github.io/resources">开发者资源</a>
 </li>
 <li>
-<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
+<a href="https://maskerprc.github.io/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
@@ -1032,7 +1032,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
+<a href="https://maskerprc.github.io/docs/stable/index.html">PyTorch</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/pytorch-domains">PyTorch 领域</a>
@@ -1046,19 +1046,19 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <a href="https://maskerprc.github.io/blog/">PyTorch 博客</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-blog">社区博客</a>
+<a href="https://maskerprc.github.io/community-blog">社区博客</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/videos">视频</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-stories">社区故事</a>
+<a href="https://maskerprc.github.io/community-stories">社区故事</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/events">活动</a>
 </li>
 <li>
-<a href="https://pytorch.org/newsletter">通讯简报</a>
+<a href="https://maskerprc.github.io/newsletter">通讯简报</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
@@ -1066,22 +1066,22 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
+<a href="https://maskerprc.github.io/foundation">PyTorch 基金会</a>
 </li>
 <li>
-<a href="https://pytorch.org/governing-board">管理委员会</a>
+<a href="https://maskerprc.github.io/governing-board">管理委员会</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/credits">云积分计划</a>
 </li>
 <li>
-<a href="https://pytorch.org/tac">技术顾问委员会</a>
+<a href="https://maskerprc.github.io/tac">技术顾问委员会</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/staff">员工</a>
 </li>
 <li>
-<a href="https://pytorch.org/contact-us">联系我们</a>
+<a href="https://maskerprc.github.io/contact-us">联系我们</a>
 </li>
 </ul>
 </ul>

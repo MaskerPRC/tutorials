@@ -85,7 +85,7 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">生态系统</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/ecosystem">
 <span class="dropdown-title">工具</span><p></p>
 <p>了解 PyTorch 生态系统中的工具和框架</p>
 </a>
@@ -101,7 +101,7 @@
 <span class="dropdown-title">开发者资源</span><p></p>
 <p>查找资源并解答问题</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/ecosystem/contributor-awards-2024">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/ecosystem/contributor-awards-2024">
 <span class="dropdown-title">2024 年度贡献者奖项</span><p></p>
 <p>本年度 PyTorch 大会获奖者揭晓</p>
 </a>
@@ -130,7 +130,7 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">文档</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/docs/stable/index.html">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/docs/stable/index.html">
 <span class="dropdown-title">PyTorch</span><p></p>
 <p>探索文档以获取全面指导，了解如何使用 PyTorch</p>
 </a>
@@ -149,14 +149,14 @@
 <span class="dropdown-title">PyTorch Blog</span><p></p>
 <p>Catch up on the latest technical news and happenings</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/community-blog">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/community-blog">
 <span class="dropdown-title">社区博客</span><p></p>
 <p>PyTorch 生态系统故事</p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/videos">
 <span class="dropdown-title">视频</span><p></p>
 <p>了解最新的 PyTorch 教程、新内容等</p>
-</a><a class="nav-dropdown-item" href="https://pytorch.org/community-stories">
+</a><a class="nav-dropdown-item" href="https://maskerprc.github.io/community-stories">
 <span class="dropdown-title">社区故事</span><p></p>
 <p>了解我们的社区如何使用 PyTorch 解决真实、日常的机器学习问题</p>
 </a>
@@ -164,7 +164,7 @@
 <span class="dropdown-title">活动</span><p></p>
 <p>查找活动、网络研讨会和播客</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/newsletter">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/newsletter">
 <span class="dropdown-title">通讯</span><p></p>
 <p>跟踪最新更新</p>
 </a>
@@ -174,23 +174,23 @@
 <div class="resources-dropdown" data-toggle="resources-dropdown" id="resourcesDropdownButton">
 <a class="with-down-arrow">关于</a>
 <div class="resources-dropdown-menu">
-<a class="nav-dropdown-item" href="https://pytorch.org/foundation">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/foundation">
 <span class="dropdown-title">PyTorch 基金会</span><p></p>
 <p>了解更多关于 PyTorch 基金会</p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/governing-board">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/governing-board">
 <span class="dropdown-title">管理委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/credits">
 <span class="dropdown-title">云信用计划</span><p></p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/tac">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/tac">
 <span class="dropdown-title">技术顾问委员会</span><p></p>
 </a>
 <a class="nav-dropdown-item" href="https://maskerprc.github.io/staff">
 <span class="dropdown-title">员工</span><p></p>
 </a>
-<a class="nav-dropdown-item" href="https://pytorch.org/contact-us">
+<a class="nav-dropdown-item" href="https://maskerprc.github.io/contact-us">
 <span class="dropdown-title">联系我们</span><p></p>
 </a>
 </div>
@@ -198,7 +198,7 @@
 </li>
 <li class="main-menu-item">
 <div class="no-dropdown">
-<a data-cta="join" href="https://pytorch.org/join">成为会员</a>
+<a data-cta="join" href="https://maskerprc.github.io/join">成为会员</a>
 </div>
 </li>
 <li>
@@ -546,11 +546,11 @@
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
-<span class="n">device</span> <span class="o">=</span> <span class="s2">"cuda"</span> <span class="k">if</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">()</span> <span class="k">else</span> <span class="s2">"cpu"</span>
+<span class="n">device</span> <span class="o">=</span> <span class="s2">"cuda"</span> <span class="k">if</span> <a class="sphx-glr-backref-module-torch-cuda sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.cuda.is_available.html#torch.cuda.is_available" title="torch.cuda.is_available"><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span></a><span class="p">()</span> <span class="k">else</span> <span class="s2">"cpu"</span>
 
 <span class="c1"># Example Usage:</span>
-<span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">),</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">),</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
-<a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+<span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">),</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">),</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -560,7 +560,7 @@
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="c1"># Lets define a helpful benchmarking function:</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.utils.benchmark</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">benchmark</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">benchmark_torch_function_in_microseconds</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">t0</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-utils-benchmark sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/benchmark_utils.html#torch.utils.benchmark.Timer" title="torch.utils.benchmark.Timer"><span class="n">benchmark</span><span class="o">.</span><span class="n">Timer</span></a><span class="p">(</span>
+    <span class="n">t0</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-utils-benchmark sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/benchmark_utils.html#torch.utils.benchmark.Timer" title="torch.utils.benchmark.Timer"><span class="n">benchmark</span><span class="o">.</span><span class="n">Timer</span></a><span class="p">(</span>
         <span class="n">stmt</span><span class="o">=</span><span class="s2">"f(*args, **kwargs)"</span><span class="p">,</span> <span class="nb">globals</span><span class="o">=</span><span class="p">{</span><span class="s2">"args"</span><span class="p">:</span> <span class="n">args</span><span class="p">,</span> <span class="s2">"kwargs"</span><span class="p">:</span> <span class="n">kwargs</span><span class="p">,</span> <span class="s2">"f"</span><span class="p">:</span> <span class="n">f</span><span class="p">}</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">t0</span><span class="o">.</span><span class="n">blocked_autorange</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span> <span class="o">*</span> <span class="mf">1e6</span>
@@ -573,30 +573,30 @@
 
 <span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float16</span>
 
-<span class="n">query</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">max_sequence_len</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="n">key</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">max_sequence_len</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="n">value</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">max_sequence_len</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">max_sequence_len</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">key</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">max_sequence_len</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">value</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">max_sequence_len</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The default implementation runs in </span><span class="si">{</span><span class="n">benchmark_torch_function_in_microseconds</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">,</span><span class="w"> </span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> microseconds"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The default implementation runs in </span><span class="si">{</span><span class="n">benchmark_torch_function_in_microseconds</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">,</span><span class="w"> </span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> microseconds"</span><span class="p">)</span>
 
 <span class="c1"># Lets explore the speed of each of the 3 implementations</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn.attention</span><span class="w"> </span><span class="kn">import</span> <span class="n">SDPBackend</span><span class="p">,</span> <a class="sphx-glr-backref-module-torch-nn-attention sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.attention.sdpa_kernel.html#torch.nn.attention.sdpa_kernel" title="torch.nn.attention.sdpa_kernel"><span class="n">sdpa_kernel</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn.attention</span><span class="w"> </span><span class="kn">import</span> <span class="n">SDPBackend</span><span class="p">,</span> <a class="sphx-glr-backref-module-torch-nn-attention sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.attention.sdpa_kernel.html#torch.nn.attention.sdpa_kernel" title="torch.nn.attention.sdpa_kernel"><span class="n">sdpa_kernel</span></a>
 
 
-<span class="k">with</span> <a class="sphx-glr-backref-module-torch-nn-attention sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.attention.sdpa_kernel.html#torch.nn.attention.sdpa_kernel" title="torch.nn.attention.sdpa_kernel"><span class="n">sdpa_kernel</span></a><span class="p">(</span><span class="n">SDPBackend</span><span class="o">.</span><span class="n">MATH</span><span class="p">):</span>
-    <span class="n">math_time</span><span class="o">=</span><span class="n">benchmark_torch_function_in_microseconds</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+<span class="k">with</span> <a class="sphx-glr-backref-module-torch-nn-attention sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.attention.sdpa_kernel.html#torch.nn.attention.sdpa_kernel" title="torch.nn.attention.sdpa_kernel"><span class="n">sdpa_kernel</span></a><span class="p">(</span><span class="n">SDPBackend</span><span class="o">.</span><span class="n">MATH</span><span class="p">):</span>
+    <span class="n">math_time</span><span class="o">=</span><span class="n">benchmark_torch_function_in_microseconds</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The math implementation runs in </span><span class="si">{</span><span class="n">math_time</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> microseconds"</span><span class="p">)</span>
 
-<span class="k">with</span> <a class="sphx-glr-backref-module-torch-nn-attention sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.attention.sdpa_kernel.html#torch.nn.attention.sdpa_kernel" title="torch.nn.attention.sdpa_kernel"><span class="n">sdpa_kernel</span></a><span class="p">(</span><span class="n">SDPBackend</span><span class="o">.</span><span class="n">FLASH_ATTENTION</span><span class="p">):</span>
+<span class="k">with</span> <a class="sphx-glr-backref-module-torch-nn-attention sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.attention.sdpa_kernel.html#torch.nn.attention.sdpa_kernel" title="torch.nn.attention.sdpa_kernel"><span class="n">sdpa_kernel</span></a><span class="p">(</span><span class="n">SDPBackend</span><span class="o">.</span><span class="n">FLASH_ATTENTION</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">flash_time</span><span class="o">=</span><span class="n">benchmark_torch_function_in_microseconds</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="n">flash_time</span><span class="o">=</span><span class="n">benchmark_torch_function_in_microseconds</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The flash attention implementation runs in </span><span class="si">{</span><span class="n">flash_time</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> microseconds"</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">"FlashAttention is not supported. See warnings for reasons."</span><span class="p">)</span>
 
-<span class="k">with</span> <a class="sphx-glr-backref-module-torch-nn-attention sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.attention.sdpa_kernel.html#torch.nn.attention.sdpa_kernel" title="torch.nn.attention.sdpa_kernel"><span class="n">sdpa_kernel</span></a><span class="p">(</span><span class="n">SDPBackend</span><span class="o">.</span><span class="n">EFFICIENT_ATTENTION</span><span class="p">):</span>
+<span class="k">with</span> <a class="sphx-glr-backref-module-torch-nn-attention sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.attention.sdpa_kernel.html#torch.nn.attention.sdpa_kernel" title="torch.nn.attention.sdpa_kernel"><span class="n">sdpa_kernel</span></a><span class="p">(</span><span class="n">SDPBackend</span><span class="o">.</span><span class="n">EFFICIENT_ATTENTION</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">efficient_time</span><span class="o">=</span><span class="n">benchmark_torch_function_in_microseconds</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="n">efficient_time</span><span class="o">=</span><span class="n">benchmark_torch_function_in_microseconds</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The memory efficient implementation runs in </span><span class="si">{</span><span class="n">efficient_time</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> microseconds"</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">"EfficientAttention is not supported. See warnings for reasons."</span><span class="p">)</span>
@@ -610,18 +610,18 @@
 <div class="section" id="causal-self-attention">
 <h2>因果自注意力</h2>
 <p>以下是一个受 Andrej Karpathy NanoGPT 仓库启发的多头因果自注意力块的示例实现。</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CausalSelfAttention</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module"><span class="n">nn</span><span class="o">.</span><span class="n">Module</span></a><span class="p">):</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CausalSelfAttention</span><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module"><span class="n">nn</span><span class="o">.</span><span class="n">Module</span></a><span class="p">):</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">bias</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_causal</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dropout</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="k">assert</span> <span class="n">embed_dimension</span> <span class="o">%</span> <span class="n">num_heads</span> <span class="o">==</span> <span class="mi">0</span>
         <span class="c1"># key, query, value projections for all heads, but in a batch</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">c_attn</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="n">embed_dimension</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c_attn</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="n">embed_dimension</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
         <span class="c1"># output projection</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">c_proj</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="n">embed_dimension</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c_proj</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Linear.html#torch.nn.Linear" title="torch.nn.Linear"><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span></a><span class="p">(</span><span class="n">embed_dimension</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">)</span>
         <span class="c1"># regularization</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">dropout</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">resid_dropout</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/generated/torch.nn.Dropout.html#torch.nn.Dropout" title="torch.nn.Dropout"><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span></a><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resid_dropout</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.Dropout.html#torch.nn.Dropout" title="torch.nn.Dropout"><span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span></a><span class="p">(</span><span class="n">dropout</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span> <span class="o">=</span> <span class="n">num_heads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">embed_dimension</span> <span class="o">=</span> <span class="n">embed_dimension</span>
         <span class="c1"># Perform causal masking</span>
@@ -647,7 +647,7 @@
             <span class="n">dropout</span> <span class="o">=</span> <span class="mf">0.0</span>
             <span class="n">is_causal</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="n">y</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attn_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dropout_p</span><span class="o">=</span><span class="n">dropout</span><span class="p">,</span> <span class="n">is_causal</span><span class="o">=</span><span class="n">is_causal</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attn_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dropout_p</span><span class="o">=</span><span class="n">dropout</span><span class="p">,</span> <span class="n">is_causal</span><span class="o">=</span><span class="n">is_causal</span><span class="p">)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_heads</span> <span class="o">*</span> <span class="n">head_dim</span><span class="p">)</span>
 
         <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resid_dropout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">c_proj</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
@@ -676,7 +676,7 @@
 <span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">pad_percentage</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
-            <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span>
+            <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span>
                 <span class="n">batch_size</span><span class="p">,</span>
                 <span class="n">max_sequence_len</span><span class="p">,</span>
                 <span class="n">embed_dimension</span><span class="p">,</span>
@@ -693,9 +693,9 @@
     <span class="c1"># Make random entry in the batch have max sequence length</span>
     <span class="n">seq_len_list</span><span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">batch_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">max_sequence_len</span>
     <span class="k">return</span> <span class="p">(</span>
-        <a class="sphx-glr-backref-module-torch-nested sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/nested.html#torch.nested.nested_tensor" title="torch.nested.nested_tensor"><span class="n">torch</span><span class="o">.</span><span class="n">nested</span><span class="o">.</span><span class="n">nested_tensor</span></a><span class="p">(</span>
+        <a class="sphx-glr-backref-module-torch-nested sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/nested.html#torch.nested.nested_tensor" title="torch.nested.nested_tensor"><span class="n">torch</span><span class="o">.</span><span class="n">nested</span><span class="o">.</span><span class="n">nested_tensor</span></a><span class="p">(</span>
             <span class="p">[</span>
-                <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="n">seq_len</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span>
+                <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.randn.html#torch.randn" title="torch.randn"><span class="n">torch</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="n">seq_len</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span>
                             <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">seq_len</span> <span class="ow">in</span> <span class="n">seq_len_list</span>
             <span class="p">]</span>
@@ -709,7 +709,7 @@
 <span class="c1"># Currently the fused implementations don't support ``NestedTensor`` for training</span>
 <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
-<span class="k">with</span> <a class="sphx-glr-backref-module-torch-nn-attention sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.attention.sdpa_kernel.html#torch.nn.attention.sdpa_kernel" title="torch.nn.attention.sdpa_kernel"><span class="n">sdpa_kernel</span></a><span class="p">(</span><span class="n">SDPBackend</span><span class="o">.</span><span class="n">FLASH_ATTENTION</span><span class="p">):</span>
+<span class="k">with</span> <a class="sphx-glr-backref-module-torch-nn-attention sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.attention.sdpa_kernel.html#torch.nn.attention.sdpa_kernel" title="torch.nn.attention.sdpa_kernel"><span class="n">sdpa_kernel</span></a><span class="p">(</span><span class="n">SDPBackend</span><span class="o">.</span><span class="n">FLASH_ATTENTION</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Random NT runs in </span><span class="si">{</span><span class="n">benchmark_torch_function_in_microseconds</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">random_nt</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> microseconds"</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Random Dense runs in </span><span class="si">{</span><span class="n">benchmark_torch_function_in_microseconds</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">random_dense</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> microseconds"</span><span class="p">)</span>
@@ -724,13 +724,13 @@
 <p>随着 PyTorch 2.0 的发布，引入了一个名为 <code class="docutils literal "><span class="pre">torch.compile()</span></code> 的新功能，它可以在急切模式下提供显著的性能提升。缩放点积注意力机制可以完全与 <code class="docutils literal "><span class="pre">torch.compile()</span></code> 组合使用。为了展示这一点，让我们使用 <code class="docutils literal "><span class="pre">torch.compile()</span></code> 编译 <code class="docutils literal "><span class="pre">CausalSelfAttention</span></code> 模块，并观察性能提升。</p>
 <div class="highlight-default "><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="n">max_sequence_len</span> <span class="o">=</span> <span class="mi">256</span>
-<span class="n">x</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">max_sequence_len</span><span class="p">,</span>
+<span class="n">x</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">max_sequence_len</span><span class="p">,</span>
                <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
     <span class="sa">f</span><span class="s2">"The non compiled module runs in  </span><span class="si">{</span><span class="n">benchmark_torch_function_in_microseconds</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> microseconds"</span><span class="p">)</span>
 
 
-<span class="n">compiled_model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.compile.html#torch.compile" title="torch.compile"><span class="n">torch</span><span class="o">.</span><span class="n">compile</span></a><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">compiled_model</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.compile.html#torch.compile" title="torch.compile"><span class="n">torch</span><span class="o">.</span><span class="n">compile</span></a><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="c1"># Let's compile it</span>
 <span class="n">compiled_model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
@@ -738,19 +738,19 @@
 </pre></div>
 </div>
 <p>精确的执行时间取决于机器，然而我的结果如下：未编译的模块运行时间为 166.616 微秒，编译后的模块运行时间为 166.726 微秒。这并不是我们预期的结果。让我们深入挖掘一下。PyTorch 自带一个惊人的内置分析器，您可以使用它来检查代码的性能特征。</p>
-<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.profiler</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">,</span> <span class="n">record_function</span><span class="p">,</span> <span class="n">ProfilerActivity</span>
+<div class="highlight-default "><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">torch.profiler</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">,</span> <span class="n">record_function</span><span class="p">,</span> <span class="n">ProfilerActivity</span>
 <span class="n">activities</span> <span class="o">=</span> <span class="p">[</span><span class="n">ProfilerActivity</span><span class="o">.</span><span class="n">CPU</span><span class="p">]</span>
 <span class="k">if</span> <span class="n">device</span> <span class="o">==</span> <span class="s1">'cuda'</span><span class="p">:</span>
     <span class="n">activities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ProfilerActivity</span><span class="o">.</span><span class="n">CUDA</span><span class="p">)</span>
 
-<span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="n">activities</span><span class="p">,</span> <span class="n">record_shapes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
+<span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="n">activities</span><span class="p">,</span> <span class="n">record_shapes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
     <span class="k">with</span> <span class="n">record_function</span><span class="p">(</span><span class="s2">" Non-Compilied Causal Attention"</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">25</span><span class="p">):</span>
             <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">prof</span><span class="o">.</span><span class="n">key_averages</span><span class="p">()</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">sort_by</span><span class="o">=</span><span class="s2">"cuda_time_total"</span><span class="p">,</span> <span class="n">row_limit</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
 
 
-<span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="n">activities</span><span class="p">,</span> <span class="n">record_shapes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
+<span class="k">with</span> <a class="sphx-glr-backref-module-torch-profiler sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/profiler.html#torch.profiler.profile" title="torch.profiler.profile"><span class="n">profile</span></a><span class="p">(</span><span class="n">activities</span><span class="o">=</span><span class="n">activities</span><span class="p">,</span> <span class="n">record_shapes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">prof</span><span class="p">:</span>
     <span class="k">with</span> <span class="n">record_function</span><span class="p">(</span><span class="s2">"Compiled Causal Attention"</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">25</span><span class="p">):</span>
             <span class="n">compiled_model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -781,7 +781,7 @@
 <span class="c1">#    is the same as using ``torch.nn.attention.bias.causal_upper_left``.</span>
 <span class="c1">#</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn.attention.bias</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-nn-attention-bias sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.attention.bias.causal_lower_right.html#torch.nn.attention.bias.causal_lower_right" title="torch.nn.attention.bias.causal_lower_right"><span class="n">causal_lower_right</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-torch-nn-attention-bias sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.attention.bias.causal_upper_left.html#torch.nn.attention.bias.causal_upper_left" title="torch.nn.attention.bias.causal_upper_left"><span class="n">causal_upper_left</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn.attention.bias</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-torch-nn-attention-bias sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.attention.bias.causal_lower_right.html#torch.nn.attention.bias.causal_lower_right" title="torch.nn.attention.bias.causal_lower_right"><span class="n">causal_lower_right</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-torch-nn-attention-bias sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.attention.bias.causal_upper_left.html#torch.nn.attention.bias.causal_upper_left" title="torch.nn.attention.bias.causal_upper_left"><span class="n">causal_upper_left</span></a>
 
 <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="n">sequence_length_q</span> <span class="o">=</span> <span class="mi">2</span>
@@ -791,18 +791,18 @@
 
 <span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float16</span>
 
-<span class="n">query</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">sequence_length_q</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="n">key</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">sequence_length_kv</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-<span class="n">value</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">sequence_length_kv</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">query</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">sequence_length_q</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">key</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">sequence_length_kv</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">value</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.rand.html#torch.rand" title="torch.rand"><span class="n">torch</span><span class="o">.</span><span class="n">rand</span></a><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">,</span> <span class="n">sequence_length_kv</span><span class="p">,</span> <span class="n">embed_dimension</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
 
-<span class="n">upper_left_bias</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn-attention-bias sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.attention.bias.causal_upper_left.html#torch.nn.attention.bias.causal_upper_left" title="torch.nn.attention.bias.causal_upper_left"><span class="n">causal_upper_left</span></a><span class="p">(</span><span class="n">sequence_length_q</span><span class="p">,</span> <span class="n">sequence_length_kv</span><span class="p">)</span>
-<span class="n">lower_right_bias</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn-attention-bias sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.attention.bias.causal_lower_right.html#torch.nn.attention.bias.causal_lower_right" title="torch.nn.attention.bias.causal_lower_right"><span class="n">causal_lower_right</span></a><span class="p">(</span><span class="n">sequence_length_q</span><span class="p">,</span> <span class="n">sequence_length_kv</span><span class="p">)</span>
+<span class="n">upper_left_bias</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn-attention-bias sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.attention.bias.causal_upper_left.html#torch.nn.attention.bias.causal_upper_left" title="torch.nn.attention.bias.causal_upper_left"><span class="n">causal_upper_left</span></a><span class="p">(</span><span class="n">sequence_length_q</span><span class="p">,</span> <span class="n">sequence_length_kv</span><span class="p">)</span>
+<span class="n">lower_right_bias</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn-attention-bias sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.attention.bias.causal_lower_right.html#torch.nn.attention.bias.causal_lower_right" title="torch.nn.attention.bias.causal_lower_right"><span class="n">causal_lower_right</span></a><span class="p">(</span><span class="n">sequence_length_q</span><span class="p">,</span> <span class="n">sequence_length_kv</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">upper_left_bias</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">lower_right_bias</span><span class="p">))</span>
 
 <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">upper_left_bias</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">lower_right_bias</span><span class="p">)</span>
-<span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">upper_left_bias</span><span class="p">),</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></a><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">upper_left_bias</span><span class="p">),</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://maskerprc.github.io/docs/stable/tensors.html#torch.Tensor" title="torch.Tensor"><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span></a><span class="p">)</span>
 
 <span class="c1"># As you can see from the previous output, are the same type ``torch.nn.attention.bias.CausalBias``</span>
 <span class="c1"># and subclass ``torch.Tensor``</span>
@@ -822,15 +822,15 @@
 <span class="c1"># even if the sequence length of q and k are different.</span>
 
 <span class="c1"># These objects are intended to be used with sdpa</span>
-<span class="n">out_upper_left</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">upper_left_bias</span><span class="p">)</span>
-<span class="n">out_lower_right</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">lower_right_bias</span><span class="p">)</span>
-<span class="n">out_is_causal</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">is_causal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">out_upper_left</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">upper_left_bias</span><span class="p">)</span>
+<span class="n">out_lower_right</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">lower_right_bias</span><span class="p">)</span>
+<span class="n">out_is_causal</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">is_causal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="k">assert</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="torch.allclose"><span class="n">torch</span><span class="o">.</span><span class="n">allclose</span></a><span class="p">(</span><span class="n">out_upper_left</span><span class="p">,</span> <span class="n">out_is_causal</span><span class="p">)</span>
-<span class="k">assert</span> <span class="ow">not</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.allclose.html#torch.allclose" title="torch.allclose"><span class="n">torch</span><span class="o">.</span><span class="n">allclose</span></a><span class="p">(</span><span class="n">out_upper_left</span><span class="p">,</span> <span class="n">out_lower_right</span><span class="p">)</span>
+<span class="k">assert</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.allclose.html#torch.allclose" title="torch.allclose"><span class="n">torch</span><span class="o">.</span><span class="n">allclose</span></a><span class="p">(</span><span class="n">out_upper_left</span><span class="p">,</span> <span class="n">out_is_causal</span><span class="p">)</span>
+<span class="k">assert</span> <span class="ow">not</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.allclose.html#torch.allclose" title="torch.allclose"><span class="n">torch</span><span class="o">.</span><span class="n">allclose</span></a><span class="p">(</span><span class="n">out_upper_left</span><span class="p">,</span> <span class="n">out_lower_right</span><span class="p">)</span>
 
 <span class="c1"># These attention biases should also be compatible with torch.compile</span>
-<span class="n">compiled_sdpa</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.compile.html#torch.compile" title="torch.compile"><span class="n">torch</span><span class="o">.</span><span class="n">compile</span></a><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">,</span> <span class="n">fullgraph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">compiled_sdpa</span> <span class="o">=</span> <a class="sphx-glr-backref-module-torch sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.compile.html#torch.compile" title="torch.compile"><span class="n">torch</span><span class="o">.</span><span class="n">compile</span></a><span class="p">(</span><a class="sphx-glr-backref-module-torch-nn-functional sphx-glr-backref-type-py-function" href="https://maskerprc.github.io/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html#torch.nn.functional.scaled_dot_product_attention" title="torch.nn.functional.scaled_dot_product_attention"><span class="n">F</span><span class="o">.</span><span class="n">scaled_dot_product_attention</span></a><span class="p">,</span> <span class="n">fullgraph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">out_upper_left</span> <span class="o">=</span> <span class="n">compiled_sdpa</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">upper_left_bias</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1037,7 +1037,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <div class="col-md-4 text-center">
 <h2>文档</h2>
 <p>访问 PyTorch 的全面开发者文档</p>
-<a class="with-right-arrow" href="https://pytorch.org/docs/stable/index.html">查看文档</a>
+<a class="with-right-arrow" href="https://maskerprc.github.io/docs/stable/index.html">查看文档</a>
 </div>
 <div class="col-md-4 text-center">
 <h2>教程</h2>
@@ -1063,7 +1063,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <li class="list-title"><a href="https://maskerprc.github.io/">PyTorch</a></li>
 <li><a href="https://maskerprc.github.io/get-started">开始使用</a></li>
 <li><a href="https://maskerprc.github.io/features">功能</a></li>
-<li><a href="https://pytorch.org/ecosystem">生态系统</a></li>
+<li><a href="https://maskerprc.github.io/ecosystem">生态系统</a></li>
 <li><a href="https://maskerprc.github.io/blog/">博客</a></li>
 <li><a href="https://github.com/pytorch/pytorch/blob/master/CONTRIBUTING.md">贡献</a></li>
 </ul>
@@ -1072,7 +1072,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <ul>
 <li class="list-title"><a href="https://maskerprc.github.io/resources">资源</a></li>
 <li><a href="https://maskerprc.github.io/tutorials">教程</a></li>
-<li><a href="https://pytorch.org/docs/stable/index.html">文档</a></li>
+<li><a href="https://maskerprc.github.io/docs/stable/index.html">文档</a></li>
 <li><a href="https://discuss.pytorch.org" target="_blank">讨论</a></li>
 <li><a href="https://github.com/pytorch/pytorch/issues" target="_blank">GitHub 问题</a></li>
 <li><a href="https://maskerprc.github.io/assets/brand-guidelines/PyTorch-Brand-Guidelines.pdf" target="_blank">品牌指南</a></li>
@@ -1155,7 +1155,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/ecosystem">工具</a>
+<a href="https://maskerprc.github.io/ecosystem">工具</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/#community-module">社区</a>
@@ -1167,7 +1167,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <a href="https://maskerprc.github.io/resources">开发者资源</a>
 </li>
 <li>
-<a href="https://pytorch.org/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
+<a href="https://maskerprc.github.io/ecosystem/contributor-awards-2023">贡献者奖项 - 2024</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
@@ -1189,7 +1189,7 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/docs/stable/index.html">PyTorch</a>
+<a href="https://maskerprc.github.io/docs/stable/index.html">PyTorch</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/pytorch-domains">PyTorch 领域</a>
@@ -1203,19 +1203,19 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 <a href="https://maskerprc.github.io/blog/">PyTorch 博客</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-blog">社区博客</a>
+<a href="https://maskerprc.github.io/community-blog">社区博客</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/videos">视频</a>
 </li>
 <li>
-<a href="https://pytorch.org/community-stories">社区故事</a>
+<a href="https://maskerprc.github.io/community-stories">社区故事</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/events">活动</a>
 </li>
 <li>
-<a href="https://pytorch.org/newsletter">通讯简报</a>
+<a href="https://maskerprc.github.io/newsletter">通讯简报</a>
 </li>
 </ul>
 <li class="resources-mobile-menu-title">
@@ -1223,22 +1223,22 @@ if(window.location.href.indexOf("/beginner/basics/")!= -1)
 </li>
 <ul class="resources-mobile-menu-items">
 <li>
-<a href="https://pytorch.org/foundation">PyTorch 基金会</a>
+<a href="https://maskerprc.github.io/foundation">PyTorch 基金会</a>
 </li>
 <li>
-<a href="https://pytorch.org/governing-board">管理委员会</a>
+<a href="https://maskerprc.github.io/governing-board">管理委员会</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/credits">云积分计划</a>
 </li>
 <li>
-<a href="https://pytorch.org/tac">技术顾问委员会</a>
+<a href="https://maskerprc.github.io/tac">技术顾问委员会</a>
 </li>
 <li>
 <a href="https://maskerprc.github.io/staff">员工</a>
 </li>
 <li>
-<a href="https://pytorch.org/contact-us">联系我们</a>
+<a href="https://maskerprc.github.io/contact-us">联系我们</a>
 </li>
 </ul>
 </ul>
